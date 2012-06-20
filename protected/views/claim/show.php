@@ -44,6 +44,23 @@ $this->menu=array(
 <br />
 
 
+<div class="row">
+    <?php echo "ID | Товар | Количество | Цена | Сумма |"; ?>
+</div>
+<?php foreach($model->claimLines as $claimLine): ?>
+	<div class="row">
+            
+            <?php echo CHtml::link("#{$claimLine->id}",array('claimLine/show','id'=>$claimLine->id)); ?> |
+            <?php echo CHtml::link($claimLine->asset->name,array('asset/view','id'=>$claimLine->asset->id)); ?> |
+            <?php echo $claimLine->count.$claimLine->asset->unit->sign; ?> |
+            <?php echo $claimLine->cost; ?> |
+            <?php echo $claimLine->amount; ?> |
+            
+	</div>
+
+
+<?php endforeach; ?>
+
 <?php $dataProvider=new CActiveDataProvider('ClaimLine', array(
            'criteria'=>array(
              'condition'=>'claim_id='.$model->id,
@@ -62,7 +79,9 @@ $this->menu=array(
 		'id',
                 array(
                 'name'=>'Название',
-                'value'=>'$data->asset->name'),
+                    
+                'value'=> '$data->asset->name'),
+                
                 array(
                 'name'=>'Количество',
                 'value'=>'$data->count'),

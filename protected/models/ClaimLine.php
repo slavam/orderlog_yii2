@@ -65,8 +65,9 @@ class ClaimLine extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'accountLines' => array(self::HAS_MANY, 'AccountLines', 'clime_line_id'),
+                    'accountLines' => array(self::HAS_MANY, 'AccountLines', 'clime_line_id'),
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id'),
+                    'claim' => array(self::BELONGS_TO, 'Claim', 'claim_id'),
 		);
 	}
 

@@ -1,6 +1,6 @@
 <?php
 
-class ClaimLineController extends Controller
+class AssetController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,7 +27,7 @@ class ClaimLineController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -54,12 +54,6 @@ class ClaimLineController extends Controller
 			'model'=>$this->loadModel($id),
 		));
 	}
-	public function actionShow($id)
-	{
-		$this->render('show',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
 
 	/**
 	 * Creates a new model.
@@ -67,14 +61,14 @@ class ClaimLineController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new ClaimLine;
+		$model=new Asset;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLine']))
+		if(isset($_POST['Asset']))
 		{
-			$model->attributes=$_POST['ClaimLine'];
+			$model->attributes=$_POST['Asset'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -96,9 +90,9 @@ class ClaimLineController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLine']))
+		if(isset($_POST['Asset']))
 		{
-			$model->attributes=$_POST['ClaimLine'];
+			$model->attributes=$_POST['Asset'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -133,7 +127,7 @@ class ClaimLineController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('ClaimLine');
+		$dataProvider=new CActiveDataProvider('Asset');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -144,10 +138,10 @@ class ClaimLineController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new ClaimLine('search');
+		$model=new Asset('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['ClaimLine']))
-			$model->attributes=$_GET['ClaimLine'];
+		if(isset($_GET['Asset']))
+			$model->attributes=$_GET['Asset'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -161,7 +155,7 @@ class ClaimLineController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=ClaimLine::model()->findByPk($id);
+		$model=Asset::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -173,7 +167,7 @@ class ClaimLineController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='claim-line-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='asset-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

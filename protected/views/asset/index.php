@@ -1,15 +1,15 @@
 <?php
 $this->breadcrumbs=array(
-	'Заявки',
+	'Assets',
 );
 
 $this->menu=array(
-	array('label'=>'Create Claim', 'url'=>array('create')),
-	array('label'=>'Manage Claim', 'url'=>array('admin')),
+	array('label'=>'Create Asset', 'url'=>array('create')),
+	array('label'=>'Manage Asset', 'url'=>array('admin')),
 );
 ?>
 
-<h1>Заявки</h1>
+<h1>Assets</h1>
 
 <?php $this->widget('zii.widgets.CListView', array(
 	'dataProvider'=>$dataProvider,

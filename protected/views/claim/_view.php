@@ -5,21 +5,21 @@
 	<br />
 
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('division_id')); ?>:</b>
-	<?php echo CHtml::encode($data->division_id); ?>
+	<b>Отделение:</b>
+	<?php echo $data->division->NAME; ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('create_date')); ?>:</b>
-	<?php echo CHtml::encode($data->create_date); ?>
+	<b>Период:</b>
+	<?php echo $data->period->NAME; ?>
 	<br />
 
 
 	<b>Направление:</b>
-	<?php echo CHtml::encode($data->direction->name); ?>
+	<?php echo $data->direction->name; ?>
 	<br />
 
-	<b><?php echo CHtml::encode($data->getAttributeLabel('state_id')); ?>:</b>
-	<?php echo CHtml::encode($data->state_id); ?>
+	<b>Состояние:</b>
+	<?php echo $data->state->stateName->name; ?>
 	<br />
 
 	<?php /*
