@@ -4,13 +4,6 @@ $this->breadcrumbs=array(
 	$model->claim_number,
 );
 
-$this->menu=array(
-	array('label'=>'Заявки', 'url'=>array('index')),
-	array('label'=>'Создать', 'url'=>array('create')),
-	array('label'=>'Изменить', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Удалить', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Claim', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Заявка #<?php echo $model->claim_number; ?></h1>
@@ -43,24 +36,6 @@ $this->menu=array(
 <?php echo $model->description; ?>
 <br />
 
-
-<div class="row">
-    <?php echo "ID | Товар | Количество | Цена | Сумма |"; ?>
-</div>
-<?php foreach($model->claimLines as $claimLine): ?>
-	<div class="row">
-            
-            <?php echo CHtml::link("#{$claimLine->id}",array('claimLine/show','id'=>$claimLine->id)); ?> |
-            <?php echo CHtml::link($claimLine->asset->name,array('asset/view','id'=>$claimLine->asset->id)); ?> |
-            <?php echo $claimLine->count.$claimLine->asset->unit->sign; ?> |
-            <?php echo $claimLine->cost; ?> |
-            <?php echo $claimLine->amount; ?> |
-            
-	</div>
-
-
-<?php endforeach; ?>
-
 <?php $dataProvider=new CActiveDataProvider('ClaimLine', array(
            'criteria'=>array(
              'condition'=>'claim_id='.$model->id,
@@ -74,14 +49,11 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'claim-line-grid',
 	'dataProvider'=>$dataProvider,
-//	'filter'=>$model->claimLines,
 	'columns'=>array(
 		'id',
                 array(
                 'name'=>'Название',
-                    
                 'value'=> '$data->asset->name'),
-                
                 array(
                 'name'=>'Количество',
                 'value'=>'$data->count'),
@@ -95,9 +67,8 @@ $this->menu=array(
                 'name'=>'Сумма',
                 'value'=>'$data->amount'),
                 array(
-		'class'=>'CButtonColumn',
-		'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))',
-                
-		),
+                  'class'=>'CButtonColumn',
+                  'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
+                ),
 	),
 )); ?>
