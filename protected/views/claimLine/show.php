@@ -44,8 +44,20 @@ $this->menu=array(
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->description)
                 ),
-		'for_whom',
-		'budget_item_id',
-		'business_id',
+                array(               
+                    'label'=>'Бизнес',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->business->NAME)
+                ),
+                array(               
+                    'label'=>'Статья бюджета',
+                    'type'=>'raw',
+                    'value'=>($model->budget_item_id>0 ? CHtml::encode($model->budgetItem->NAME): 0)
+                ),
+                array(               
+                    'label'=>'Для кого',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->findWorker($model->for_whom))
+                ),
 	),
 )); ?>

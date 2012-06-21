@@ -39,6 +39,13 @@ class ClaimLine extends CActiveRecord
 		return 'claim_lines';
 	}
 
+       	public function findWorker($worker_id)
+	{
+          $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
+ 	 return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
+//          return array($worker->FIRSTNAME, $worker->FIRSTNAME, $worker->SONAME);
+	}
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */
@@ -68,6 +75,9 @@ class ClaimLine extends CActiveRecord
                     'accountLines' => array(self::HAS_MANY, 'AccountLines', 'clime_line_id'),
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id'),
                     'claim' => array(self::BELONGS_TO, 'Claim', 'claim_id'),
+                    'business' => array(self::BELONGS_TO, 'Business', 'business_id'),
+                    'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
+                    'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
 		);
 	}
 
