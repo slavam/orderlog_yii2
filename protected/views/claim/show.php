@@ -96,6 +96,7 @@ $this->menu=array(
                 'value'=>'$data->amount'),
                 array(
 		'class'=>'CButtonColumn',
+		'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))',
                 
 		),
 	),

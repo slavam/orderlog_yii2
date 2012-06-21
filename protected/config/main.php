@@ -53,7 +53,7 @@ return array(
 		),
                 'db1'=>array(
 			     'class'=>'CDbConnection',
-			     'connectionString' => 'oci:dbname=XE;charset=UTF8',                 //FIN.DEP
+			     'connectionString' => 'oci:dbname=XE1',                 //FIN.DEP
         		     'username'=>'v_morhachov',
 			     'password'=>'v_morhachov',
 			     'enableProfiling'=>true,
