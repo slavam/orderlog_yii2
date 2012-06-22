@@ -108,7 +108,7 @@ class ClaimController extends Controller
 		{
 			$model->attributes=$_POST['Claim'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('show','id'=>$model->id));
 		}
 
 		$this->render('update',array(
@@ -141,7 +141,11 @@ class ClaimController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Claim');
+		$dataProvider=new CActiveDataProvider('Claim', array(
+                    'criteria'=>array(
+                        'order'=>'period_id, division_id, id',
+                        ),
+                ));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

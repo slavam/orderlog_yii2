@@ -8,6 +8,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'WEB-ЗАКАЗ',
+	'sourceLanguage'=>'ru', 
 
 	// preloading 'log' component
 	'preload'=>array('log'),

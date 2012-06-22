@@ -1,8 +1,8 @@
 <?php
 $this->breadcrumbs=array(
-	'Claims'=>array('index'),
-	$model->id=>array('view','id'=>$model->id),
-	'Update',
+	'Заявки'=>array('index'),
+	$model->claim_number=>array('show','id'=>$model->id),
+	'Изменить',
 );
 
 $this->menu=array(
@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update Claim <?php echo $model->id; ?></h1>
+<h1>Изменить заявку <?php echo $model->claim_number; ?></h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

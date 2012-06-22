@@ -89,4 +89,11 @@ class Direction extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+       	public function findDirections()
+	{
+       		$directions = Direction::model()->findAll(array('order' => 'id'));
+		return CHtml::listData($directions,'id','name');
+	}
+
 }

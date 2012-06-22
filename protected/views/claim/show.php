@@ -1,9 +1,8 @@
 <?php
 $this->breadcrumbs=array(
-	'Заявки'=>array('index'),
-	$model->claim_number,
+    'Заявки'=>array('index'),
+    $model->claim_number,
 );
-
 ?>
 
 <h1>Заявка #<?php echo $model->claim_number; ?></h1>
@@ -69,6 +68,8 @@ $this->breadcrumbs=array(
                 array(
                   'class'=>'CButtonColumn',
                   'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
+                  'updateButtonUrl'=>'Yii::app()->createUrl("claimLine/update",array("id"=>$data->id))', 
+                  'deleteButtonUrl'=>'Yii::app()->createUrl("claimLine/delete",array("id"=>$data->id))', 
                 ),
 	),
 )); ?>
