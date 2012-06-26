@@ -5,66 +5,71 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	<p class="note">Fields with <span class="required">*</span> are required.</p>
+    <?php echo $form->errorSummary($model); ?>
 
-	<?php echo $form->errorSummary($model); ?>
-
+        <div class="row">
+		<b>Тип</b>
+                <br>
+		<?php echo $form->dropDownList($model,'ware_type_id',WareType::findWareTypes());?> 
+		<?php echo $form->error($model,'ware_type_id'); ?>
+	</div>    
 	<div class="row">
-		<?php echo $form->labelEx($model,'name'); ?>
+		<b>Название</b>
+                <br>
 		<?php echo $form->textField($model,'name'); ?>
 		<?php echo $form->error($model,'name'); ?>
 	</div>
-
 	<div class="row">
-		<?php echo $form->labelEx($model,'part_number'); ?>
+		<b>Номенклатурный номер</b>
+                <br>
 		<?php echo $form->textField($model,'part_number'); ?>
 		<?php echo $form->error($model,'part_number'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'ware_type_id'); ?>
-		<?php echo $form->textField($model,'ware_type_id'); ?>
-		<?php echo $form->error($model,'ware_type_id'); ?>
-	</div>
-
-	<div class="row">
-		<?php echo $form->labelEx($model,'budget_item_id'); ?>
-		<?php echo $form->textField($model,'budget_item_id'); ?>
+		<b>Статья бюджета</b>
+                <br>
+                <?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::findBudgetItems());?> 
 		<?php echo $form->error($model,'budget_item_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'cost'); ?>
+		<b>Цена</b>
+                <br>
 		<?php echo $form->textField($model,'cost'); ?>
 		<?php echo $form->error($model,'cost'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'direction_id'); ?>
-		<?php echo $form->textField($model,'direction_id'); ?>
+		<b>Направление</b>
+                <br>
+                <?php echo $form->dropDownList($model,'direction_id', Direction::findDirections());?> 
 		<?php echo $form->error($model,'direction_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'asset_group_id'); ?>
-		<?php echo $form->textField($model,'asset_group_id'); ?>
+		<b>Группа</b>
+                <br>
+                <?php echo $form->dropDownList($model,'asset_group_id', AssetGroup::findAssetGroups());?> 
 		<?php echo $form->error($model,'asset_group_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'info'); ?>
+		<b>Дополнительная информация</b>
+                <br>
 		<?php echo $form->textField($model,'info'); ?>
 		<?php echo $form->error($model,'info'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'unit_id'); ?>
-		<?php echo $form->textField($model,'unit_id'); ?>
+		<b>Единица измерения</b>
+                <br>
+                <?php echo $form->dropDownList($model,'unit_id', Unit::findUnits());?>
 		<?php echo $form->error($model,'unit_id'); ?>
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

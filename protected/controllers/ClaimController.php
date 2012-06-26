@@ -83,8 +83,14 @@ class ClaimController extends Controller
 		if(isset($_POST['Claim']))
 		{
 			$model->attributes=$_POST['Claim'];
+                        $model->state_id = 1;
+                        $model->budgetary = true;
+                        $model->create_date = date("Y-m-d H:i:s", time());
+                        $model->claim_number = $model->direction->stamp.$model->id;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+                          $model->claim_number = $model->direction->stamp.$model->id;
+                          $model->save();
+			  $this->redirect(array('show','id'=>$model->id));
 		}
 
 		$this->render('create',array(

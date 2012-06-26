@@ -87,4 +87,10 @@ class AssetGroup extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        public function findAssetGroups()
+	{
+       		$assetGroups = AssetGroup::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($assetGroups,'id','name');
+	}
+
 }

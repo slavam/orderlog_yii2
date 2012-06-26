@@ -86,4 +86,9 @@ class WareType extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        public function findWareTypes()
+	{
+       		$wareTypes = WareType::model()->findAll(array('order' => 'id'));
+		return CHtml::listData($wareTypes,'id','name');
+	}
 }
