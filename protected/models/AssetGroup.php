@@ -1,36 +1,30 @@
 <?php
 
 /**
- * This is the model class for table "FIN.BUDGET_BUSINESS".
+ * This is the model class for table "asset_groups".
  *
- * The followings are the available columns in table 'FIN.BUDGET_BUSINESS':
- * @property integer $ID
- * @property integer $SR_BUSINESS_ID
- * @property string $CODE
- * @property string $NAME
- * @property integer $ORD
+ * The followings are the available columns in table 'asset_groups':
+ * @property integer $id
+ * @property string $name
+ * @property integer $block_id
  */
-class Business extends CActiveRecord
+class AssetGroup extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return Business the static model class
+	 * @return AssetGroup the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
 
-        public function getDbConnection(){
-	        return Yii::app()->db1;
-        }
-
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'FIN.BUDGET_BUSINESS';
+		return 'asset_groups';
 	}
 
 	/**
@@ -41,13 +35,11 @@ class Business extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('SR_BUSINESS_ID, CODE, NAME, ORD', 'required'),
-			array('SR_BUSINESS_ID, ORD', 'numerical', 'integerOnly'=>true),
-			array('CODE', 'length', 'max'=>4),
-			array('NAME', 'length', 'max'=>127),
+			array('name', 'required'),
+			array('block_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('ID, SR_BUSINESS_ID, CODE, NAME, ORD', 'safe', 'on'=>'search'),
+			array('id, name, block_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -59,7 +51,8 @@ class Business extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'business_id'),
+                    'assets' => array(self::HAS_MANY, 'Asset', 'asset_group_id'),
+                    'block' => array(self::BELONGS_TO, 'Block', 'block_id'),
 		);
 	}
 
@@ -69,11 +62,9 @@ class Business extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'ID' => 'ID',
-			'SR_BUSINESS_ID' => 'Sr Business',
-			'CODE' => 'Code',
-			'NAME' => 'Name',
-			'ORD' => 'Ord',
+			'id' => 'ID',
+			'name' => 'Name',
+			'block_id' => 'Block',
 		);
 	}
 
@@ -88,21 +79,12 @@ class Business extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('ID',$this->ID);
-		$criteria->compare('SR_BUSINESS_ID',$this->SR_BUSINESS_ID);
-		$criteria->compare('CODE',$this->CODE,true);
-		$criteria->compare('NAME',$this->NAME,true);
-		$criteria->compare('ORD',$this->ORD);
+		$criteria->compare('id',$this->id);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('block_id',$this->block_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-        
-       	public static function findBusinesses()
-	{
-		$businesses = Business::model()->findAll(array('order' => 'CODE'));
-		return CHtml::listData($businesses,'ID','NAME');
-	}
-
 }

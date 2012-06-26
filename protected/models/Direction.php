@@ -95,5 +95,4 @@ class Direction extends CActiveRecord
        		$directions = Direction::model()->findAll(array('order' => 'id'));
 		return CHtml::listData($directions,'id','name');
 	}
-
 }

@@ -65,7 +65,8 @@ class BudgetItem extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'budget_item_id'),
+                    'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'budget_item_id'),
+                    'assets' => array(self::HAS_MANY, 'Asset', 'budget_item_id'),
 		);
 	}
 

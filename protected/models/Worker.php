@@ -156,4 +156,14 @@ class Worker extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        	public static function findWorkers()
+	{
+		$workers = Worker::model()->findAll(array('order' => 'LASTNAME, FIRSTNAME, SONAME'));
+                $data = array(''=>'Задайте сотрудника');
+                foreach($workers as $employer){
+                        $data[$employer->ID_EMP] = $employer->LASTNAME." ".$employer->FIRSTNAME." ".$employer->SONAME;
+                }			
+                return $data;
+	}
 }

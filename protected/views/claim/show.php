@@ -8,7 +8,7 @@ $this->breadcrumbs=array(
 <h1>Заявка #<?php echo $model->claim_number; ?></h1>
 
 <b>Номер :</b>
-<?php echo CHtml::link(CHtml::encode($model->claim_number), array('view', 'id'=>$model->id)); ?>
+<?php echo $model->claim_number; ?>
 <br />
 
 <b>Направление :</b>
@@ -73,3 +73,4 @@ $this->breadcrumbs=array(
                 ),
 	),
 )); ?>
+<?php echo CHtml::link(CHtml::encode('Добавить строку'), array('claimLine/create', 'claim_id'=>$model->id)); ?>

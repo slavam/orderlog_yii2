@@ -75,8 +75,13 @@ class ClaimLineController extends Controller
 		if(isset($_POST['ClaimLine']))
 		{
 			$model->attributes=$_POST['ClaimLine'];
+                        $model->claim_id=$_GET['claim_id'];
+                        $asset =  Asset::model()->findByPk($model->asset_id);
+                        $model->cost=$asset->cost;
+                        $model->amount=$model->count*$asset->cost;
+                        $model->budget_item_id=$asset->budget_item_id;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('claim/show','id'=>$model->claim_id));
 		}
 
 		$this->render('create',array(
@@ -99,8 +104,12 @@ class ClaimLineController extends Controller
 		if(isset($_POST['ClaimLine']))
 		{
 			$model->attributes=$_POST['ClaimLine'];
+                        $asset =  Asset::model()->findByPk($model->asset_id);
+                        $model->cost=$asset->cost;
+                        $model->amount=$model->count*$asset->cost;
+                        $model->budget_item_id=$asset->budget_item_id;
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('claim/show','id'=>$model->claim_id));
 		}
 
 		$this->render('update',array(

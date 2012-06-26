@@ -60,6 +60,10 @@ class Asset extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
+                    'wareType' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
+                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
+                    'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
+                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
 		);
 	}
 
@@ -107,5 +111,11 @@ class Asset extends CActiveRecord
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
+	}
+        
+               	public function findAssets()
+	{
+       		$assets = Asset::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($assets,'id','name');
 	}
 }

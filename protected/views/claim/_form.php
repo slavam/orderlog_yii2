@@ -22,25 +22,28 @@
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'period_id'); ?>
-		<?php echo $form->textField($model,'period_id'); ?>
+		<b>Период</b>
+                <br>
+		<?php echo $form->dropDownList($model,'period_id', Period::findPeriods());?> 
 		<?php echo $form->error($model,'period_id'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'comment'); ?>
+		<b>Комментарий</b>
+                <br>
 		<?php echo $form->textField($model,'comment'); ?>
 		<?php echo $form->error($model,'comment'); ?>
 	</div>
 
 	<div class="row">
-		<?php echo $form->labelEx($model,'description'); ?>
+		<b>Описание</b>
+                <br>
 		<?php echo $form->textArea($model,'description',array('rows'=>6, 'cols'=>50)); ?>
 		<?php echo $form->error($model,'description'); ?>
 	</div>
 
 	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Create' : 'Save'); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

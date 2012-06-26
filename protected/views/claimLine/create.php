@@ -1,7 +1,7 @@
 <?php
 $this->breadcrumbs=array(
 	'Claim Lines'=>array('index'),
-	'Create',
+	'Создать',
 );
 
 $this->menu=array(
@@ -10,6 +10,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create ClaimLine</h1>
+<h1>Создать строку заявки</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
