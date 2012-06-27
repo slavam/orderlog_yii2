@@ -26,7 +26,7 @@ $this->menu=array(
                 ),
                 array(
                   'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("asset/show",array("id"=>$data->id))', 
+                  'viewButtonUrl'=>'Yii::app()->createUrl("assetGroup/show",array("id"=>$data->id))', 
                 ),
             
     ))); ?>
