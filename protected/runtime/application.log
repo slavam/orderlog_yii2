@@ -4751,3 +4751,50 @@ Stack trace:
 #28 C:\Sites\yii\demos\framework\base\CApplication.php(158): CWebApplication->processRequest()
 #29 C:\Sites\yii\demos\ordertest\index.php(13): CApplication->run()
 #30 {main} REQUEST_URI=/demos/ordertest/index.php?r=asset/update&id=13
+2012/06/27 09:19:08 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Невозможно обработать запрос "assetGroup/index".' in C:\Sites\yii\demos\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Sites\yii\demos\framework\web\CWebApplication.php(136): CWebApplication->runController('assetGroup/inde...')
+#1 C:\Sites\yii\demos\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Sites\yii\demos\ordertest\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/demos/ordertest/index.php?r=assetGroup/index
+2012/06/27 09:46:52 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Невозможно обработать запрос "create".' in C:\Sites\yii\demos\framework\web\CWebApplication.php:281
+Stack trace:
+#0 C:\Sites\yii\demos\framework\web\CWebApplication.php(136): CWebApplication->runController('create')
+#1 C:\Sites\yii\demos\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#2 C:\Sites\yii\demos\ordertest\index.php(13): CApplication->run()
+#3 {main} REQUEST_URI=/demos/ordertest/index.php?r=create
+2012/06/27 10:16:23 [error] [exception.CException] exception 'CException' with message 'Не определено свойство "Block.wareType".' in C:\Sites\yii\demos\framework\base\CComponent.php:131
+Stack trace:
+#0 C:\Sites\yii\demos\framework\db\ar\CActiveRecord.php(129): CComponent->__get('wareType')
+#1 C:\Sites\yii\demos\framework\base\CComponent.php(619) : eval()'d code(1): CActiveRecord->__get('wareType')
+#2 C:\Sites\yii\demos\framework\base\CComponent.php(619): eval()
+#3 C:\Sites\yii\demos\framework\zii\widgets\grid\CDataColumn.php(133): CComponent->evaluateExpression('$data->wareType...', Array)
+#4 C:\Sites\yii\demos\framework\zii\widgets\grid\CGridColumn.php(135): CDataColumn->renderDataCellContent(0, Object(Block))
+#5 C:\Sites\yii\demos\framework\zii\widgets\grid\CGridView.php(512): CGridColumn->renderDataCell(0)
+#6 C:\Sites\yii\demos\framework\zii\widgets\grid\CGridView.php(485): CGridView->renderTableRow(0)
+#7 C:\Sites\yii\demos\framework\zii\widgets\grid\CGridView.php(395): CGridView->renderTableBody()
+#8 C:\Sites\yii\demos\framework\zii\widgets\CBaseListView.php(158): CGridView->renderItems()
+#9 [internal function]: CBaseListView->renderSection(Array)
+#10 C:\Sites\yii\demos\framework\zii\widgets\CBaseListView.php(141): preg_replace_callback('/{(\w+)}/', Array, '{summary}?{item...')
+#11 C:\Sites\yii\demos\framework\zii\widgets\CBaseListView.php(126): CBaseListView->renderContent()
+#12 C:\Sites\yii\demos\framework\web\CBaseController.php(166): CBaseListView->run()
+#13 C:\Sites\yii\demos\ordertest\protected\views\block\index.php(22): CBaseController->widget('zii.widgets.gri...', Array)
+#14 C:\Sites\yii\demos\framework\web\CBaseController.php(119): require('C:\Sites\yii\de...')
+#15 C:\Sites\yii\demos\framework\web\CBaseController.php(88): CBaseController->renderInternal('C:\Sites\yii\de...', Array, true)
+#16 C:\Sites\yii\demos\framework\web\CController.php(866): CBaseController->renderFile('C:\Sites\yii\de...', Array, true)
+#17 C:\Sites\yii\demos\framework\web\CController.php(779): CController->renderPartial('index', Array, true)
+#18 C:\Sites\yii\demos\ordertest\protected\controllers\BlockController.php(137): CController->render('index', Array)
+#19 C:\Sites\yii\demos\framework\web\actions\CInlineAction.php(50): BlockController->actionIndex()
+#20 C:\Sites\yii\demos\framework\web\CController.php(300): CInlineAction->runWithParams(Array)
+#21 C:\Sites\yii\demos\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#22 C:\Sites\yii\demos\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#23 C:\Sites\yii\demos\framework\web\CController.php(1144): CFilter->filter(Object(CFilterChain))
+#24 C:\Sites\yii\demos\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#25 C:\Sites\yii\demos\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#26 C:\Sites\yii\demos\framework\web\CController.php(283): CFilterChain->run()
+#27 C:\Sites\yii\demos\framework\web\CController.php(257): CController->runActionWithFilters(Object(CInlineAction), Array)
+#28 C:\Sites\yii\demos\framework\web\CWebApplication.php(277): CController->run('index')
+#29 C:\Sites\yii\demos\framework\web\CWebApplication.php(136): CWebApplication->runController('block/index')
+#30 C:\Sites\yii\demos\framework\base\CApplication.php(158): CWebApplication->processRequest()
+#31 C:\Sites\yii\demos\ordertest\index.php(13): CApplication->run()
+#32 {main} REQUEST_URI=/demos/ordertest/index.php?r=block/index

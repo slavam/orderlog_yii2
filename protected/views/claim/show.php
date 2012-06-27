@@ -55,10 +55,7 @@ $this->breadcrumbs=array(
                 'value'=> '$data->asset->name'),
                 array(
                 'name'=>'Количество',
-                'value'=>'$data->count'),
-                array(
-                'name'=>'',
-                'value'=>' $data->asset->unit->sign '),
+                'value'=>'$data->count." ".$data->asset->unit->sign'),
                 array(
                 'name'=>'Цена',
                 'value'=>'$data->cost'),

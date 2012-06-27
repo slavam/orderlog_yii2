@@ -1,6 +1,6 @@
 <?php
 
-class BlockController extends Controller
+class AssetGroupController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -61,14 +61,14 @@ class BlockController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Block;
+		$model=new AssetGroup;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Block']))
+		if(isset($_POST['AssetGroup']))
 		{
-			$model->attributes=$_POST['Block'];
+			$model->attributes=$_POST['AssetGroup'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -90,9 +90,9 @@ class BlockController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Block']))
+		if(isset($_POST['AssetGroup']))
 		{
-			$model->attributes=$_POST['Block'];
+			$model->attributes=$_POST['AssetGroup'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -127,9 +127,9 @@ class BlockController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Block', array(
+		$dataProvider=new CActiveDataProvider('AssetGroup', array(
                     'criteria'=>array(
-                        'order'=>'name',
+                        'order'=>'block_id, name',
                         ),
                 ));
 		$this->render('index',array(
@@ -142,10 +142,10 @@ class BlockController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new Block('search');
+		$model=new AssetGroup('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Block']))
-			$model->attributes=$_GET['Block'];
+		if(isset($_GET['AssetGroup']))
+			$model->attributes=$_GET['AssetGroup'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -159,7 +159,7 @@ class BlockController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Block::model()->findByPk($id);
+		$model=AssetGroup::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -171,7 +171,7 @@ class BlockController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='block-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='asset-group-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

@@ -39,10 +39,4 @@ $this->menu=array(
 
 )); ?>
 
-
-<?php //
-//    $this->widget('zii.widgets.CListView', array(
-//	'dataProvider'=>$dataProvider,
-//	'itemView'=>'_view',
-//)); 
-?>
+<?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
