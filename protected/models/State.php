@@ -90,4 +90,10 @@ class State extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+       	public function findStates()
+	{
+//       		$states = State::model()->findAll(array('order' => 'id'));
+//		return CHtml::listData($directions,'id','name');
+	}
+        
 }

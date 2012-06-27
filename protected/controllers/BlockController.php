@@ -127,7 +127,11 @@ class BlockController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Block');
+		$dataProvider=new CActiveDataProvider('Block', array(
+                    'criteria'=>array(
+                        'order'=>'name',
+                        ),
+                ));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

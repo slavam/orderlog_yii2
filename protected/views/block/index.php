@@ -9,9 +9,20 @@ $this->menu=array(
 );
 ?>
 
-<h1>Blocks</h1>
+<h1>Супергруппы</h1>
 
-<?php $this->widget('zii.widgets.CListView', array(
+<?php $this->widget('zii.widgets.grid.CGridView', array(
+	'id'=>'claim-grid',
 	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+	'columns'=>array(
+                array(
+                'name'=>'Название',
+                'value'=>'$data->name',
+            ),
+            array(
+                'class'=>'CButtonColumn',
+            ),
+            
+))); ?>
+
+<?php echo CHtml::link('Добавить супергруппу', Yii::app()->createUrl("block/create"))?>

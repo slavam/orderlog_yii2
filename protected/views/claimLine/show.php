@@ -22,7 +22,7 @@ $this->menu=array(
                     'label'=>'Товар',
                     'type'=>'raw',
                     'value'=>CHtml::link(CHtml::encode($model->asset->name),
-                             array('asset/view','id'=>$model->asset->id)),
+                             array('asset/show','id'=>$model->asset->id)),
                 ),
                 array(               
                     'label'=>'Количество',

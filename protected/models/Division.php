@@ -125,9 +125,6 @@ class DIVISION extends CActiveRecord
 	public static function All()
 	{
 		$models = Division::model()->findAll(array('order' => 'CODE'));
-		$list = CHtml::listData($models,'ID','NAME');
-//		$list = CHtml::listData($models,'ID_EMP','LASTNAME.FIRSTNAME.SONAME');
-
-		return $list;
+		return CHtml::listData($models,'ID','NAME');
 	}
 }

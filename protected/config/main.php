@@ -8,6 +8,7 @@
 return array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'WEB-ЗАКАЗ',
+	'sourceLanguage'=>'ru', 
 
 	// preloading 'log' component
 	'preload'=>array('log'),
@@ -53,7 +54,7 @@ return array(
 		),
                 'db1'=>array(
 			     'class'=>'CDbConnection',
-			     'connectionString' => 'oci:dbname=XE1',                 //FIN.DEP
+			     'connectionString' => 'oci:dbname=XE_FD;charset=UTF8',                 //FIN.DEP
         		     'username'=>'v_morhachov',
 			     'password'=>'v_morhachov',
 			     'enableProfiling'=>true,

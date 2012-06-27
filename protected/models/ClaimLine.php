@@ -36,14 +36,13 @@ class ClaimLine extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'claim_lines';
+            return 'claim_lines';
 	}
 
        	public function findWorker($worker_id)
 	{
-          $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
- 	 return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
-//          return array($worker->FIRSTNAME, $worker->FIRSTNAME, $worker->SONAME);
+            $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
+            return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
 	}
 
 	/**

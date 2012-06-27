@@ -98,4 +98,11 @@ class Business extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+       	public static function findBusinesses()
+	{
+		$businesses = Business::model()->findAll(array('order' => 'CODE'));
+		return CHtml::listData($businesses,'ID','NAME');
+	}
+
 }

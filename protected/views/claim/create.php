@@ -1,7 +1,7 @@
 <?php
 $this->breadcrumbs=array(
-	'Claims'=>array('index'),
-	'Create',
+	'Заявки'=>array('index'),
+	'Создать',
 );
 
 $this->menu=array(
@@ -10,6 +10,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create Claim</h1>
+<h1>Создать заявку</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

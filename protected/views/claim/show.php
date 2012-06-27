@@ -1,15 +1,14 @@
 <?php
 $this->breadcrumbs=array(
-	'Заявки'=>array('index'),
-	$model->claim_number,
+    'Заявки'=>array('index'),
+    $model->claim_number,
 );
-
 ?>
 
 <h1>Заявка #<?php echo $model->claim_number; ?></h1>
 
 <b>Номер :</b>
-<?php echo CHtml::link(CHtml::encode($model->claim_number), array('view', 'id'=>$model->id)); ?>
+<?php echo $model->claim_number; ?>
 <br />
 
 <b>Направление :</b>
@@ -56,10 +55,7 @@ $this->breadcrumbs=array(
                 'value'=> '$data->asset->name'),
                 array(
                 'name'=>'Количество',
-                'value'=>'$data->count'),
-                array(
-                'name'=>'',
-                'value'=>' $data->asset->unit->sign '),
+                'value'=>'$data->count." ".$data->asset->unit->sign'),
                 array(
                 'name'=>'Цена',
                 'value'=>'$data->cost'),
@@ -69,6 +65,9 @@ $this->breadcrumbs=array(
                 array(
                   'class'=>'CButtonColumn',
                   'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
+                  'updateButtonUrl'=>'Yii::app()->createUrl("claimLine/update",array("id"=>$data->id))', 
+                  'deleteButtonUrl'=>'Yii::app()->createUrl("claimLine/delete",array("id"=>$data->id))', 
                 ),
 	),
 )); ?>
+<?php echo CHtml::link(CHtml::encode('Добавить строку'), array('claimLine/create', 'claim_id'=>$model->id)); ?>

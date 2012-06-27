@@ -86,4 +86,10 @@ class Unit extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        public function findUnits()
+	{
+       		$units = Unit::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($units,'id','name');
+	}
+        
 }
