@@ -113,7 +113,7 @@ class Asset extends CActiveRecord
 		));
 	}
         
-               	public function findAssets()
+        public function findAssets()
 	{
        		$assets = Asset::model()->findAll(array('order' => 'name'));
 		return CHtml::listData($assets,'id','name');

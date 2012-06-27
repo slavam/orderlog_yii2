@@ -81,4 +81,10 @@ class Block extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        public function findBlocks()
+	{
+       		$blocks = Block::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($blocks,'id','name');
+	}
+
 }

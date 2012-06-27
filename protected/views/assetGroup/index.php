@@ -30,3 +30,4 @@ $this->menu=array(
                 ),
             
     ))); ?>
+<?php echo CHtml::link('Добавить группу', Yii::app()->createUrl("assetGroup/create"))?>
