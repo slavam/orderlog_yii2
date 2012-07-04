@@ -27,7 +27,7 @@ class ClaimLineController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show'),
+				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -89,7 +89,7 @@ class ClaimLineController extends Controller
 		));
 	}
 
-	/**
+        /**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
@@ -104,7 +104,7 @@ class ClaimLineController extends Controller
 		if(isset($_POST['ClaimLine']))
 		{
 			$model->attributes=$_POST['ClaimLine'];
-                        $asset =  Asset::model()->findByPk($model->asset_id);
+                        $asset = Asset::model()->findByPk($model->asset_id);
                         $model->cost=$asset->cost;
                         $model->amount=$model->count*$asset->cost;
                         $model->budget_item_id=$asset->budget_item_id;
@@ -188,4 +188,31 @@ class ClaimLineController extends Controller
 			Yii::app()->end();
 		}
 	}
+        
+        public function actionGetClaimParams()
+        {
+            $model=new Claim;
+            if(isset($_POST['Claim']))
+            {                          
+                $this->redirect(array('claimLine/showConsolidatedClaim',
+                    'period_id'=>$_POST['Claim']['period_id'],
+                    'direction_id'=>$_POST['Claim']['direction_id']
+                    ));
+            }
+            $this->render('getClaimParams',array(
+			'model'=>$model,));
+        }
+
+        
+        public function actionShowConsolidatedClaim()
+        {
+            $period_id=$_GET['period_id'];
+            $direction_id=$_GET['direction_id'];
+            $model=new ClaimLine();
+            $this->render('showConsolidatedClaim',array(
+		'period_id'=>$period_id,
+                'direction_id'=>$direction_id,
+                'model'=>$model,
+		));
+        }
 }

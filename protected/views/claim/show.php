@@ -49,7 +49,9 @@ $this->breadcrumbs=array(
 	'id'=>'claim-line-grid',
 	'dataProvider'=>$dataProvider,
 	'columns'=>array(
-		'id',
+		array(
+                'name'=>'Тип',
+                'value'=> '$data->asset->wareType->short_name'),
                 array(
                 'name'=>'Название',
                 'value'=> '$data->asset->name'),
@@ -62,6 +64,9 @@ $this->breadcrumbs=array(
                 array(
                 'name'=>'Сумма',
                 'value'=>'$data->amount'),
+                array(
+                'name'=>'Примечание',
+                'value'=>'$data->description'),
                 array(
                   'class'=>'CButtonColumn',
                   'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
