@@ -1,7 +1,7 @@
 <?php
 $this->breadcrumbs=array(
-	'Asset Groups'=>array('index'),
-	'Create',
+	'Группы товаров'=>array('index'),
+	'Создать',
 );
 
 $this->menu=array(
@@ -10,6 +10,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Create AssetGroup</h1>
+<h1>Создать группу товаров</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
