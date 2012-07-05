@@ -22,6 +22,13 @@
 		<?php echo $form->error($model,'count'); ?>
 	</div>
 
+        <div class="row">
+		<b><?php echo $model->asset->priceType->name; ?></b>
+                <br>
+		<?php echo $form->textField($model,'cost'); ?>
+		<?php echo $form->error($model,'cost'); ?>
+	</div>
+
 	<div class="row">
 		<b>Примечание</b>
                 <br>
@@ -41,6 +48,13 @@
                 <br>
 		<?php echo $form->dropDownList($model,'business_id',Business::findBusinesses());?> 
 		<?php echo $form->error($model,'business_id'); ?>
+	</div>
+    
+        <div class="row">
+		<b>Статус</b>
+                <br>
+		<?php echo $form->dropDownList($model,'status_id', Status::findStatuses());?> 
+		<?php echo $form->error($model,'status_id'); ?>
 	</div>
 
 	<div class="row buttons">

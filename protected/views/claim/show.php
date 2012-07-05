@@ -49,7 +49,9 @@ $this->breadcrumbs=array(
 	'id'=>'claim-line-grid',
 	'dataProvider'=>$dataProvider,
 	'columns'=>array(
-		'id',
+		array(
+                'name'=>'Тип',
+                'value'=> '$data->asset->wareType->short_name'),
                 array(
                 'name'=>'Название',
                 'value'=> '$data->asset->name'),
@@ -63,6 +65,9 @@ $this->breadcrumbs=array(
                 'name'=>'Сумма',
                 'value'=>'$data->amount'),
                 array(
+                'name'=>'Примечание',
+                'value'=>'$data->description'),
+                array(
                   'class'=>'CButtonColumn',
                   'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
                   'updateButtonUrl'=>'Yii::app()->createUrl("claimLine/update",array("id"=>$data->id))', 
@@ -71,3 +76,10 @@ $this->breadcrumbs=array(
 	),
 )); ?>
 <?php echo CHtml::link(CHtml::encode('Добавить строку'), array('claimLine/create', 'claim_id'=>$model->id)); ?>
+<br/>
+<?php 
+  if ($model->state->stateName->name != "Согласовано")
+  {
+    echo CHtml::link(CHtml::encode($model->state->stateName->name == 'Черновик' ? 'На согласование':'Согласовано'), array('claim/changeClaimState', 'id'=>$model->id)); 
+  }
+?>  

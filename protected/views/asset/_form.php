@@ -40,6 +40,13 @@
 		<?php echo $form->error($model,'cost'); ?>
 	</div>
 
+        <div class="row">
+		<b>Тип цены</b>
+                <br>
+                <?php echo $form->dropDownList($model,'price_type_id', PriceType::findPriceTypes());?> 
+		<?php echo $form->error($model,'price_type_id'); ?>
+	</div>
+
 	<div class="row">
 		<b>Направление</b>
                 <br>

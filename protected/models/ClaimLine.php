@@ -129,4 +129,47 @@ class ClaimLine extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function findConsolidatedClaimLines($period_id, $direction_id)
+        {
+            $lines = ClaimLine::model()->findAllBySql('select * from claim_lines c_l 
+                join claims c on c.id=c_l.claim_id and c.period_id =1844 and c.state_id=2 and c.direction_id=1');
+            return $lines;
+        }
+
+
+//        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
+//        {
+//            return nil;
+            //$this->findAllBySql('select * from claim_lines c_l join claims c on c.id=c_l.claim_id and c.period_id =1844 and c.state_id=2 and c.direction_id=1');
+//            return $this->with('claim')->findAll(array(
+//                'condition'=>'claim.state_id=2 and claim.direction_id=1'
+            //));
+//            @period = Period.find params[:claim_params][:period_id]
+//    @direction = Direction.find params[:claim_params][:direction_id]
+//    claims = Claim.select("distinct(division_id)").where("state_id=2 and period_id=? and direction_id=?",@period.id, @direction.id)
+//    division_ids = []
+//    claims.each {|d| division_ids << d.division_id}
+//    query = "select sum(cl.count) as quantity, sum(cl.amount) as amount, cl.budget_item_id, '' as article, 0 as limit from claims c
+//      join claim_lines cl on cl.claim_id=c.id
+//      where c.direction_id = "+@direction.id.to_s+" and period_id="+@period.id.to_s+" and c.state_id = 2
+//      group by cl.budget_item_id"
+//    @claim_lines = Claim.find_by_sql(query)
+//    @claim_lines.each {|cl|
+//      query = "select sum(bv.value*bd.sign) as limit from FIN.budget_value bv
+//        join FIN.budget_factor bf on bf.id=bv.budget_factor_id
+//        join FIN.budget_directory bd on bd.id=bf.budget_directory_id and bd.budget_groups_id in (7,9)
+//        -- join FIN.budget_business bb on bb.id=bf.budget_business_id
+//        where bv.budget_flag_correction_id=1 and bv.division_id in ("+division_ids.join(',')+") and bv.periods_id="+@period.id.to_s
+//      budget_limit = BudgetItem.find_by_sql(query).first
+//      b_i = BudgetItem.select("name, id").find cl.budget_item_id
+//      cl.article = b_i.name
+//      cl.budget_item_id = b_i.id
+//      cl.limit = (budget_limit ? budget_limit.limit : 0)
+//    }
+//
+            
+            
+//        }
+
 }

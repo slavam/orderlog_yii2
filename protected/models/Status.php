@@ -1,22 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "states".
+ * This is the model class for table "statuses".
  *
- * The followings are the available columns in table 'states':
+ * The followings are the available columns in table 'statuses':
  * @property integer $id
- * @property integer $document_type_id
- * @property integer $state_name_id
- *
- * The followings are the available model relations:
- * @property Claims[] $claims
- * @property StateNames $stateName
+ * @property string $name
+ * @property string $short_name
  */
-class State extends CActiveRecord
+class Status extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return State the static model class
+	 * @return Status the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -28,7 +24,7 @@ class State extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'states';
+		return 'statuses';
 	}
 
 	/**
@@ -39,10 +35,11 @@ class State extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('document_type_id, state_name_id', 'numerical', 'integerOnly'=>true),
+			array('name', 'required'),
+			array('short_name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, document_type_id, state_name_id', 'safe', 'on'=>'search'),
+			array('id, name, short_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +51,6 @@ class State extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'claims' => array(self::HAS_MANY, 'Claim', 'state_id'),
-			'stateName' => array(self::BELONGS_TO, 'StateName', 'state_name_id'),
-			'documentType' => array(self::BELONGS_TO, 'DocumentType', 'document_type_id'),
 		);
 	}
 
@@ -67,8 +61,8 @@ class State extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'document_type_id' => 'Document Type',
-			'state_name_id' => 'State Name',
+			'name' => 'Name',
+			'short_name' => 'Short Name',
 		);
 	}
 
@@ -84,17 +78,17 @@ class State extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('document_type_id',$this->document_type_id);
-		$criteria->compare('state_name_id',$this->state_name_id);
+		$criteria->compare('name',$this->name,true);
+		$criteria->compare('short_name',$this->short_name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-       	public function findStates()
+        public function findStatuses()
 	{
-//       		$states = State::model()->findAll(array('order' => 'id'));
-//		return CHtml::listData($directions,'id','name');
+       		$statuses = Status::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($statuses,'id','name');
 	}
-        
+
 }
