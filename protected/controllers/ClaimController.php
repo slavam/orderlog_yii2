@@ -51,22 +51,17 @@ class ClaimController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
-			'model'=>$this->loadModel($id),
-		));
+            $this->render('view',array(
+		'model'=>$this->loadModel($id),
+            ));
 	}
 
 	public function actionShow($id)
 	{
-            
             $model =$this->loadModel($id);
-//            $division=Division::model()->findByPk($model->division_id);
-//            $division_name = $division->NAME;
-//            $period=Division::model()->findByPk($model->division_id);
-//            $division_name = $division->NAME;
-		$this->render('show',array(
+            $this->render('show',array(
 			'model'=>$model,
-		));
+            ));
 	}
         
 	/**
@@ -75,7 +70,7 @@ class ClaimController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Claim;
+            $model=new Claim;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -92,7 +87,6 @@ class ClaimController extends Controller
                           $model->save();
 			  $this->redirect(array('show','id'=>$model->id));
 		}
-
 		$this->render('create',array(
 			'model'=>$model,
 		));
@@ -116,7 +110,6 @@ class ClaimController extends Controller
 			if($model->save())
 				$this->redirect(array('show','id'=>$model->id));
 		}
-
 		$this->render('update',array(
 			'model'=>$model,
 		));
@@ -206,23 +199,19 @@ class ClaimController extends Controller
 			Yii::app()->end();
 		}
 	}
+
         public function actionChangeClaimState($id)
         {
             $model=Claim::model()->findByPk($id);
             $new_state = $model->state_id;
-//            $document_type = DocumentType::model()->findByPk($model->state->document_type_id);
             if ($model->state->documentType->name == "Первичная заявка")
             {
-                switch (true)
+                switch ($model->state->stateName->name)
                 {
-                    case ($model->state->stateName->name == "Черновик"):
-//                        $state=State::model()->find(array(
-//                            'condition'=>'document_type_id=:d_t_id',
-//                            'params'=>array(':d_t_id'=>10),
-//));
+                    case "Черновик":
                         $new_state = 5; // "На согласовании"
                         break;
-                    case ($model->state->stateName->name == "На согласовании"):
+                    case "На согласовании":
                         $new_state = 2; // "Согласовано"
                         break;
                 }    
