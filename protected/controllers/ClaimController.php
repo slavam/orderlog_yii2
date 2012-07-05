@@ -141,8 +141,9 @@ class ClaimController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('Claim', array(
+                    'pagination'=>false, 
                     'criteria'=>array(
-                        'order'=>'period_id, division_id, id',
+                        'order'=>'period_id desc, division_id, id',
                         ),
                 ));
 		$this->render('index',array(

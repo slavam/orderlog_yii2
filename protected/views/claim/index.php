@@ -15,6 +15,7 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'claim-grid',
 	'dataProvider'=>$dataProvider,
+        'enablePagination'=>false,
 	'columns'=>array(
                 array(
                 'name'=>'Номер',
