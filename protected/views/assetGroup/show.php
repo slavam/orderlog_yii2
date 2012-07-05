@@ -18,8 +18,16 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
 	'attributes'=>array(
-		'id',
-		'name',
-		'block_id',
+                array(               
+                    'label'=>'Супергруппа',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->block->name),
+                             
+                ),
+                array(               
+                    'label'=>'Группа',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->name)
+                ),
 	),
 )); ?>

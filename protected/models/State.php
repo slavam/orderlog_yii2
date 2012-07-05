@@ -56,6 +56,7 @@ class State extends CActiveRecord
 		return array(
 			'claims' => array(self::HAS_MANY, 'Claim', 'state_id'),
 			'stateName' => array(self::BELONGS_TO, 'StateName', 'state_name_id'),
+			'documentType' => array(self::BELONGS_TO, 'DocumentType', 'document_type_id'),
 		);
 	}
 

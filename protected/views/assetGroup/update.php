@@ -1,8 +1,8 @@
 <?php
 $this->breadcrumbs=array(
-	'Asset Groups'=>array('index'),
+	'Группы товаров'=>array('index'),
 	$model->name=>array('view','id'=>$model->id),
-	'Update',
+	'Изменить',
 );
 
 $this->menu=array(
@@ -13,6 +13,6 @@ $this->menu=array(
 );
 ?>
 
-<h1>Update AssetGroup <?php echo $model->id; ?></h1>
+<h1>Изменить группу товаров</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

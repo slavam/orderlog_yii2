@@ -1,17 +1,17 @@
 <?php
 
 /**
- * This is the model class for table "blocks".
+ * This is the model class for table "price_types".
  *
- * The followings are the available columns in table 'blocks':
+ * The followings are the available columns in table 'price_types':
  * @property integer $id
  * @property string $name
  */
-class Block extends CActiveRecord
+class PriceType extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return Block the static model class
+	 * @return PriceType the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -23,7 +23,7 @@ class Block extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'blocks';
+		return 'price_types';
 	}
 
 	/**
@@ -34,7 +34,7 @@ class Block extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'safe'),
+			array('name', 'required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name', 'safe', 'on'=>'search'),
@@ -81,10 +81,9 @@ class Block extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-        public function findBlocks()
+        public function findPriceTypes()
 	{
-       		$blocks = Block::model()->findAll(array('order' => 'name'));
-		return CHtml::listData($blocks,'id','name');
+       		$prices = PriceType::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($prices,'id','name');
 	}
-
 }

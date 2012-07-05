@@ -118,4 +118,5 @@ class Claim extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+
 }

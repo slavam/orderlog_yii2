@@ -64,6 +64,7 @@ class Asset extends CActiveRecord
                     'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
+                    'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
 		);
 	}
 
@@ -113,7 +114,7 @@ class Asset extends CActiveRecord
 		));
 	}
         
-               	public function findAssets()
+        public function findAssets()
 	{
        		$assets = Asset::model()->findAll(array('order' => 'name'));
 		return CHtml::listData($assets,'id','name');

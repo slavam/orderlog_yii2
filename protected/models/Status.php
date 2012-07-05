@@ -1,17 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "blocks".
+ * This is the model class for table "statuses".
  *
- * The followings are the available columns in table 'blocks':
+ * The followings are the available columns in table 'statuses':
  * @property integer $id
  * @property string $name
+ * @property string $short_name
  */
-class Block extends CActiveRecord
+class Status extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return Block the static model class
+	 * @return Status the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -23,7 +24,7 @@ class Block extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'blocks';
+		return 'statuses';
 	}
 
 	/**
@@ -34,10 +35,11 @@ class Block extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'safe'),
+			array('name', 'required'),
+			array('short_name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, short_name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +62,7 @@ class Block extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'short_name' => 'Short Name',
 		);
 	}
 
@@ -76,15 +79,16 @@ class Block extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('short_name',$this->short_name,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-        public function findBlocks()
+        public function findStatuses()
 	{
-       		$blocks = Block::model()->findAll(array('order' => 'name'));
-		return CHtml::listData($blocks,'id','name');
+       		$statuses = Status::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($statuses,'id','name');
 	}
 
 }

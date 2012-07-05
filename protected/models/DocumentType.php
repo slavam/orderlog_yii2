@@ -1,17 +1,18 @@
 <?php
 
 /**
- * This is the model class for table "blocks".
+ * This is the model class for table "document_types".
  *
- * The followings are the available columns in table 'blocks':
+ * The followings are the available columns in table 'document_types':
  * @property integer $id
  * @property string $name
+ * @property string $description
  */
-class Block extends CActiveRecord
+class DocumentType extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return Block the static model class
+	 * @return DocumentType the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
@@ -23,7 +24,7 @@ class Block extends CActiveRecord
 	 */
 	public function tableName()
 	{
-		return 'blocks';
+		return 'document_types';
 	}
 
 	/**
@@ -34,10 +35,10 @@ class Block extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('name', 'safe'),
+			array('name, description', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, description', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +61,7 @@ class Block extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'description' => 'Description',
 		);
 	}
 
@@ -76,15 +78,10 @@ class Block extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('description',$this->description,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-        public function findBlocks()
-	{
-       		$blocks = Block::model()->findAll(array('order' => 'name'));
-		return CHtml::listData($blocks,'id','name');
-	}
-
 }

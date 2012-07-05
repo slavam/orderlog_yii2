@@ -30,6 +30,7 @@
 			'items'=>array(
 				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Заявки', 'url'=>array('/claim/index')),
+                                array('label'=>'К-заявки', 'url'=>array('/claimLine/getClaimParams')),
 				array('label'=>'Товары', 'url'=>array('/asset/index')),
                                 array('label'=>'Группы', 'url'=>array('/assetGroup/index')),
                                 array('label'=>'Супергруппы', 'url'=>array('/block/index')),
@@ -47,8 +48,7 @@
 	<?php echo $content; ?>
 
 	<div id="footer">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
+		Copyright &copy; <?php echo date('Y'); ?> ВСЕУКРАИНСКИЙ БАНК РАЗВИТИЯ.<br/>
 		<?php echo Yii::powered(); ?>
 	</div><!-- footer -->
 

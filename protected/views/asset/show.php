@@ -24,7 +24,7 @@ $this->menu=array(
                     'value'=>CHtml::encode($model->wareType->name),
                 ),
                 array(               
-                    'label'=>'Товар',
+                    'label'=>'Название',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->name),
                 ),
@@ -39,6 +39,11 @@ $this->menu=array(
                     'value'=>CHtml::encode($model->cost),
                 ),
                 array(               
+                    'label'=>'Тип цены',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->priceType->name),
+                ),
+                array(               
                     'label'=>'Группа',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->assetGroup->name.'=>'.$model->assetGroup->block->name),
@@ -46,7 +51,7 @@ $this->menu=array(
                 array(               
                     'label'=>'Статья бюджета',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->budgetItem->NAME.' ('.$model->budgetItem->CODE.')'),
+                    'value'=>CHtml::encode($model->budget_item_id ? $model->budgetItem->NAME.' ('.$model->budgetItem->CODE.')' : 'Не указана'),
                 ),
                 array(               
                     'label'=>'Направление',
