@@ -76,3 +76,10 @@ $this->breadcrumbs=array(
 	),
 )); ?>
 <?php echo CHtml::link(CHtml::encode('Добавить строку'), array('claimLine/create', 'claim_id'=>$model->id)); ?>
+<br/>
+<?php 
+  if ($model->state->stateName->name != "Согласовано")
+  {
+    echo CHtml::link(CHtml::encode($model->state->stateName->name == 'Черновик' ? 'На согласование':'Согласовано'), array('claim/changeClaimState', 'id'=>$model->id)); 
+  }
+?>  

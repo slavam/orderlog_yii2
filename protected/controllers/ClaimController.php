@@ -27,7 +27,7 @@ class ClaimController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','list'),
+				'actions'=>array('index','view','show','list','changeClaimState'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -206,4 +206,36 @@ class ClaimController extends Controller
 			Yii::app()->end();
 		}
 	}
+        public function actionChangeClaimState($id)
+        {
+            $model=Claim::model()->findByPk($id);
+            $new_state = $model->state_id;
+//            $document_type = DocumentType::model()->findByPk($model->state->document_type_id);
+            if ($model->state->documentType->name == "Первичная заявка")
+            {
+                switch (true)
+                {
+                    case ($model->state->stateName->name == "Черновик"):
+//                        $state=State::model()->find(array(
+//                            'condition'=>'document_type_id=:d_t_id',
+//                            'params'=>array(':d_t_id'=>10),
+//));
+                        $new_state = 5; // "На согласовании"
+                        break;
+                    case ($model->state->stateName->name == "На согласовании"):
+                        $new_state = 2; // "Согласовано"
+                        break;
+                }    
+            }       
+            $model->state_id = $new_state;
+            $model->save();
+            $dataProvider=new CActiveDataProvider('Claim', array(
+                'criteria'=>array(
+                    'order'=>'period_id, division_id, id',
+                ),
+            ));
+            $this->render('index',array(
+                    'dataProvider'=>$dataProvider,
+            ));
+        }
 }

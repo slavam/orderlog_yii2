@@ -13,7 +13,6 @@ $this->menu=array(
 ?>
 
 <h1>Консолидированная заявка</h1>
-
 <h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
 <h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
 <?php 
