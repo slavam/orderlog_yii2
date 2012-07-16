@@ -59,5 +59,10 @@ $this->menu=array(
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->findWorker($model->for_whom))
                 ),
+            array(               
+                    'label'=>'Расположение объекта',
+                    'type'=>'raw',
+                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): 0)
+                ),
 	),
 )); ?>

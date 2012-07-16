@@ -22,14 +22,14 @@
 		<?php echo $form->error($model,'count'); ?>
 	</div>
 
-        <div class="row">
-		<b><?php echo $model->asset->priceType->name; ?></b>
-                <br>
-		<?php echo $form->textField($model,'cost'); ?>
-		<?php echo $form->error($model,'cost'); ?>
-	</div>
+        <?php if (!$model->isNewRecord) {        
+            echo '<div class="row">';
+            echo '<b>Цена ('.$model->asset->priceType->name.')</b><br>';
+            echo $form->textField($model,'cost');
+            echo '</div>';
+        }; ?>
 
-	<div class="row">
+        <div class="row">
 		<b>Примечание</b>
                 <br>
 		<?php echo $form->textField($model,'description'); ?>
@@ -57,6 +57,12 @@
 		<?php echo $form->error($model,'status_id'); ?>
 	</div>
 
+	<div class="row">
+		<b>Расположение</b>
+                <br>
+		<?php echo $form->dropDownList($model,'position_id',  Place::findAllPlaces());?> 
+		<?php echo $form->error($model,'position_id'); ?>
+	</div>
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>
