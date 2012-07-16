@@ -119,4 +119,11 @@ class Asset extends CActiveRecord
        		$assets = Asset::model()->findAll(array('order' => 'name'));
 		return CHtml::listData($assets,'id','name');
 	}
+        public function get_price()
+         {
+            return '<form action="http://127.0.0.1/demos/ordertest/index.php?r=asset/updateGrid&id='.$this->id .'" method="post">'.
+                    CActiveForm::textField($this,"cost",array("name"=>"Asset[cost]")).
+                    CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
+                    '</form>';
+         }
 }

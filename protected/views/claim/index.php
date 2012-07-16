@@ -18,6 +18,9 @@ $this->menu=array(
         'enablePagination'=>false,
 	'columns'=>array(
                 array(
+                'name'=>'Период',
+                'value'=>'$data->period->NAME'),
+                array(
                 'name'=>'Номер',
                 'value'=>'$data->claim_number',
 //                'value'=> 'CHtml::link($data->claim_number,
@@ -26,9 +29,6 @@ $this->menu=array(
                 ),
             
             
-                array(
-                'name'=>'Период',
-                'value'=>'$data->period->NAME'),
                 array(
                 'name'=>'Статус',
                 'value'=>' $data->state->stateName->name '),

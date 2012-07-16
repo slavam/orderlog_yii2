@@ -22,7 +22,8 @@
  */
 class ClaimLine extends CActiveRecord
 {
-	/**
+    
+    /**
 	 * Returns the static model of the specified AR class.
 	 * @return ClaimLine the static model class
 	 */
@@ -30,7 +31,8 @@ class ClaimLine extends CActiveRecord
 	{
 		return parent::model($className);
 	}
-
+        
+        
 	/**
 	 * @return string the associated database table name
 	 */
@@ -136,7 +138,19 @@ class ClaimLine extends CActiveRecord
                 join claims c on c.id=c_l.claim_id and c.period_id =1844 and c.state_id=2 and c.direction_id=1');
             return $lines;
         }
-
+        
+        public function findAddress($address_id)
+	{
+            $position = Place::model()->findAllBySql("
+                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
+                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
+                    FROM places T1 WHERE T1.parent_id IS NULL
+                  union
+                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
+                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
+                  select path as title from temp1 where id=".$address_id);
+            return CHtml::encode($position[0]->title); 
+	}
 
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
