@@ -47,21 +47,27 @@ var my_id = "";
 
 <script type="text/javascript">
 $(document).ready(function(){
-$('#Asset_cost').live('change', function () {
-  var my_id = "";
-  $(this).next().each(function(){my_id = this.value });
-  var q ='?r=asset/UpdateGrid&id='+my_id;
-  jQuery.ajax({'url':q,'data':{'Asset[cost]':$(this).val()},'type':'post','success':function(){alert('Поле обновлено');},'error':function(){alert('error');},'cache':false});})});
+  $('#Asset_cost').live('change', function () {
+    var my_id = "";
+    $(this).next().each(function(){my_id = this.value });
+    var q ='?r=asset/UpdateGrid&id='+my_id;
+    jQuery.ajax({'url'    :q,
+                 'data'   :{'Asset[cost]':$(this).val()},
+                 'type'   :'post',
+                 'success':function(){alert('Поле обновлено');},
+                 'error'  :function(){alert('error');},
+                 'cache'  :false});
+  })
+});
 </script> 
 <?php
-// Yii::app()->getClientScript()->registerCoreScript('jqueryForm'); 
 $this->breadcrumbs=array(
-	'Товары',
+    'Товары',
 );
 
 $this->menu=array(
-	array('label'=>'Create Asset', 'url'=>array('create')),
-	array('label'=>'Manage Asset', 'url'=>array('admin')),
+    array('label'=>'Create Asset', 'url'=>array('create')),
+    array('label'=>'Manage Asset', 'url'=>array('admin')),
 );
 ?>
 
@@ -73,13 +79,7 @@ $this->menu=array(
 	'columns'=>array(
                 array(
                 'name'=>'Тип',
-                'value'=>'$data->wareType->short_name',
-//                'value'=> 'CHtml::link($data->claim_number,
-//                             Yii::app()->createUrl("claim/show",array("id"=>$data->primaryKey)))',
-//                'type'  => 'raw',    
-                ),
-            
-            
+                'value'=>'$data->wareType->short_name'),
                 array(
                 'name'=>'Группа',
                 'value'=>'$data->assetGroup->name'),
@@ -92,15 +92,11 @@ $this->menu=array(
                 array(
                 'name'=>'Цена',
                 'type'=>'raw',
-                'value'=>'$data->get_price()',
-                ),
+                'value'=>'$data->get_price()'),
                 array(
                   'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("asset/show",array("id"=>$data->id))', 
-                ),
-            
-            ),
-
+                  'viewButtonUrl'=>'Yii::app()->createUrl("asset/show",array("id"=>$data->id))'),
+        ),
 )); ?>
 
 <?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
