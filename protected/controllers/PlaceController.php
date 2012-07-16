@@ -143,21 +143,12 @@ class PlaceController extends Controller
                         'title'
                     ),
                 ),
-            //    'pagination'=>array(
-            //        'pageSize'=>10,
-            //    ),
             ));
             
             
-            
-//		$dataProvider=new CActiveDataProvider('Place');
-//            $dataProvider=new CActiveDataProvider(Place::model()->findAllAddresses());
-//            $dataProvider=new CActiveDataProvider('Place');
-//            $dataProvider = Place::model()->findAllAddresses(); 
-                
-                $this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+            $this->render('index',array(
+                'dataProvider'=>$dataProvider,
+            ));
 	}
 
 	/**

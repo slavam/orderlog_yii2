@@ -82,10 +82,11 @@ class ClaimController extends Controller
                         $model->budgetary = true;
                         $model->create_date = date("Y-m-d H:i:s", time());
                         $model->claim_number = $model->direction->stamp.$model->id;
-			if($model->save())
+			if($model->save()) {
                           $model->claim_number = $model->direction->stamp.$model->id;
                           $model->save();
 			  $this->redirect(array('show','id'=>$model->id));
+                        }  
 		}
 		$this->render('create',array(
 			'model'=>$model,
