@@ -14,7 +14,7 @@ $grid = new jqGridRender($conn);
 // Write the SQL Query 
 $grid->SelectCommand = 'SELECT * FROM asset_groups'; 
 // set the ouput format to json 
-$grid->dataType = 'json'; 
+//$grid->dataType = 'json'; 
 $grid->table ="asset_groups"; 
 $grid->setPrimaryKeyId("id"); 
 $grid->serialKey = false; 
@@ -35,15 +35,15 @@ $grid->setGridOptions(array(
     "postData"=>array("grid_recs"=>776) 
     )); 
 // Change some property of the field(s) 
-$grid->setColProperty("id", array("label"=>"ID", "width"=>60, "editable"=>false)); 
+//$grid->setColProperty("id", array("label"=>"ID", "width"=>60, "editable"=>false)); 
 //$grid->setColProperty('name', array("edittype"=>"select", "editoptions"=>array("value"=>" :Select")));
 //$grid->setColProperty("OrderDate", array( 
 //    "formatter"=>"date", 
 //    "formatoptions"=>array("srcformat"=>"Y-m-d H:i:s","newformat"=>"m/d/Y") 
 //    ) 
 //); 
-$grid->setColProperty("name", array("label"=>"Группа", "width"=>160, "editable"=>true)); 
-$grid->setAutocomplete("id",false,"SELECT * FROM blocks WHERE name LIKE ? ORDER BY name",null,true,true);
+//$grid->setAutocomplete("id",false,"SELECT * FROM blocks WHERE name LIKE ? ORDER BY name",null,true,true);
+//$grid->setColProperty("name", array("label"=>"Группа", "width"=>260, "editable"=>true)); 
 //$grid->setDatepicker("OrderDate",array("buttonOnly"=>false)); 
 //$grid->datearray = array('OrderDate'); 
 // Enjoy 
