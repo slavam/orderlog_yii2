@@ -15,7 +15,11 @@ $this->menu=array(
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'claim-grid',
 	'dataProvider'=>$dataProvider,
+        'enablePagination'=>false,
 	'columns'=>array(
+                array(
+                'name'=>'Период',
+                'value'=>'$data->period->NAME'),
                 array(
                 'name'=>'Номер',
                 'value'=>'$data->claim_number',
@@ -25,9 +29,6 @@ $this->menu=array(
                 ),
             
             
-                array(
-                'name'=>'Период',
-                'value'=>'$data->period->NAME'),
                 array(
                 'name'=>'Статус',
                 'value'=>' $data->state->stateName->name '),

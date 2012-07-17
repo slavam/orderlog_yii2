@@ -13,7 +13,7 @@
 
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" />
 	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" />
-
+        <script type="text/javascript" src="<?php echo Yii::app()->request->baseUrl.'/js/jquery.form.js'?>"></script>
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
@@ -31,6 +31,7 @@
 				array('label'=>'Home', 'url'=>array('/site/index')),
 				array('label'=>'Заявки', 'url'=>array('/claim/index')),
                                 array('label'=>'К-заявки', 'url'=>array('/claimLine/getClaimParams')),
+                                array('label'=>'Расположение', 'url'=>array('/place/tree')),
 				array('label'=>'Товары', 'url'=>array('/asset/index')),
                                 array('label'=>'Группы', 'url'=>array('/assetGroup/index')),
                                 array('label'=>'Супергруппы', 'url'=>array('/block/index')),

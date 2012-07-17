@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -89,6 +89,16 @@ class AssetGroupController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
+        public function actionUpdateRow()
+        {
+            if(isset($_POST['id']))
+            {
+                $model=$this->loadModel($_POST['id']);
+                $model->name = $_POST['name'];
+                if($model->save())
+				$this->redirect(array('index'));
+            }
+        }
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -183,4 +193,23 @@ class AssetGroupController extends Controller
 			Yii::app()->end();
 		}
 	}
+
+        public function actionGetDataForGrid()
+        {
+            
+            $dataProvider=new CActiveDataProvider('AssetGroup', array(
+                    'criteria'=>array(
+                        'order'=>'block_id, name',
+                        ),
+                ));
+            $responce->page = $_GET['page'];
+            $responce->records = $dataProvider->getTotalItemCount();
+            $responce->total = ceil($responce->records / $_GET['rows']);
+            $rows = $dataProvider->getData();
+            foreach ($rows as $i=>$row) {
+                $responce->rows[$i]['id'] = $row['id'];
+                $responce->rows[$i]['cell'] = array($row->id, $row->name, $row->block->name);
+            }
+            echo CJSON::encode($responce);
+        }
 }

@@ -82,10 +82,11 @@ class ClaimController extends Controller
                         $model->budgetary = true;
                         $model->create_date = date("Y-m-d H:i:s", time());
                         $model->claim_number = $model->direction->stamp.$model->id;
-			if($model->save())
+			if($model->save()) {
                           $model->claim_number = $model->direction->stamp.$model->id;
                           $model->save();
 			  $this->redirect(array('show','id'=>$model->id));
+                        }  
 		}
 		$this->render('create',array(
 			'model'=>$model,
@@ -106,9 +107,9 @@ class ClaimController extends Controller
 
 		if(isset($_POST['Claim']))
 		{
-			$model->attributes=$_POST['Claim'];
-			if($model->save())
-				$this->redirect(array('show','id'=>$model->id));
+                    $model->attributes=$_POST['Claim'];
+                    if($model->save())
+                            $this->redirect(array('show','id'=>$model->id));
 		}
 		$this->render('update',array(
 			'model'=>$model,
@@ -141,8 +142,9 @@ class ClaimController extends Controller
 	public function actionIndex()
 	{
 		$dataProvider=new CActiveDataProvider('Claim', array(
+                    'pagination'=>false, 
                     'criteria'=>array(
-                        'order'=>'period_id, division_id, id',
+                        'order'=>'period_id desc, division_id, id',
                         ),
                 ));
 		$this->render('index',array(
