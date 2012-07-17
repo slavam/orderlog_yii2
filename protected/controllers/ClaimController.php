@@ -107,9 +107,9 @@ class ClaimController extends Controller
 
 		if(isset($_POST['Claim']))
 		{
-			$model->attributes=$_POST['Claim'];
-			if($model->save())
-				$this->redirect(array('show','id'=>$model->id));
+                    $model->attributes=$_POST['Claim'];
+                    if($model->save())
+                            $this->redirect(array('show','id'=>$model->id));
 		}
 		$this->render('update',array(
 			'model'=>$model,
