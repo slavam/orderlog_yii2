@@ -124,8 +124,8 @@ class Asset extends CActiveRecord
 //            $s = Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id));
 //            return '<form action="http://127.0.0.1/demos/ordertest/index.php?r=asset/updateGrid&id='.$this->id .'" method="post">'.
             return '<form action="'.Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id)).'" method="post">'.
-                   CActiveForm::textField($this,"cost",array("name"=>"Asset[cost]")).
-                   CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
+                   @CActiveForm::textField($this,"cost",array("name"=>"Asset[cost]")).
+                   @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
 }

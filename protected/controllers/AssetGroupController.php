@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -99,6 +99,8 @@ class AssetGroupController extends Controller
 				$this->redirect(array('index'));
             }
         }
+
+
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -145,7 +147,7 @@ class AssetGroupController extends Controller
 	{
 		$dataProvider=new CActiveDataProvider('AssetGroup', array(
                     'criteria'=>array(
-                        'order'=>'block_id, name',
+                        'order'=>'id, name',
                         ),
                 ));
 		$this->render('index',array(
@@ -197,18 +199,31 @@ class AssetGroupController extends Controller
         public function actionGetDataForGrid()
         {
             
+//            $criteria = new CDbCriteria;
+//            $criteria->order = $_GET['sidx'].' '.$_GET['sord'];
+
+
             $dataProvider=new CActiveDataProvider('AssetGroup', array(
-                    'criteria'=>array(
-                        'order'=>'block_id, name',
+                    'criteria'=>array(                              
+                        'order'=>'id',
                         ),
-                ));
+                  ));
+			$pagination = $dataProvider->getPagination();
+			if(isset($_GET['page']))
+                            $pagination->setCurrentPage($_GET['page']-1);
+			if(isset($_GET['rows']))
+                            $pagination->setPageSize($_GET['rows']);
+
+            $responce = new StdClass();
+
             $responce->page = $_GET['page'];
             $responce->records = $dataProvider->getTotalItemCount();
             $responce->total = ceil($responce->records / $_GET['rows']);
-            $rows = $dataProvider->getData();
-            foreach ($rows as $i=>$row) {
+			
+            $local_rows = $dataProvider->getData();
+            foreach ($local_rows as $i=>$row) {
                 $responce->rows[$i]['id'] = $row['id'];
-                $responce->rows[$i]['cell'] = array($row->id, $row->name, $row->block->name);
+                $responce->rows[$i]['cell'] = array($row->id, $row->block->name, $row->name);
             }
             echo CJSON::encode($responce);
         }
