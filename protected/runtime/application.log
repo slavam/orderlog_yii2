@@ -10457,3 +10457,227 @@ Stack trace:
 REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342617089088&rows=10&page=1&sidx=id&sord=asc
 HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
 ---
+2012/07/19 12:03:57 [error] [exception.CDbException] exception 'CDbException' with message 'CDbConnection не удалось открыть соединение с базой данных: SQLSTATE[08006] [7] could not connect to server: Connection timed out (0x0000274C/10060)
+	Is the server running on host "dev1-d00" and accepting
+	TCP/IP connections on port 5432?' in D:\prj\framework\db\CDbConnection.php:382
+Stack trace:
+#0 D:\prj\framework\db\CDbConnection.php(331): CDbConnection->open()
+#1 D:\prj\framework\db\CDbConnection.php(309): CDbConnection->setActive(true)
+#2 D:\prj\framework\base\CModule.php(388): CDbConnection->init()
+#3 D:\prj\framework\base\CApplication.php(431): CModule->getComponent('db')
+#4 D:\prj\framework\db\ar\CActiveRecord.php(615): CApplication->getDb()
+#5 D:\prj\framework\db\ar\CActiveRecord.php(2263): CActiveRecord->getDbConnection()
+#6 D:\prj\framework\db\ar\CActiveRecord.php(379): CActiveRecordMetaData->__construct(Object(AssetGroup))
+#7 D:\prj\framework\web\CActiveDataProvider.php(75): CActiveRecord::model('AssetGroup')
+#8 D:\prj\goods\protected\controllers\AssetGroupController.php(162): CActiveDataProvider->__construct('AssetGroup', Array)
+#9 D:\prj\framework\web\actions\CInlineAction.php(50): AssetGroupController->actionIndex()
+#10 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#11 D:\prj\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#12 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#13 D:\prj\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#14 D:\prj\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#15 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#16 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#17 D:\prj\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#18 D:\prj\framework\web\CWebApplication.php(276): CController->run('index')
+#19 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#20 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#21 D:\prj\goods\index.php(13): CApplication->run()
+#22 {main}
+REQUEST_URI=/goods/index.php?r=assetGroup/index
+HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
+---
+2012/07/19 14:23:37 [error] [php] Attempt to assign property of non-object (D:\prj\goods\protected\controllers\AssetGroupController.php:231)
+Stack trace:
+#0 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#1 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#2 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#3 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#4 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#5 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#6 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#7 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#8 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#9 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#10 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php?r=assetGroup/getDataForGrid&rows=10&page=2
+in D:\prj\goods\protected\controllers\AssetGroupController.php (231)
+in D:\prj\goods\index.php (13)
+2012/07/19 14:25:11 [error] [php] Attempt to assign property of non-object (D:\prj\goods\protected\controllers\AssetGroupController.php:231)
+Stack trace:
+#0 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#1 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#2 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#3 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#4 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#5 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#6 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#7 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#8 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#9 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#10 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php?r=assetGroup/getDataForGrid&rows=10&page=2
+in D:\prj\goods\protected\controllers\AssetGroupController.php (231)
+in D:\prj\goods\index.php (13)
+2012/07/19 14:25:25 [error] [php] Attempt to assign property of non-object (D:\prj\goods\protected\controllers\AssetGroupController.php:231)
+Stack trace:
+#0 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#1 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#2 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#3 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#4 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#5 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#6 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#7 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#8 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#9 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#10 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php?r=assetGroup/getDataForGrid&rows=10&page=2
+in D:\prj\goods\protected\controllers\AssetGroupController.php (231)
+in D:\prj\goods\index.php (13)
+2012/07/19 14:46:20 [error] [php] Division by zero (D:\prj\goods\protected\controllers\AssetGroupController.php:235)
+Stack trace:
+#0 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#1 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#2 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#3 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#4 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#5 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#6 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#7 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#8 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#9 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#10 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php?r=assetGroup/getDataForGrid
+in D:\prj\goods\protected\controllers\AssetGroupController.php (235)
+in D:\prj\goods\index.php (13)
+2012/07/19 15:21:18 [error] [exception.CDbException] exception 'CDbException' with message 'Отношение "Block" не было определено в active record классе "AssetGroup".' in D:\prj\framework\db\ar\CActiveFinder.php:215
+Stack trace:
+#0 D:\prj\framework\db\ar\CActiveFinder.php(310): CActiveFinder->buildJoinTree(Object(CJoinElement), 'Block')
+#1 D:\prj\framework\db\ar\CActiveFinder.php(49): CActiveFinder->buildJoinTree(Object(CJoinElement), Array)
+#2 D:\prj\framework\db\ar\CActiveRecord.php(1539): CActiveFinder->__construct(Object(AssetGroup), Array)
+#3 D:\prj\framework\web\CActiveDataProvider.php(179): CActiveRecord->count(Object(CDbCriteria))
+#4 D:\prj\framework\web\CDataProvider.php(193): CActiveDataProvider->calculateTotalItemCount()
+#5 D:\prj\framework\web\CActiveDataProvider.php(129): CDataProvider->getTotalItemCount()
+#6 D:\prj\framework\web\CDataProvider.php(137): CActiveDataProvider->fetchData()
+#7 D:\prj\goods\protected\controllers\AssetGroupController.php(256): CDataProvider->getData()
+#8 D:\prj\framework\web\actions\CInlineAction.php(50): AssetGroupController->actionGetDataForGrid()
+#9 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#10 D:\prj\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#11 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#12 D:\prj\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#13 D:\prj\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#14 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#15 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#16 D:\prj\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#17 D:\prj\framework\web\CWebApplication.php(276): CController->run('getDataForGrid')
+#18 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/getD...')
+#19 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#20 D:\prj\goods\index.php(13): CApplication->run()
+#21 {main}
+REQUEST_URI=/goods/index.php?r=assetGroup/getDataForGrid
+---
+2012/07/19 15:59:49 [error] [php] array_keys() expects parameter 1 to be array, null given (D:\prj\goods\protected\controllers\AssetGroupController.php:254)
+Stack trace:
+#0 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams()
+#1 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#2 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#4 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#5 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#6 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#7 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#8 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#9 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#10 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#11 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342702789545&rows=10000&page=1&sidx=&sord=asc
+in D:\prj\goods\protected\controllers\AssetGroupController.php (254)
+in D:\prj\goods\index.php (13)
+2012/07/19 16:01:40 [error] [php] array_keys() expects parameter 1 to be array, null given (D:\prj\goods\protected\controllers\AssetGroupController.php:254)
+Stack trace:
+#0 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams()
+#1 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#2 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#4 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#5 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#6 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#7 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#8 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#9 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#10 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#11 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342702869785&rows=10000&page=1&sidx=&sord=asc
+in D:\prj\goods\protected\controllers\AssetGroupController.php (254)
+in D:\prj\goods\index.php (13)
+2012/07/19 16:02:36 [error] [php] array_keys() expects parameter 1 to be array, null given (D:\prj\goods\protected\controllers\AssetGroupController.php:255)
+Stack trace:
+#0 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams()
+#1 D:\prj\framework\web\filters\CFilterChain.php(134): AssetGroupController->runAction()
+#2 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#3 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#4 D:\prj\framework\web\filters\CInlineFilter.php(59): AssetGroupController->filterAccessControl()
+#5 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#6 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#7 D:\prj\framework\web\CController.php(266): AssetGroupController->runActionWithFilters()
+#8 D:\prj\framework\web\CWebApplication.php(276): AssetGroupController->run()
+#9 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#10 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#11 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342702949190&rows=10000&page=1&sidx=&sord=asc
+in D:\prj\goods\protected\controllers\AssetGroupController.php (255)
+in D:\prj\goods\index.php (13)
+2012/07/19 17:31:14 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'The requested page does not exist.' in D:\prj\goods\protected\controllers\AssetGroupController.php:192
+Stack trace:
+#0 D:\prj\goods\protected\controllers\AssetGroupController.php(96): AssetGroupController->loadModel('115')
+#1 D:\prj\framework\web\actions\CInlineAction.php(50): AssetGroupController->actionUpdateRow()
+#2 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#3 D:\prj\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#4 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#5 D:\prj\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#6 D:\prj\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#7 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#8 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#9 D:\prj\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#10 D:\prj\framework\web\CWebApplication.php(276): CController->run('updateRow')
+#11 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/upda...')
+#12 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#13 D:\prj\goods\index.php(13): CApplication->run()
+#14 {main}
+REQUEST_URI=/goods/index.php/?r=assetGroup/updateRow
+HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
+---
+2012/07/20 09:40:57 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchColumn(): SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: SELECT COUNT(*) FROM "asset_groups" "t" WHERE block_id=
+                                                               ^. Выполнявшийся SQL-запрос: SELECT COUNT(*) FROM "asset_groups" "t" WHERE block_id=.
+in D:\prj\goods\protected\controllers\AssetGroupController.php (256)
+in D:\prj\goods\index.php (13)
+2012/07/20 09:40:57 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[42601]: Syntax error: 7 ERROR:  syntax error at end of input
+LINE 1: SELECT COUNT(*) FROM "asset_groups" "t" WHERE block_id=
+                                                               ^. The SQL statement executed was: SELECT COUNT(*) FROM "asset_groups" "t" WHERE block_id=' in D:\prj\framework\db\CDbCommand.php:528
+Stack trace:
+#0 D:\prj\framework\db\CDbCommand.php(425): CDbCommand->queryInternal('fetchColumn', 0, Array)
+#1 D:\prj\framework\db\ar\CActiveRecord.php(1536): CDbCommand->queryScalar()
+#2 D:\prj\framework\web\CActiveDataProvider.php(179): CActiveRecord->count(Object(CDbCriteria))
+#3 D:\prj\framework\web\CDataProvider.php(193): CActiveDataProvider->calculateTotalItemCount()
+#4 D:\prj\framework\web\CActiveDataProvider.php(129): CDataProvider->getTotalItemCount()
+#5 D:\prj\framework\web\CDataProvider.php(137): CActiveDataProvider->fetchData()
+#6 D:\prj\goods\protected\controllers\AssetGroupController.php(256): CDataProvider->getData()
+#7 D:\prj\framework\web\actions\CInlineAction.php(50): AssetGroupController->actionGetDataForGrid()
+#8 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#9 D:\prj\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#10 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#11 D:\prj\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#12 D:\prj\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#13 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#14 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#15 D:\prj\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#16 D:\prj\framework\web\CWebApplication.php(276): CController->run('getDataForGrid')
+#17 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/getD...')
+#18 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#19 D:\prj\goods\index.php(13): CApplication->run()
+#20 {main}
+REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342766456973&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
+---
