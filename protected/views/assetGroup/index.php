@@ -34,90 +34,43 @@ $this->menu=array(
 <script type="text/javascript">
 $(function() {
     var lastSel;
+    var sel_id;
     jQuery("#list").jqGrid( {
         url : 'index.php/?r=assetGroup/getDataForGrid',
         datatype : 'json',
         width : '800',
-        height : 'autoheight',
+        height : 'auto',
         mtype : 'GET',
-        colNames : [ 'ID', 'Супергруппа', 'Группа' ],
-        colModel : [ {
-            name : 'id',
-            index : 'id',
-            width : 20
-        }, {
-            name : 'b_name',
-            index : 'b_name',
-            width : 150
-        }, {
-            name : 'name',
-            index : 'name',
-            width : 150,
-            editable:true,
-            edittype:"text"
-        } ],
-        pager : '#pager',
-        rowNum : 20,
-        rowList : [ 10, 20, 50, 100 ],
-        sortname : 'id',
-        sortorder : 'asc',
-        viewrecords : true,
+        colNames : [ 'IDDB', /*'Супергруппа',*/ 'Группа' ],
+        colModel : [
+         { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
+         { name : 'name', index : 'name', width : 150, editable: true } 
+        ],
         caption : 'Группы товаров',
+        treeGrid: true,
+        treeGridModel: 'adjacency',
+        ExpandColumn: 'name',
+//        ExpandColClick: true,
+        rowNum : 0,
 
-	cellEdit: true,
-	cellsubmit: 'remote',
+//    	loadError: function(xhr, status, error) {alert(status +error)}
 
-   
-/*	    
         ondblClickRow: function(id) {
             if (id ) { //&& id != lastSel
+            	sel_id= $('#list').getCell(id, 'iddb');
+            	$("#list").jqGrid('setGridParam', {editurl:'index.php/?r=assetGroup/updateRow&iddb='+sel_id});
+//            	alert(sel_id);
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
                 lastSel = id;
             }
             
         },
-*/
-        
-//        editurl: 'index.php/?r=assetGroup/updateRow'
-        cellurl: 'index.php/?r=assetGroup/updateRow'
+        editurl: 'index.php/?r=assetGroup/updateRow'
 
-    }).navGrid('#pager',{view:false, del:false, add:true, edit:false},
-      {
-        
-      }, // default settings for edit
-      {
 
-      }, // default settings for add
-      {}, // delete instead that del:false we need this
-      {
-          closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,
-          sopt:['eq','cn']
-      }, // search options
-
-      {
-      } /* view parameters*/
-      );
+    });
 
 });
 </script>
 <!--<h1>Группы товаров</h1>-->
-
-<?php // $this->widget('zii.widgets.grid.CGridView', array(
-//	'id'=>'claim-grid',
-//	'dataProvider'=>$dataProvider,
-//	'columns'=>array(
-//                array(
-//                'name'=>'Супергруппа',
-//                'value'=>'$data->block->name',
-//                ),
-//                array(
-//                'name'=>'Группа',
-//                'value'=>'$data->name',
-//                ),
-//                array(
-//                  'class'=>'CButtonColumn',
-//                  'viewButtonUrl'=>'Yii::app()->createUrl("assetGroup/show",array("id"=>$data->id))', 
-//                ),
-//    ))); ?>
-<?php //echo CHtml::link('Добавить группу', Yii::app()->createUrl("assetGroup/create"))?>
