@@ -58,7 +58,11 @@ $(function() {
         ondblClickRow: function(id) {
             if (id ) { //&& id != lastSel
             	sel_id= $('#list').getCell(id, 'iddb');
+<<<<<<< HEAD
             	$("#list").jqGrid('setGridParam', {editurl:'updateRow/iddb='+sel_id});
+=======
+            	$("#list").jqGrid('setGridParam', {editurl:'updateRow?iddb='+sel_id});
+>>>>>>> 3be56cdb9fbdaf9e6a25ca1328ccb1df36aa8724
 //            	alert(sel_id);
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
@@ -66,11 +70,18 @@ $(function() {
             }
             
         },
+<<<<<<< HEAD
         editurl: 'assetGroup/updateRow'
+=======
+//        editurl: '/assetGroup/updateRow'
+>>>>>>> 3be56cdb9fbdaf9e6a25ca1328ccb1df36aa8724
 
 
     });
 
 });
+
+//alert("!");
+
 </script>
 <!--<h1>Группы товаров</h1>-->

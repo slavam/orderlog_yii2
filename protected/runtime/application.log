@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 2012/07/20 10:57:00 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in D:\prj\framework\web\CController.php:484
 Stack trace:
 #0 D:\prj\framework\web\CController.php(271): CController->missingAction('index.php')
@@ -393,4 +394,289 @@ Stack trace:
 #5 {main}
 REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784763006&rows=10000&page=1&sidx=name&sord=desc
 HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+=======
+2012/07/20 10:51:41 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770701734&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 10:52:43 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770763453&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 10:53:37 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770817226&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 10:55:29 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770928883&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 10:56:37 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770997583&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 11:09:30 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342771770236
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:11:02 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342771862112
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:14:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342772088786
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:19:44 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342772384563
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:19:53 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342772393144
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:21:03 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=108".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=108')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=108')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=108&_=1342772462845
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 11:22:09 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=38".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=38')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=38')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=38&_=1342772529862
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 13:02:38 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342778558170
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/20 14:24:06 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/assetGroup/getDataForGrid?_search=false&nd=1342783446091&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:08 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/assetGroup/getDataForGrid?_search=false&nd=1342783447977&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:09 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/assetGroup/getDataForGrid?_search=false&nd=1342783449063&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:11 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/assetGroup/getDataForGrid?_search=false&nd=1342783451758&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:18 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783458294&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:19 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783459648&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:33 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783473787&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783475138&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:36 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783476398&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:24:37 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783477612&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:31:21 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/assetGroup/getDataForGrid?_search=false&nd=1342783881431&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
+2012/07/20 14:32:26 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "getDataFroGrid".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('getDataFroGrid')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('getDataFroGrid')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/getD...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/assetGroup/getDataFroGrid
+---
+2012/07/20 14:32:42 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "getDataFroGrid".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('getDataFroGrid')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('getDataFroGrid')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/getD...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/assetGroup/getDataFroGrid
+>>>>>>> 3be56cdb9fbdaf9e6a25ca1328ccb1df36aa8724
 ---

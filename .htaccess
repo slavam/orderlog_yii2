@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 Options +FollowSymLinks
 IndexIgnore */*
 RewriteEngine on
@@ -7,4 +8,15 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
  
 # в противном случае перенаправляем запрос через index.php
+=======
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+# если директория или файл существуют, используем их
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+# в противном случае перенаправляем запрос через index.php
+>>>>>>> 3be56cdb9fbdaf9e6a25ca1328ccb1df36aa8724
 RewriteRule . index.php
