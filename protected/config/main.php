@@ -35,12 +35,6 @@ return array(
         'urlManager'=>array(
 		'urlFormat'=>'path',
 		'rules'=>array(
-<<<<<<< HEAD
-=======
-/*        		'post/<id:\d+>/<title:.*?>'=>'post/view',
-        		'posts/<tag:.*?>'=>'post/index',
-*/
->>>>>>> 3be56cdb9fbdaf9e6a25ca1328ccb1df36aa8724
         		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
         	),
         ),
