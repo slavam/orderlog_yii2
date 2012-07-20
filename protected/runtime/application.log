@@ -10457,6 +10457,7 @@ Stack trace:
 REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342617089088&rows=10&page=1&sidx=id&sord=asc
 HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
 ---
+<<<<<<< HEAD
 2012/07/19 12:03:57 [error] [exception.CDbException] exception 'CDbException' with message 'CDbConnection не удалось открыть соединение с базой данных: SQLSTATE[08006] [7] could not connect to server: Connection timed out (0x0000274C/10060)
 	Is the server running on host "dev1-d00" and accepting
 	TCP/IP connections on port 5432?' in D:\prj\framework\db\CDbConnection.php:382
@@ -10680,4 +10681,364 @@ Stack trace:
 #20 {main}
 REQUEST_URI=/goods/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342766456973&rows=10000&page=1&sidx=&sord=asc
 HTTP_REFERER=http://localhost/goods/index.php?r=assetGroup/index
+=======
+2012/07/19 11:00:50 [warning] [application] Не удалось присвоить небезопасный атрибут "status_id" класса "ClaimLine".
+in C:\sites\dev1-d00\www\goods\protected\controllers\ClaimLineController.php (106)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 11:00:50 [warning] [application] Не удалось присвоить небезопасный атрибут "position_id" класса "ClaimLine".
+in C:\sites\dev1-d00\www\goods\protected\controllers\ClaimLineController.php (106)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 11:01:42 [warning] [application] Не удалось присвоить небезопасный атрибут "status_id" класса "ClaimLine".
+in C:\sites\dev1-d00\www\goods\protected\controllers\ClaimLineController.php (106)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 11:01:42 [warning] [application] Не удалось присвоить небезопасный атрибут "position_id" класса "ClaimLine".
+in C:\sites\dev1-d00\www\goods\protected\controllers\ClaimLineController.php (106)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 11:31:35 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 2: FROM "advplace"
+             ^. Выполнявшийся SQL-запрос: SELECT "id", "title" AS "text", "icon", "title" AS "alt", "tooltip", "parent_id" AS "id_parent", "options" AS "options", "id"
+FROM "advplace"
+WHERE visible=:visible
+ORDER BY "title".
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (135)
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (120)
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (104)
+2012/07/19 11:31:36 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 2: FROM "advplace"
+             ^. The SQL statement executed was: SELECT "id", "title" AS "text", "icon", "title" AS "alt", "tooltip", "parent_id" AS "id_parent", "options" AS "options", "id"
+FROM "advplace"
+WHERE visible=:visible
+ORDER BY "title"' in C:\sites\dev1-d00\www\framework\db\CDbCommand.php:528
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\db\CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(135): CDbCommand->queryAll()
+#2 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(120): MTreeView->queryTable()
+#3 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(104): MTreeView->getData()
+#4 C:\sites\dev1-d00\www\framework\web\CBaseController.php(148): MTreeView->init()
+#5 C:\sites\dev1-d00\www\framework\web\CBaseController.php(173): CBaseController->createWidget('application.ext...', Array)
+#6 C:\sites\dev1-d00\www\goods\protected\views\place\tree.php(48): CBaseController->widget('application.ext...', Array)
+#7 C:\sites\dev1-d00\www\framework\web\CBaseController.php(127): require('C:\sites\dev1-d...')
+#8 C:\sites\dev1-d00\www\framework\web\CBaseController.php(96): CBaseController->renderInternal('C:\sites\dev1-d...', Array, true)
+#9 C:\sites\dev1-d00\www\framework\web\CController.php(870): CBaseController->renderFile('C:\sites\dev1-d...', Array, true)
+#10 C:\sites\dev1-d00\www\framework\web\CController.php(783): CController->renderPartial('tree', Array, true)
+#11 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(238): CController->render('tree', Array)
+#12 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(50): PlaceController->actionTree()
+#13 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#14 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#15 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#16 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#17 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#18 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#19 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#20 C:\sites\dev1-d00\www\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#21 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('tree')
+#22 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/tree')
+#23 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#24 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#25 {main}
+REQUEST_URI=/goods/index.php?r=place/tree
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/index
+---
+2012/07/19 11:32:39 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetchAll(): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 2: FROM "advplace"
+             ^. Выполнявшийся SQL-запрос: SELECT "id", "title" AS "text", "icon", "title" AS "alt", "tooltip", "parent_id" AS "id_parent", "options" AS "options", "id"
+FROM "advplace"
+WHERE visible=:visible
+ORDER BY "title".
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (135)
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (120)
+in C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php (104)
+2012/07/19 11:32:39 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 2: FROM "advplace"
+             ^. The SQL statement executed was: SELECT "id", "title" AS "text", "icon", "title" AS "alt", "tooltip", "parent_id" AS "id_parent", "options" AS "options", "id"
+FROM "advplace"
+WHERE visible=:visible
+ORDER BY "title"' in C:\sites\dev1-d00\www\framework\db\CDbCommand.php:528
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\db\CDbCommand.php(390): CDbCommand->queryInternal('fetchAll', Array, Array)
+#1 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(135): CDbCommand->queryAll()
+#2 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(120): MTreeView->queryTable()
+#3 C:\sites\dev1-d00\www\goods\protected\extensions\MTreeView\MTreeView.php(104): MTreeView->getData()
+#4 C:\sites\dev1-d00\www\framework\web\CBaseController.php(148): MTreeView->init()
+#5 C:\sites\dev1-d00\www\framework\web\CBaseController.php(173): CBaseController->createWidget('application.ext...', Array)
+#6 C:\sites\dev1-d00\www\goods\protected\views\place\tree.php(48): CBaseController->widget('application.ext...', Array)
+#7 C:\sites\dev1-d00\www\framework\web\CBaseController.php(127): require('C:\sites\dev1-d...')
+#8 C:\sites\dev1-d00\www\framework\web\CBaseController.php(96): CBaseController->renderInternal('C:\sites\dev1-d...', Array, true)
+#9 C:\sites\dev1-d00\www\framework\web\CController.php(870): CBaseController->renderFile('C:\sites\dev1-d...', Array, true)
+#10 C:\sites\dev1-d00\www\framework\web\CController.php(783): CController->renderPartial('tree', Array, true)
+#11 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(238): CController->render('tree', Array)
+#12 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(50): PlaceController->actionTree()
+#13 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#14 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#15 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#16 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#17 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#18 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#19 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#20 C:\sites\dev1-d00\www\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#21 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('tree')
+#22 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/tree')
+#23 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#24 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#25 {main}
+REQUEST_URI=/goods/index.php?r=place/tree
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/index
+---
+2012/07/19 11:33:39 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342686819785
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:33:43 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342686823157
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:33:49 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=478".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=478')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=478')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=478&_=1342686829479
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:33:50 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=7".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=7')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=7')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=7&_=1342686830617
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:50:12 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342687812440
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:51:24 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342687884583
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 11:55:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342688135375
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 12:20:35 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342689635076
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 12:20:40 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342689640025
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 12:22:04 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "addid_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('addid_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('addid_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/addid_add...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/addid_add=1&_=1342689724886
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 12:23:10 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "add?id_add=1".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('add?id_add=1')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('add?id_add=1')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/add?id_ad...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php?r=place/add?id_add=1&_=1342689790256
+HTTP_REFERER=http://dev1-d00/goods/index.php?r=place/tree
+---
+2012/07/19 12:35:49 [error] [php] include(Advplace.php): failed to open stream: No such file or directory (C:\sites\dev1-d00\www\framework\YiiBase.php:418)
+Stack trace:
+#0 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(218): spl_autoload_call()
+#1 unknown(0): PlaceController->actionAdd()
+#2 C:\sites\dev1-d00\www\framework\web\actions\CAction.php(107): ReflectionMethod->invokeArgs()
+#3 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(48): CInlineAction->runWithParamsInternal()
+#4 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams()
+#5 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): PlaceController->runAction()
+#6 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#7 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#8 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): PlaceController->filterAccessControl()
+#9 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#10 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#11 C:\sites\dev1-d00\www\framework\web\CController.php(266): PlaceController->runActionWithFilters()
+#12 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): PlaceController->run()
+#13 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#14 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#15 C:\sites\dev1-d00\www\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/place/add?id_add=7&_=1342690514586
+in C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php (218)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 12:43:20 [error] [php] include(Advplace.php): failed to open stream: No such file or directory (C:\sites\dev1-d00\www\framework\YiiBase.php:418)
+Stack trace:
+#0 C:\sites\dev1-d00\www\goods\protected\models\Place.php(154): spl_autoload_call()
+#1 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(218): PlaceController->AddRecord()
+#2 unknown(0): PlaceController->actionAdd()
+#3 C:\sites\dev1-d00\www\framework\web\actions\CAction.php(107): ReflectionMethod->invokeArgs()
+#4 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(48): CInlineAction->runWithParamsInternal()
+#5 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams()
+#6 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): PlaceController->runAction()
+#7 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#8 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#9 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): PlaceController->filterAccessControl()
+#10 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#11 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#12 C:\sites\dev1-d00\www\framework\web\CController.php(266): PlaceController->runActionWithFilters()
+#13 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): PlaceController->run()
+#14 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#15 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#16 C:\sites\dev1-d00\www\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/place/add?id_add=7&_=1342690943943
+in C:\sites\dev1-d00\www\goods\protected\models\Place.php (154)
+in C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php (218)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 12:44:47 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::execute(): SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "advplace_pkey"
+DETAIL:  Key (id)=(1) already exists.. Выполнявшийся SQL-запрос: INSERT INTO "places" ("parent_id", "title", "position", "tooltip", "url", "icon", "visible", "task", "options", "productid", "id2") VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10).
+in C:\sites\dev1-d00\www\goods\protected\models\Place.php (172)
+in C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php (218)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 12:44:47 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[23505]: Unique violation: 7 ERROR:  duplicate key value violates unique constraint "advplace_pkey"
+DETAIL:  Key (id)=(1) already exists.. The SQL statement executed was: INSERT INTO "places" ("parent_id", "title", "position", "tooltip", "url", "icon", "visible", "task", "options", "productid", "id2") VALUES (:yp0, :yp1, :yp2, :yp3, :yp4, :yp5, :yp6, :yp7, :yp8, :yp9, :yp10)' in C:\sites\dev1-d00\www\framework\db\CDbCommand.php:354
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\db\ar\CActiveRecord.php(1014): CDbCommand->execute()
+#1 C:\sites\dev1-d00\www\framework\db\ar\CActiveRecord.php(787): CActiveRecord->insert(NULL)
+#2 C:\sites\dev1-d00\www\goods\protected\models\Place.php(172): CActiveRecord->save()
+#3 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(218): Place->AddRecord('?????????? ?? ?...', '1')
+#4 [internal function]: PlaceController->actionAdd('7')
+#5 C:\sites\dev1-d00\www\framework\web\actions\CAction.php(107): ReflectionMethod->invokeArgs(Object(PlaceController), Array)
+#6 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(48): CAction->runWithParamsInternal(Object(PlaceController), Object(ReflectionMethod), Array)
+#7 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#8 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#9 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#10 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#11 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#12 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#13 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#14 C:\sites\dev1-d00\www\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#15 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('add')
+#16 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/add')
+#17 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#18 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#19 {main}
+REQUEST_URI=/goods/index.php/place/add?id_add=7&_=1342691067860
+HTTP_REFERER=http://dev1-d00/goods/index.php/place/tree
+---
+2012/07/19 12:47:48 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Невозможно обработать запрос "advplace/delete".' in C:\sites\dev1-d00\www\framework\web\CWebApplication.php:280
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('advplace/delete')
+#1 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#2 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#3 {main}
+REQUEST_URI=/goods/index.php/advplace/delete/?id=488
+HTTP_REFERER=http://dev1-d00/goods/index.php/place/tree
+---
+2012/07/19 12:54:32 [error] [php] include(Advplace.php): failed to open stream: No such file or directory (C:\sites\dev1-d00\www\framework\YiiBase.php:418)
+Stack trace:
+#0 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(126): spl_autoload_call()
+#1 unknown(0): PlaceController->actionDelete()
+#2 C:\sites\dev1-d00\www\framework\web\actions\CAction.php(107): ReflectionMethod->invokeArgs()
+#3 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(48): CInlineAction->runWithParamsInternal()
+#4 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams()
+#5 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): PlaceController->runAction()
+#6 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#7 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#8 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): PlaceController->filterAccessControl()
+#9 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#10 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#11 C:\sites\dev1-d00\www\framework\web\CController.php(266): PlaceController->runActionWithFilters()
+#12 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): PlaceController->run()
+#13 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#14 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#15 C:\sites\dev1-d00\www\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/place/delete/?id=488
+in C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php (126)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 12:56:07 [error] [system.db.CDbCommand] Не удалось выполнить CDbCommand::fetch(): SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 1: select * from advplace where upper(title) = upper('Новый гор...
+                      ^. Выполнявшийся SQL-запрос: select * from advplace where upper(title) = upper('Новый город в АР Крым') AND parent_id = 1.
+in C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php (220)
+in C:\sites\dev1-d00\www\goods\index.php (13)
+2012/07/19 12:56:07 [error] [exception.CDbException] exception 'CDbException' with message 'CDbCommand не удалось исполнить SQL-запрос: SQLSTATE[42P01]: Undefined table: 7 ERROR:  relation "advplace" does not exist
+LINE 1: select * from advplace where upper(title) = upper('Новый гор...
+                      ^. The SQL statement executed was: select * from advplace where upper(title) = upper('Новый город в АР Крым') AND parent_id = 1' in C:\sites\dev1-d00\www\framework\db\CDbCommand.php:528
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\db\CDbCommand.php(408): CDbCommand->queryInternal('fetch', Array, Array)
+#1 C:\sites\dev1-d00\www\framework\db\ar\CActiveRecord.php(1494): CDbCommand->queryRow()
+#2 C:\sites\dev1-d00\www\goods\protected\controllers\PlaceController.php(220): CActiveRecord->findBySql('select * from a...')
+#3 [internal function]: PlaceController->actionAdd('1')
+#4 C:\sites\dev1-d00\www\framework\web\actions\CAction.php(107): ReflectionMethod->invokeArgs(Object(PlaceController), Array)
+#5 C:\sites\dev1-d00\www\framework\web\actions\CInlineAction.php(48): CAction->runWithParamsInternal(Object(PlaceController), Object(ReflectionMethod), Array)
+#6 C:\sites\dev1-d00\www\framework\web\CController.php(309): CInlineAction->runWithParams(Array)
+#7 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(134): CController->runAction(Object(CInlineAction))
+#8 C:\sites\dev1-d00\www\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#9 C:\sites\dev1-d00\www\framework\web\CController.php(1146): CFilter->filter(Object(CFilterChain))
+#10 C:\sites\dev1-d00\www\framework\web\filters\CInlineFilter.php(59): CController->filterAccessControl(Object(CFilterChain))
+#11 C:\sites\dev1-d00\www\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter(Object(CFilterChain))
+#12 C:\sites\dev1-d00\www\framework\web\CController.php(292): CFilterChain->run()
+#13 C:\sites\dev1-d00\www\framework\web\CController.php(266): CController->runActionWithFilters(Object(CInlineAction), Array)
+#14 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('add')
+#15 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('place/add')
+#16 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#17 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#18 {main}
+REQUEST_URI=/goods/index.php/place/add?id_add=1&_=1342691739408
+HTTP_REFERER=http://dev1-d00/goods/index.php/place/tree
+>>>>>>> ae55620e357b34536e0666b41c049bce1f34bf08
 ---

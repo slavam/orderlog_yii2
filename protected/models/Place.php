@@ -144,4 +144,39 @@ public $PATH;
                       FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
                   select id, path as title from temp1 where level=3 ORDER BY PATH");
         }
+	/**
+	 * Add or change record 
+	 */
+	public function AddRecord($place,$add_record)
+	{
+
+         if ($add_record != 2){
+            $save_model = new Place;
+                 $save_model->parent_id = $this->parent_model->id;
+                 $save_model->title = $place;
+                 $save_model->position = 0;
+                 $save_model->tooltip = $this->parent_model->title;
+                 $save_model->url = $this->url_save.$save_model->id;
+                 $save_model->icon = "";
+                 $save_model->visible = 1;
+                 $save_model->task = "";
+                 $save_model->options = '"';
+                 $save_model->productid = $this->parent_model->id;
+                 $save_model->id2 = $this->parent_model->id;
+
+            } else {
+            $save_model=$this->loadModel($this->parent_model->id);
+                 $save_model->title = $place;
+         }
+               
+            if (($save_model->save()) && ($add_record != 2)) {
+                    $save_model->url = $save_model->url.$save_model->id;
+                    $save_model->productid = $save_model->id;
+                    $save_model->save();
+            } else {
+                    $save_model->save();                
+            }
+         return $save_model->id;
+	}
+        
 }
