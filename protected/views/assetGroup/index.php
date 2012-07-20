@@ -36,7 +36,7 @@ $(function() {
     var lastSel;
     var sel_id;
     jQuery("#list").jqGrid( {
-        url : 'index.php/?r=assetGroup/getDataForGrid',
+        url : 'getDataForGrid',
         datatype : 'json',
         width : '800',
         height : 'auto',
@@ -58,7 +58,7 @@ $(function() {
         ondblClickRow: function(id) {
             if (id ) { //&& id != lastSel
             	sel_id= $('#list').getCell(id, 'iddb');
-            	$("#list").jqGrid('setGridParam', {editurl:'index.php/?r=assetGroup/updateRow&iddb='+sel_id});
+            	$("#list").jqGrid('setGridParam', {editurl:'updateRow?iddb='+sel_id});
 //            	alert(sel_id);
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
@@ -66,11 +66,14 @@ $(function() {
             }
             
         },
-        editurl: 'index.php/?r=assetGroup/updateRow'
+//        editurl: '/assetGroup/updateRow'
 
 
     });
 
 });
+
+//alert("!");
+
 </script>
 <!--<h1>Группы товаров</h1>-->
