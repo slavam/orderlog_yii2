@@ -10816,3 +10816,14 @@ Stack trace:
 REQUEST_URI=/goods/index.php/place/add?id_add=1&_=1342691739408
 HTTP_REFERER=http://dev1-d00/goods/index.php/place/tree
 ---
+2012/07/20 10:45:17 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "index.php".' in C:\sites\dev1-d00\www\framework\web\CController.php:484
+Stack trace:
+#0 C:\sites\dev1-d00\www\framework\web\CController.php(271): CController->missingAction('index.php')
+#1 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(276): CController->run('index.php')
+#2 C:\sites\dev1-d00\www\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/inde...')
+#3 C:\sites\dev1-d00\www\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 C:\sites\dev1-d00\www\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/index.php/?r=assetGroup/getDataForGrid&_search=false&nd=1342770317223&rows=20&page=1&sidx=id&sord=asc
+HTTP_REFERER=http://dev1-d00/goods/index.php/assetGroup/index
+---
