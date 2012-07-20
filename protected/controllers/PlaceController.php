@@ -6,6 +6,11 @@ class PlaceController extends Controller
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
+	public $parent_model;
+	public $parent_type;
+        public $menu_id;
+        public $url_save = "/claimline/create/";
+
 	public $layout='//layouts/column2';
 
 	/**
@@ -38,9 +43,12 @@ class PlaceController extends Controller
 				'actions'=>array('admin','delete'),
 				'users'=>array('admin'),
 			),
+                    /*
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
+                     * 
+                     */
 		);
 	}
 
@@ -110,13 +118,25 @@ class PlaceController extends Controller
 	public function actionDelete($id)
 	{
 		if(Yii::app()->request->isPostRequest)
-		{
+                {
+                    $criteria=new CDbCriteria;
+                    $criteria->condition='parent_id=:parent_id';
+                    $criteria->params=array(':parent_id'=>$id);
+                    
+                    $posts=Place::model()->findAll($criteria); // $params не требуется
+                    
+                if ($posts) {
+               		foreach($posts as $post) {
+			$this->loadModel($post->id)->delete();
+                        }
+                }
+                   
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('tree'));
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
@@ -180,23 +200,82 @@ class PlaceController extends Controller
 	}
 
 	/**
+	 * Form witn AJAX validation for creates a new record.
+	 */
+	public function actionAdd($id_add)
+	{           
+            $this->parent_model = $this->loadModel($id_add);
+
+            $model=new PlaceForm;           
+            $this->performAjaxValidation($model);
+
+            if(isset($_POST['PlaceForm']))
+            {
+		$model->attributes=$_POST['PlaceForm'];
+
+                if ($model->validate())
+		{
+                    if ($model->add_record == 0) {
+                        
+                        $findtown=Place::model()->findBySql("select * from places where upper(title) = upper('".$model->town."') AND parent_id = ".$this->parent_model->id);
+                                
+                            if (!$findtown) {
+                                $town_id = Place::AddRecord($model->town,$model->add_record);
+                                $this->parent_model = $this->loadModel($town_id);
+                        } else {
+                                $this->parent_model = $this->loadModel($findtown->id);    
+                        }
+                        $place_id = Place::AddRecord($model->place,$model->add_record);
+                    } else {
+                        $town_id = Place::AddRecord($model->place,$model->add_record);                    
+                    }
+                    
+                    $this->redirect(array('tree'));
+                }
+            }
+                if ($this->parent_model->parent_id == 0) {                       	// region - add city and advertising place
+			$this->parent_type = 0;
+		} else  {                                                         
+			$temp_model = $this->loadModel($this->parent_model->parent_id);
+			if  ($temp_model->parent_id == 0 ) {				// city or advertising place
+				$this->parent_type = 1;
+			} else {
+				$this->parent_type = 2;
+                                $model->place = $this->parent_model->title;  
+			} 
+		}
+
+		$this->renderPartial('addplace',array('model'=>$model),FALSE, TRUE);
+
+	}
+
+        public function actionTree()
+	{
+            Yii::app()->clientScript->registerCoreScript('jquery');
+            Yii::app()->clientScript->registerCoreScript('jquery.yiiactiveform.js'); 
+
+            $model=new PlaceForm;
+            $this->render('tree',array('model'=>$model));
+
+/*
+		$dataProvider=new CActiveDataProvider('Place');
+		$this->render('tree',array(
+			'dataProvider'=>$dataProvider,
+		));
+*/
+	}
+
+	/**
 	 * Performs the AJAX validation.
 	 * @param CModel the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='place-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='advplace-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
-	}
-        public function actionTree()
-	{
-		$dataProvider=new CActiveDataProvider('Place');
-		$this->render('tree',array(
-			'dataProvider'=>$dataProvider,
-		));
 	}
 
 }
