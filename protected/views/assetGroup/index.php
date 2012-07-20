@@ -7,14 +7,17 @@ $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+
 $this->breadcrumbs=array(
 	'Группы товаров',
 );
 
+/*
 $this->menu=array(
 	array('label'=>'Create AssetGroup', 'url'=>array('create')),
 	array('label'=>'Manage AssetGroup', 'url'=>array('admin')),
 );
+*/
 ?>
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
@@ -34,42 +37,52 @@ $(function() {
     jQuery("#list").jqGrid( {
         url : 'index.php/?r=assetGroup/getDataForGrid',
         datatype : 'json',
-        width : 600,
+        width : '800',
         height : 'autoheight',
         mtype : 'GET',
-        colNames : [ 'ID', 'Группа', 'Супергруппа' ],
+        colNames : [ 'ID', 'Супергруппа', 'Группа' ],
         colModel : [ {
             name : 'id',
             index : 'id',
-            width : 60
+            width : 20
+        }, {
+            name : 'b_name',
+            index : 'b_name',
+            width : 150
         }, {
             name : 'name',
             index : 'name',
             width : 150,
-            editable:true
-        }, {
-            name : 'b_name',
-            index : 'b_name',
-            width : 120
+            editable:true,
+            edittype:"text"
         } ],
         pager : '#pager',
-        rowNum : 30,
-        rowList : [ 10, 20, 30 ],
+        rowNum : 20,
+        rowList : [ 10, 20, 50, 100 ],
         sortname : 'id',
-        sortorder : 'desc',
+        sortorder : 'asc',
         viewrecords : true,
         caption : 'Группы товаров',
-        
+
+	cellEdit: true,
+	cellsubmit: 'remote',
+
+   
+/*	    
         ondblClickRow: function(id) {
-            if (id && id != lastSel) {
+            if (id ) { //&& id != lastSel
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
                 lastSel = id;
             }
+            
         },
-        editurl: 'index.php/?r=assetGroup/updateRow'
+*/
+        
+//        editurl: 'index.php/?r=assetGroup/updateRow'
+        cellurl: 'index.php/?r=assetGroup/updateRow'
 
-    }).navGrid('#pager',{view:true, del:false, add:true, edit:true},
+    }).navGrid('#pager',{view:false, del:false, add:true, edit:false},
       {
         
       }, // default settings for edit
@@ -83,7 +96,6 @@ $(function() {
       }, // search options
 
       {
-          width:700
       } /* view parameters*/
       );
 
