@@ -1,0 +1,10 @@
+Options +FollowSymLinks
+IndexIgnore */*
+RewriteEngine on
+
+# если директория или файл существуют, используем их
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+ 
+# в противном случае перенаправляем запрос через index.php
+RewriteRule . index.php

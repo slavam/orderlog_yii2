@@ -218,3 +218,179 @@ Stack trace:
 REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342783341154&rows=10000&page=1&sidx=&sord=asc
 HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
 ---
+2012/07/20 14:44:03 [error] [php] Non-static method Period::findPeriods() should not be called statically, assuming $this from incompatible context (D:\prj\goods\protected\views\claimLine\getClaimParams.php:9)
+Stack trace:
+#0 D:\prj\framework\web\CController.php(870): ClaimLineController->renderFile()
+#1 D:\prj\framework\web\CController.php(783): ClaimLineController->renderPartial()
+#2 D:\prj\goods\protected\controllers\ClaimLineController.php(203): ClaimLineController->render()
+#3 D:\prj\framework\web\actions\CInlineAction.php(50): ClaimLineController->actionGetClaimParams()
+#4 D:\prj\framework\web\CController.php(309): CInlineAction->runWithParams()
+#5 D:\prj\framework\web\filters\CFilterChain.php(134): ClaimLineController->runAction()
+#6 D:\prj\framework\web\filters\CFilter.php(41): CFilterChain->run()
+#7 D:\prj\framework\web\CController.php(1146): CAccessControlFilter->filter()
+#8 D:\prj\framework\web\filters\CInlineFilter.php(59): ClaimLineController->filterAccessControl()
+#9 D:\prj\framework\web\filters\CFilterChain.php(131): CInlineFilter->filter()
+#10 D:\prj\framework\web\CController.php(292): CFilterChain->run()
+#11 D:\prj\framework\web\CController.php(266): ClaimLineController->runActionWithFilters()
+#12 D:\prj\framework\web\CWebApplication.php(276): ClaimLineController->run()
+#13 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController()
+#14 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#15 D:\prj\goods\index.php(13): CWebApplication->run()
+REQUEST_URI=/goods/index.php/claimLine/getClaimParams
+in D:\prj\goods\protected\views\claimLine\getClaimParams.php (9)
+in D:\prj\goods\protected\controllers\ClaimLineController.php (203)
+in D:\prj\goods\index.php (13)
+2012/07/20 14:44:21 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784661882&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:44:24 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784664559&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:44:26 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784666381&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:44:27 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784667362&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:44:54 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784694308&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:44:58 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784697823&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:45:13 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784713035&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:45:16 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784716113&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:45:16 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784716737&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:45:43 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784743399&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:46:00 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784760364&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:46:01 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784761807&rows=10000&page=1&sidx=&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:46:02 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784762421&rows=10000&page=1&sidx=name&sord=asc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
+2012/07/20 14:46:03 [error] [exception.CHttpException.404] exception 'CHttpException' with message 'Системе не удалось найти запрашиваемое действие "assetGroup".' in D:\prj\framework\web\CController.php:484
+Stack trace:
+#0 D:\prj\framework\web\CController.php(271): CController->missingAction('assetGroup')
+#1 D:\prj\framework\web\CWebApplication.php(276): CController->run('assetGroup')
+#2 D:\prj\framework\web\CWebApplication.php(135): CWebApplication->runController('assetGroup/asse...')
+#3 D:\prj\framework\base\CApplication.php(162): CWebApplication->processRequest()
+#4 D:\prj\goods\index.php(13): CApplication->run()
+#5 {main}
+REQUEST_URI=/goods/index.php/assetGroup/assetGroup/getDataForGrid?_search=false&nd=1342784763006&rows=10000&page=1&sidx=name&sord=desc
+HTTP_REFERER=http://localhost/goods/index.php/assetGroup/index
+---
