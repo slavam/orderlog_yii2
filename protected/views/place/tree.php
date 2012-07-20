@@ -41,7 +41,7 @@
 			'position'=>'title',
 			'task'=>false,
 			'options'=>'options',
-			'url'=>array('/place/add',array('id_add'=>'id'))
+			'url'=>array('place/add',array('id_add'=>'id'))
 		),
 //		'template'=>'{icon}&nbsp;{text}',
 		'ajaxOptions'=>array('update'=>'#mtreeview-target')

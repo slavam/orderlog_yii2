@@ -31,12 +31,15 @@ return array(
             'allowAutoLogin' => true,
         ),
 
+        
         'urlManager'=>array(
 		'urlFormat'=>'path',
 		'rules'=>array(
         		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
         	),
         ),
+        
+
 
 
         // uncomment the following to enable URLs in path-format

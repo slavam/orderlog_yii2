@@ -91,24 +91,12 @@ class AssetGroupController extends Controller
 	 */
         public function actionUpdateRow()
         {
-            if(isset($_REQUEST['iddb']))
+            if(isset($_POST['id']))
             {
-                if(isset($_REQUEST['parent'])&&$_REQUEST['parent']!="null") {
-                    $model=$this->loadModel($_REQUEST['iddb']);
-                    $model->name = $_REQUEST['name'];
-                    if($model->save())
-    				$this->redirect(array('index'));
-                }
-                
-                if(isset($_REQUEST['parent'])&&$_REQUEST['parent']=="null") {
-                    $model=Block::model()->findByPk($_REQUEST['iddb']);
-                    if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
-                    $model->name = $_REQUEST['name'];
-                    if($model->save())
-    				$this->redirect(array('index'));
-                    
-                }
+                $model=$this->loadModel($_POST['id']);
+                $model->name = $_POST['name'];
+                if($model->save())
+				$this->redirect(array('index'));
             }
         }
 
@@ -116,10 +104,10 @@ class AssetGroupController extends Controller
         {
             if(isset($_POST['id']))
             {
-                //$model=$this->loadModel($_POST['id']);
-                //$model->name = $_POST['name'];
-                //if($model->save())
-		//		$this->redirect(array('index'));
+                $model=$this->loadModel($_POST['id']);
+                $model->name = $_POST['name'];
+                if($model->save())
+				$this->redirect(array('index'));
             }
         }
 
@@ -221,87 +209,34 @@ class AssetGroupController extends Controller
         public function actionGetDataForGrid()
         {
             
+//            $criteria = new CDbCriteria;
+//            $criteria->order = $_GET['sidx'].' '.$_GET['sord'];
 
-            $responce = array();
 
-            $dataProvider_block = new CActiveDataProvider('Block' , array(
+            $dataProvider=new CActiveDataProvider('AssetGroup' , array(
                     'criteria'=>array(                              
-                        'order'=>'name',
+	                    'with' => array('block'),
+                        'order'=>'t.name',
                         ),
                   )
                   );
-
-			$pagination_block = $dataProvider_block->getPagination();
+			$pagination = $dataProvider->getPagination();
 			if(isset($_GET['page']))
-                            $pagination_block->setCurrentPage(0);
+                            $pagination->setCurrentPage($_GET['page']-1);
 			if(isset($_GET['rows']))
-                            $pagination_block->setPageSize($_GET['rows']);
+                            $pagination->setPageSize($_GET['rows']);
 
-			$blocks_ = $dataProvider_block->getData();
+            $responce = new StdClass();
 
-
-			$responce['rows']=array();
-
-			$r_i = 0;
-				
-            foreach ($blocks_ as $i=>$row) {
-                $responce['rows'][$r_i]['id'] = $r_i+1;
-                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'0','null',false,false,true);
-                $r_i++;
-
-	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
-	                    'criteria'=>array(
-	                    	'condition'=>'block_id='.$row->id,
-	                        'order'=>'name',
-	                        ),
-	                  )
-	                  );
-	
-				$pagination_group = $dataProvider_group->getPagination();
-				if(isset($_GET['page']))
-	                            $pagination_group->setCurrentPage(0);
-				if(isset($_GET['rows']))
-	                            $pagination_group->setPageSize($_GET['rows']);
-
-				$groups_ = $dataProvider_group->getData();
-				$parent_ = $r_i;
-
-				foreach ($groups_ as $i=>$row) {
-	                $responce['rows'][$r_i]['id'] = $r_i+1;
-	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'1',"$parent_",true,true,true);
-	                $r_i++;
-				}
-
-
-            }
-
-/*			
-			$new_super_block ='';
-			$current_parent='null';
-			$current_level ='0';
-			$current_name  ='';
-
-            $local_rows = $dataProvider_group->getData();
-
+            $responce->page = $_GET['page'];
+            $responce->records = $dataProvider->getTotalItemCount();
+            $responce->total = ceil($responce->records / $_GET['rows']);
+			
+            $local_rows = $dataProvider->getData();
             foreach ($local_rows as $i=>$row) {
-                $responce['rows'][$i]['id'] = $row['id'];
-
-                if($new_super_block!=$row->block->name) {
-                	$new_super_block=$row->block->name;
-                	$current_name = $row->block->name;
-	                $current_parent='null';
-					$current_level ='0';
-				}
-                else {
-                	$current_name = $row->name;
-                	$current_parent='null';
-					$current_level ='1';
-				}
-
-                $responce['rows'][$i]['cell'] = array($row->id, $current_name,$current_level,$current_parent,true,false,true);
-
+                $responce->rows[$i]['id'] = $row['id'];
+                $responce->rows[$i]['cell'] = array(/*$row->id,*/ $row->block->name, $row->name);
             }
-*/
             echo CJSON::encode($responce);
         }
 }
