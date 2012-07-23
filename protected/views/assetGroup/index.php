@@ -44,7 +44,7 @@ $(function() {
         colNames : [ 'IDDB', 'Группа','Комментарий', 'Код', 'Направление', '' ],
         colModel : [
          { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
-         { name : 'name', index : 'name', width : 150, editable: true, sortable:false },
+         { name : 'name', index : 'name', width : 150, editable: true, sortable:false, editrules:{required:true} },
          { name : 'comment', index : 'comment', width : 150, editable: true, sortable:false },
          { name : 'stamp', index : 'stamp', width : 50, editable: true, sortable:false },
          { name : 'dir', index : 'dir', width : 50, editable: false, sortable:false },
@@ -56,6 +56,7 @@ $(function() {
         ExpandColumn: 'name',
 //        ExpandColClick: true,
         rowNum : 0,
+        pager: '#pager',
 
 //    	loadError: function(xhr, status, error) {alert(status +error)}
 
@@ -69,7 +70,26 @@ $(function() {
             }
             
         },
-    });
+    }).navGrid('#pager',{view:false, del:true, add:true, edit:true},
+      {
+                editfunc: function (rowid) {
+                    alert('The "Edit" button was clicked with rowid=' + rowid);
+                }
+        
+      }, // default settings for edit
+      {
+
+      }, // default settings for add
+      {}, // delete instead that del:false we need this
+      {
+          closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,
+          sopt:['eq','cn']
+      }, // search options
+
+      {
+      } /* view parameters*/
+      );
+
 
 });
 
