@@ -41,11 +41,12 @@ $(function() {
         width : '900',
         height : 'auto',
         mtype : 'GET',
-        colNames : [ 'IDDB', 'Группа','Комментарий', 'Направление', '' ],
+        colNames : [ 'IDDB', 'Группа','Комментарий', 'Код', 'Направление', '' ],
         colModel : [
          { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
          { name : 'name', index : 'name', width : 150, editable: true, sortable:false },
          { name : 'comment', index : 'comment', width : 150, editable: true, sortable:false },
+         { name : 'stamp', index : 'stamp', width : 50, editable: true, sortable:false },
          { name : 'dir', index : 'dir', width : 50, editable: false, sortable:false },
 		 { name : 'btns', index : 'btns', width : 20, sortable:false,formatter:'actions', formatoptions:{keys:true,editbutton:false}},
         ],

@@ -103,6 +103,7 @@ class AssetGroupController extends Controller
                     $model=$this->loadModel($_REQUEST['iddb']);
                     $model->name = $_REQUEST['name'];
                     $model->comment = $_REQUEST['comment'];
+                    $model->stamp = $_REQUEST['stamp'];
                     if($model->save())
     				$this->redirect(array('index'));
                 }
@@ -113,6 +114,7 @@ class AssetGroupController extends Controller
 						throw new CHttpException(404,'The requested page does not exist.');
                     $model->name = $_REQUEST['name'];
                     $model->comment = $_REQUEST['comment'];
+                    $model->stamp = $_REQUEST['stamp'];
                     if($model->save())
     				$this->redirect(array('index'));
                     
@@ -255,7 +257,7 @@ class AssetGroupController extends Controller
 				
             foreach ($blocks_ as $i=>$row) {
                 $responce['rows'][$r_i]['id'] = $r_i+1;
-                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->directions->short_name,'','0','null',false,false,true);
+                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp, $row->directions->short_name,'','0','null',false,false,true);
                 $r_i++;
 
 	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
@@ -277,7 +279,7 @@ class AssetGroupController extends Controller
 
 				foreach ($groups_ as $i=>$row) {
 	                $responce['rows'][$r_i]['id'] = $r_i+1;
-	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment,'','','1',"$parent_",true,true,true);
+	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp,'','','1',"$parent_",true,true,true);
 	                $r_i++;
 				}
 
