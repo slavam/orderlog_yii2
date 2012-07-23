@@ -30,6 +30,17 @@ return array(
             // enable cookie-based authentication
             'allowAutoLogin' => true,
         ),
+
+        
+        'urlManager'=>array(
+		'urlFormat'=>'path',
+		'rules'=>array(
+        		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+        	),
+        ),
+        
+
+
         // uncomment the following to enable URLs in path-format
         /*
           'urlManager'=>array(
@@ -90,6 +101,7 @@ return array(
              */
             ),
         ),
+/*
         'ClientScript' => array(
             'class' => 'ClientScript',
             'scriptMap' => array(
@@ -97,6 +109,7 @@ return array(
                 'jqueryForm' => 'http://127.0.0.1/demos/ordertest/js/jquery.form.js'
             ),
         ),
+*/
     ),
     // application-level parameters that can be accessed
     // using Yii::app()->params['paramName']

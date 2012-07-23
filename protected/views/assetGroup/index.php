@@ -7,31 +7,43 @@ $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+
 $this->breadcrumbs=array(
 	'Группы товаров',
 );
 
+/*
 $this->menu=array(
 	array('label'=>'Create AssetGroup', 'url'=>array('create')),
 	array('label'=>'Manage AssetGroup', 'url'=>array('admin')),
 );
+*/
 ?>
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
 </script>
+<<<<<<< HEAD
+=======
+<div>
+<b>INFO: работает только редактирование названий групп/подгрупп и комментариев по двойному клику!</b>
+</div>
+>>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044
 <table id="list"></table> 
 <div id="pager"></div> 
 
 <script type="text/javascript">
 $(function() {
     var lastSel;
+    var sel_id;
+    var subcategories = ["football", "formel 1", "physics", "mathematics"];
     jQuery("#list").jqGrid( {
-        url : 'index.php/?r=assetGroup/getDataForGrid',
+        url : 'getDataForGrid',
         datatype : 'json',
-        width : 600,
-        height : 'autoheight',
+        width : '900',
+        height : 'auto',
         mtype : 'GET',
+<<<<<<< HEAD
         colNames : [ 'ID', 'Группа', 'Супергруппа' ],
         colModel : [ {
             name : 'id',
@@ -53,34 +65,44 @@ $(function() {
         sortname : 'id',
         sortorder : 'desc',
         viewrecords : true,
+=======
+        colNames : [ 'IDDB', 'Группа','Комментарий', 'Код', 'Направление', '' ],
+        colModel : [
+         { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
+         { name : 'name', index : 'name', width : 150, editable: true, sortable:false },
+         { name : 'comment', index : 'comment', width : 150, editable: true, sortable:false },
+         { name : 'stamp', index : 'stamp', width : 50, editable: true, sortable:false },
+         { name : 'dir', index : 'dir', width : 50, editable: false, sortable:false },
+		 { name : 'btns', index : 'btns', width : 20, sortable:false,formatter:'actions', formatoptions:{keys:true,editbutton:false}},
+        ],
+>>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044
         caption : 'Группы товаров',
-        
-        ondblClickRow: function(id) {
-            if (id && id != lastSel) {
+        treeGrid: true,
+        treeGridModel: 'adjacency',
+        ExpandColumn: 'name',
+//        ExpandColClick: true,
+        rowNum : 0,
+
+//    	loadError: function(xhr, status, error) {alert(status +error)}
+
+        ondblClickRow: function(id) {                                                                                  
+            if (id ) { //&& id != lastSel                                                                               
+            	sel_id= $('#list').getCell(id, 'iddb');
+            	$("#list").jqGrid('setGridParam', {editurl:'updateRow?iddb='+sel_id});
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
                 lastSel = id;
             }
+            
         },
-        editurl: 'index.php/?r=assetGroup/updateRow'
-
-    }).navGrid('#pager',{view:true, del:false, add:true, edit:true},
-      {
-        
-      }, // default settings for edit
-      {
-
-      }, // default settings for add
-      {}, // delete instead that del:false we need this
-      {
-          closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,
-          sopt:['eq','cn']
-      }, // search options
-
-      {
-          width:700
-      } /* view parameters*/
-      );
+    });
 
 });
+
+//alert("!");
+
 </script>
+<<<<<<< HEAD
+=======
+<!--<h1>Группы товаров</h1>-->
+>>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044
