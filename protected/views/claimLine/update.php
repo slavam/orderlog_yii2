@@ -4,12 +4,6 @@ $this->breadcrumbs=array(
 	'Изменить',
 );
 
-$this->menu=array(
-	array('label'=>'List ClaimLine', 'url'=>array('index')),
-	array('label'=>'Create ClaimLine', 'url'=>array('create')),
-	array('label'=>'View ClaimLine', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage ClaimLine', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Изменить строку заявки</h1>

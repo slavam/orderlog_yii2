@@ -1,6 +1,6 @@
 <?php
 
-class ClaimLineController extends Controller
+class ClaimLineProductController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,7 +27,7 @@ class ClaimLineController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams'),
+				'actions'=>array('indexByLine','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -54,12 +54,6 @@ class ClaimLineController extends Controller
 			'model'=>$this->loadModel($id),
 		));
 	}
-	public function actionShow($id)
-	{
-		$this->render('show',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
 
 	/**
 	 * Creates a new model.
@@ -67,31 +61,29 @@ class ClaimLineController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new ClaimLine;
-                $model->claim_id=$_GET['claim_id'];
-                $model->count = 1;
+		$model=new ClaimLineProduct;
+                $claim_line_id = $_GET['claim_line_id'];
+//                $model->product->direction_id = $direction_id;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLine']))
+		if(isset($_POST['ClaimLineProduct']))
 		{
-			$model->attributes=$_POST['ClaimLine'];
-                        $model->claim_id=$_GET['claim_id'];
-                        $asset =  Asset::model()->findByPk($model->asset_id);
-                        $model->cost=$asset->cost;
-                        $model->amount=$model->count*$asset->cost;
-                        $model->budget_item_id=$asset->budget_item_id;
+			$model->attributes=$_POST['ClaimLineProduct'];
+                        $model->claim_line_id = $claim_line_id;
 			if($model->save())
-				$this->redirect(array('claim/show','id'=>$model->claim_id));
+				$this->redirect(array('claimLine/show','id'=>$claim_line_id));
 		}
-
+                $direction_id = $_GET['direction_id'];
 		$this->render('create',array(
-			'model'=>$model,
+                    'model'=>$model,
+                    'direction_id'=>$direction_id,
+                    'claim_line_id' => $_GET['claim_line_id'],
 		));
 	}
 
-        /**
+	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
@@ -103,15 +95,11 @@ class ClaimLineController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLine']))
+		if(isset($_POST['ClaimLineProduct']))
 		{
-			$model->attributes=$_POST['ClaimLine'];
-                        $asset = Asset::model()->findByPk($model->asset_id);
-                        $model->cost=$asset->cost;
-                        $model->amount=$model->count*$asset->cost;
-                        $model->budget_item_id=$asset->budget_item_id;
+			$model->attributes=$_POST['ClaimLineProduct'];
 			if($model->save())
-				$this->redirect(array('claim/show','id'=>$model->claim_id));
+				$this->redirect(array('view','id'=>$model->id));
 		}
 
 		$this->render('update',array(
@@ -142,11 +130,21 @@ class ClaimLineController extends Controller
 	/**
 	 * Lists all models.
 	 */
-	public function actionIndex()
-	{
-		$dataProvider=new CActiveDataProvider('ClaimLine');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+	public function actionIndexByLine()
+	{            
+            
+            
+            $dataProvider=new CActiveDataProvider('ClaimLineProduct', array(
+                'criteria'=>array(
+                    'condition'=>'claim_line_id='.$_GET['claim_line_id'],
+                    'order'=>'id',
+                ),
+            ));
+//            $direction_id = $dataProvider->data[0]->product->direction_id;
+		$this->render('indexByLine',array(
+                    'dataProvider'=>$dataProvider,
+                    'direction_id'=>$dataProvider->data[0]->product->direction_id,
+                    'claim_line_id'=>$_GET['claim_line_id'],
 		));
 	}
 
@@ -155,10 +153,10 @@ class ClaimLineController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new ClaimLine('search');
+		$model=new ClaimLineProduct('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['ClaimLine']))
-			$model->attributes=$_GET['ClaimLine'];
+		if(isset($_GET['ClaimLineProduct']))
+			$model->attributes=$_GET['ClaimLineProduct'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -172,7 +170,7 @@ class ClaimLineController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=ClaimLine::model()->findByPk($id);
+		$model=ClaimLineProduct::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -184,47 +182,10 @@ class ClaimLineController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='claim-line-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='claim-line-product-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-        
-        public function actionGetClaimParams()
-        {
-            $model=new Claim;
-            if(isset($_POST['Claim']))
-            {                          
-                $this->redirect(array('claimLine/showConsolidatedClaim',
-                    'period_id'=>$_POST['Claim']['period_id'],
-                    'direction_id'=>$_POST['Claim']['direction_id']
-                    ));
-            }
-            $this->render('getClaimParams',array(
-			'model'=>$model,));
-        }
-
-        
-        public function actionShowConsolidatedClaim()
-        {
-            $period_id=$_GET['period_id'];
-            $direction_id=$_GET['direction_id'];
-            $model=new ClaimLine();
-            $this->render('showConsolidatedClaim',array(
-		'period_id'=>$period_id,
-                'direction_id'=>$direction_id,
-                'model'=>$model,
-		));
-        }
-        
-//WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
-//SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
-//    FROM places T1 WHERE T1.parent_id IS NULL
-//union
-//select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||'->'|| T2.title AS VARCHAR(150)), LEVEL + 1
-//     FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
-//select * from temp1 ORDER BY PATH         
-        
-        
 }

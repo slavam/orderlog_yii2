@@ -63,6 +63,18 @@
 		<?php echo $form->dropDownList($model,'position_id',  Place::findAllPlaces());?> 
 		<?php echo $form->error($model,'position_id'); ?>
 	</div>
+        <?php if (!$model->isNewRecord):?>
+            <div class="row">
+                <b>Продукты</b>
+                <br>
+                <?php if ($model->findProductsAsString($model->id) > '') { 
+                        echo CHtml::link(CHtml::encode($model->findProductsAsString($model->id)), array('claimLineProduct/indexByLine','claim_line_id'=>$model->id));
+                    } else {
+                        echo CHtml::link('Добавить продукт', array('claimLineProduct/create','direction_id'=>$model->claim->direction_id, 'claim_line_id'=>$model->id));
+                } ?> 
+                <?php echo $form->error($model,'position_id'); ?>
+            </div>
+        <?php endif;?>
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>
