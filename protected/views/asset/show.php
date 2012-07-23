@@ -24,14 +24,14 @@ $this->menu=array(
                     'value'=>CHtml::encode($model->wareType->name),
                 ),
                 array(               
+                    'label'=>'Группа',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->assetGroup->name.'=>'.$model->assetGroup->block->name),
+                ),
+                array(               
                     'label'=>'Название',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->name),
-                ),
-                array(               
-                    'label'=>'Номенклатурный номер',
-                    'type'=>'raw',
-                    'value'=>CHtml::encode($model->part_number),
                 ),
                 array(               
                     'label'=>'Цена',
@@ -44,9 +44,9 @@ $this->menu=array(
                     'value'=>CHtml::encode($model->priceType->name),
                 ),
                 array(               
-                    'label'=>'Группа',
+                    'label'=>'Номенклатурный номер',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->assetGroup->name.'=>'.$model->assetGroup->block->name),
+                    'value'=>CHtml::encode($model->part_number),
                 ),
                 array(               
                     'label'=>'Статья бюджета',

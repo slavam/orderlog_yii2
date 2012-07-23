@@ -59,10 +59,16 @@ $this->menu=array(
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->findWorker($model->for_whom))
                 ),
-            array(               
+                array(               
                     'label'=>'Расположение объекта',
                     'type'=>'raw',
-                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): 0)
+                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): '')
+                ),
+                array(               
+                    'label'=>'Продукты',
+                    'type'=>'raw',
+                    'value'=>CHtml::link(CHtml::encode($model->findProductsAsString($model->id)),
+                             array('claimLineProduct/indexByLine','claim_line_id'=>$model->id))
                 ),
 	),
 )); ?>
