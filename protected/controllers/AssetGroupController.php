@@ -93,9 +93,16 @@ class AssetGroupController extends Controller
         {
             if(isset($_REQUEST['iddb']))
             {
+
+
+            /*
+            	TODO: string validation before updating DB! (comment by o.lysenko 23.07.2012 12:17)
+            */
+
                 if(isset($_REQUEST['parent'])&&$_REQUEST['parent']!="null") {
                     $model=$this->loadModel($_REQUEST['iddb']);
                     $model->name = $_REQUEST['name'];
+                    $model->comment = $_REQUEST['comment'];
                     if($model->save())
     				$this->redirect(array('index'));
                 }
@@ -103,8 +110,9 @@ class AssetGroupController extends Controller
                 if(isset($_REQUEST['parent'])&&$_REQUEST['parent']=="null") {
                     $model=Block::model()->findByPk($_REQUEST['iddb']);
                     if($model===null)
-			throw new CHttpException(404,'The requested page does not exist.');
+						throw new CHttpException(404,'The requested page does not exist.');
                     $model->name = $_REQUEST['name'];
+                    $model->comment = $_REQUEST['comment'];
                     if($model->save())
     				$this->redirect(array('index'));
                     
@@ -225,8 +233,9 @@ class AssetGroupController extends Controller
             $responce = array();
 
             $dataProvider_block = new CActiveDataProvider('Block' , array(
-                    'criteria'=>array(                              
-                        'order'=>'name',
+                    'criteria'=>array(
+                    'with'=>array('directions'),
+                        'order'=>'directions.name, t.name',
                         ),
                   )
                   );
@@ -246,7 +255,7 @@ class AssetGroupController extends Controller
 				
             foreach ($blocks_ as $i=>$row) {
                 $responce['rows'][$r_i]['id'] = $r_i+1;
-                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'0','null',false,false,true);
+                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->directions->short_name,'','0','null',false,false,true);
                 $r_i++;
 
 	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
@@ -268,7 +277,7 @@ class AssetGroupController extends Controller
 
 				foreach ($groups_ as $i=>$row) {
 	                $responce['rows'][$r_i]['id'] = $r_i+1;
-	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'1',"$parent_",true,true,true);
+	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment,'','','1',"$parent_",true,true,true);
 	                $r_i++;
 				}
 

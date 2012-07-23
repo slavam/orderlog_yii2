@@ -24,9 +24,8 @@ $this->menu=array(
    $.jgrid.useJSON = true;
 </script>
 <div>
-    <?php //include ("getDataForGrid.php");?>
+<b>INFO: работает только редактирование названий групп/подгрупп и комментариев по двойному клику!</b>
 </div>
-<br/> 
 <table id="list"></table> 
 <div id="pager"></div> 
 
@@ -35,16 +34,20 @@ $this->menu=array(
 $(function() {
     var lastSel;
     var sel_id;
+    var subcategories = ["football", "formel 1", "physics", "mathematics"];
     jQuery("#list").jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
-        width : '800',
+        width : '900',
         height : 'auto',
         mtype : 'GET',
-        colNames : [ 'IDDB', /*'Супергруппа',*/ 'Группа' ],
+        colNames : [ 'IDDB', 'Группа','Комментарий', 'Направление', '' ],
         colModel : [
          { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
-         { name : 'name', index : 'name', width : 150, editable: true } 
+         { name : 'name', index : 'name', width : 150, editable: true, sortable:false },
+         { name : 'comment', index : 'comment', width : 150, editable: true, sortable:false },
+         { name : 'dir', index : 'dir', width : 50, editable: false, sortable:false },
+		 { name : 'btns', index : 'btns', width : 20, sortable:false,formatter:'actions', formatoptions:{keys:true,editbutton:false}},
         ],
         caption : 'Группы товаров',
         treeGrid: true,
@@ -55,19 +58,16 @@ $(function() {
 
 //    	loadError: function(xhr, status, error) {alert(status +error)}
 
-        ondblClickRow: function(id) {
-            if (id ) { //&& id != lastSel
+        ondblClickRow: function(id) {                                                                                  
+            if (id ) { //&& id != lastSel                                                                               
             	sel_id= $('#list').getCell(id, 'iddb');
-            	$("#list").jqGrid('setGridParam', {editurl:'updateRow/iddb='+sel_id});
-//            	alert(sel_id);
+            	$("#list").jqGrid('setGridParam', {editurl:'updateRow?iddb='+sel_id});
                 jQuery("#list").restoreRow(lastSel);
                 jQuery("#list").editRow(id, true);
                 lastSel = id;
             }
             
         },
-//        editurl: '/assetGroup/updateRow'
-
     });
 
 });
