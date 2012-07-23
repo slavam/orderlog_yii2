@@ -20,13 +20,8 @@ $this->menu=array(
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
 </script>
-<div>
-    <?php //include ("getDataForGrid.php");?>
-</div>
-<br/> 
 <table id="list"></table> 
 <div id="pager"></div> 
-
 
 <script type="text/javascript">
 $(function() {
@@ -53,7 +48,7 @@ $(function() {
             width : 120
         } ],
         pager : '#pager',
-        rowNum : 30,
+        rowNum : 10,
         rowList : [ 10, 20, 30 ],
         sortname : 'id',
         sortorder : 'desc',
@@ -89,23 +84,3 @@ $(function() {
 
 });
 </script>
-<!--<h1>Группы товаров</h1>-->
-
-<?php // $this->widget('zii.widgets.grid.CGridView', array(
-//	'id'=>'claim-grid',
-//	'dataProvider'=>$dataProvider,
-//	'columns'=>array(
-//                array(
-//                'name'=>'Супергруппа',
-//                'value'=>'$data->block->name',
-//                ),
-//                array(
-//                'name'=>'Группа',
-//                'value'=>'$data->name',
-//                ),
-//                array(
-//                  'class'=>'CButtonColumn',
-//                  'viewButtonUrl'=>'Yii::app()->createUrl("assetGroup/show",array("id"=>$data->id))', 
-//                ),
-//    ))); ?>
-<?php //echo CHtml::link('Добавить группу', Yii::app()->createUrl("assetGroup/create"))?>

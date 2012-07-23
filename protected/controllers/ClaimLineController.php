@@ -68,6 +68,8 @@ class ClaimLineController extends Controller
 	public function actionCreate()
 	{
 		$model=new ClaimLine;
+                $model->claim_id=$_GET['claim_id'];
+                $model->count = 1;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);

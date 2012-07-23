@@ -1,6 +1,6 @@
 <?php
 
-class AssetGroupController extends Controller
+class ProductController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -54,12 +54,6 @@ class AssetGroupController extends Controller
 			'model'=>$this->loadModel($id),
 		));
 	}
-	public function actionShow($id)
-	{
-		$this->render('show',array(
-			'model'=>$this->loadModel($id),
-		));
-	}
 
 	/**
 	 * Creates a new model.
@@ -67,14 +61,14 @@ class AssetGroupController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new AssetGroup;
+		$model=new Product;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['AssetGroup']))
+		if(isset($_POST['Product']))
 		{
-			$model->attributes=$_POST['AssetGroup'];
+			$model->attributes=$_POST['Product'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -89,16 +83,6 @@ class AssetGroupController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-        public function actionUpdateRow()
-        {
-            if(isset($_POST['id']))
-            {
-                $model=$this->loadModel($_POST['id']);
-                $model->name = $_POST['name'];
-                if($model->save())
-				$this->redirect(array('index'));
-            }
-        }
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -106,9 +90,9 @@ class AssetGroupController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['AssetGroup']))
+		if(isset($_POST['Product']))
 		{
-			$model->attributes=$_POST['AssetGroup'];
+			$model->attributes=$_POST['Product'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -143,11 +127,7 @@ class AssetGroupController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('AssetGroup', array(
-                    'criteria'=>array(
-                        'order'=>'block_id, name',
-                        ),
-                ));
+		$dataProvider=new CActiveDataProvider('Product');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -158,10 +138,10 @@ class AssetGroupController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new AssetGroup('search');
+		$model=new Product('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['AssetGroup']))
-			$model->attributes=$_GET['AssetGroup'];
+		if(isset($_GET['Product']))
+			$model->attributes=$_GET['Product'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -175,7 +155,7 @@ class AssetGroupController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=AssetGroup::model()->findByPk($id);
+		$model=Product::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -187,33 +167,10 @@ class AssetGroupController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='asset-group-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='product-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-
-        public function actionGetDataForGrid()
-        {
-            
-            $dataProvider=new CActiveDataProvider('AssetGroup', array(
-                'criteria'=>array(
-                    'order'=>'block_id, name',
-                ),
-                'pagination'=>array(
-                    'pageSize'=>$_GET['rows'],
-                )
-            ));
-            $responce->page = $_GET['page'];
-            $responce->records = $dataProvider->getTotalItemCount();
-            $responce->total = ceil($responce->records / $_GET['rows']);
-            $rows = $dataProvider->getData();
-//            $firstRowIndex = $curPage * $rowsPerPage - $rowsPerPage;
-            foreach ($rows as $i=>$row) {
-                $responce->rows[$i]['id'] = $row['id'];
-                $responce->rows[$i]['cell'] = array($row->id, $row->name, $row->block->name);
-            }
-            echo CJSON::encode($responce);
-        }
 }
