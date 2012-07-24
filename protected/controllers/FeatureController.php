@@ -1,6 +1,6 @@
 <?php
 
-class ClaimLineProductController extends Controller
+class FeatureController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,7 +27,7 @@ class ClaimLineProductController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('indexByLine','view'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -61,24 +61,20 @@ class ClaimLineProductController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new ClaimLineProduct;
-                $claim_line_id = $_GET['claim_line_id'];
+		$model=new Feature;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLineProduct']))
+		if(isset($_POST['Feature']))
 		{
-			$model->attributes=$_POST['ClaimLineProduct'];
-                        $model->claim_line_id = $claim_line_id;
+			$model->attributes=$_POST['Feature'];
 			if($model->save())
-				$this->redirect(array('claimLine/show','id'=>$claim_line_id));
+				$this->redirect(array('view','id'=>$model->id));
 		}
-                $direction_id = $_GET['direction_id'];
+
 		$this->render('create',array(
-                    'model'=>$model,
-                    'direction_id'=>$direction_id,
-                    'claim_line_id' => $_GET['claim_line_id'],
+			'model'=>$model,
 		));
 	}
 
@@ -94,9 +90,9 @@ class ClaimLineProductController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['ClaimLineProduct']))
+		if(isset($_POST['Feature']))
 		{
-			$model->attributes=$_POST['ClaimLineProduct'];
+			$model->attributes=$_POST['Feature'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id));
 		}
@@ -129,21 +125,11 @@ class ClaimLineProductController extends Controller
 	/**
 	 * Lists all models.
 	 */
-	public function actionIndexByLine()
-	{            
-            
-            
-            $dataProvider=new CActiveDataProvider('ClaimLineProduct', array(
-                'criteria'=>array(
-                    'condition'=>'claim_line_id='.$_GET['claim_line_id'],
-                    'order'=>'id',
-                ),
-            ));
-//            $direction_id = $dataProvider->data[0]->product->direction_id;
-		$this->render('indexByLine',array(
-                    'dataProvider'=>$dataProvider,
-                    'direction_id'=>$dataProvider->data[0]->product->direction_id,
-                    'claim_line_id'=>$_GET['claim_line_id'],
+	public function actionIndex()
+	{
+		$dataProvider=new CActiveDataProvider('Feature');
+		$this->render('index',array(
+			'dataProvider'=>$dataProvider,
 		));
 	}
 
@@ -152,10 +138,10 @@ class ClaimLineProductController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new ClaimLineProduct('search');
+		$model=new Feature('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['ClaimLineProduct']))
-			$model->attributes=$_GET['ClaimLineProduct'];
+		if(isset($_GET['Feature']))
+			$model->attributes=$_GET['Feature'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -169,7 +155,7 @@ class ClaimLineProductController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=ClaimLineProduct::model()->findByPk($id);
+		$model=Feature::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -181,7 +167,7 @@ class ClaimLineProductController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='claim-line-product-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='feature-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

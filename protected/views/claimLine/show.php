@@ -70,5 +70,12 @@ $this->menu=array(
                     'value'=>CHtml::link(CHtml::encode($model->findProductsAsString($model->id)),
                              array('claimLineProduct/indexByLine','claim_line_id'=>$model->id))
                 ),
+                array(               
+                    'label'=>'Характеристики',
+                    'type'=>'raw',
+                    'value'=>CHtml::link(CHtml::encode($model->findFeaturesAsString($model->id)),
+                             array('claimLineFeature/featuresByClaimLine','claim_line_id'=>$model->id))
+                ),
 	),
 )); ?>
+<?php  echo CHtml::link('Редактировать строку', array('update','id'=>$model->id)) ?>

@@ -33,6 +33,7 @@
                                 array('label'=>'К-заявки', 'url'=>array('/claimLine/getClaimParams')),
                                 array('label'=>'Расположение', 'url'=>array('/place/tree')),
                                 array('label'=>'Продукты', 'url'=>array('/product/index')),
+                                array('label'=>'Характеристики', 'url'=>array('/feature/index')),
 				array('label'=>'Товары', 'url'=>array('/asset/index')),
                                 array('label'=>'Группы', 'url'=>array('/assetGroup/index')),
                                 array('label'=>'Супергруппы', 'url'=>array('/block/index')),
