@@ -1,6 +1,6 @@
 <?php
 $this->breadcrumbs=array(
-	'Продукты строки заявки'=>array('featuresByClaimLine','claim_line_id'=>$claim_line_id),
+	'Характеристики строки заявки'=>array('featuresByClaimLine','claim_line_id'=>$claim_line_id),
 	'Создать',
 );
 

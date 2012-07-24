@@ -90,6 +90,7 @@ class ClaimLineProductController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
+                $claim_line_id = $_GET['claim_line_id'];
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
@@ -98,11 +99,13 @@ class ClaimLineProductController extends Controller
 		{
 			$model->attributes=$_POST['ClaimLineProduct'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('claimLine/show','id'=>$claim_line_id));
 		}
-
+                $direction_id = $model->product->direction_id;
 		$this->render('update',array(
 			'model'=>$model,
+                    'direction_id'=>$direction_id,
+                    'claim_line_id' => $_GET['claim_line_id'],
 		));
 	}
 
