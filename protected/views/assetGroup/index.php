@@ -23,14 +23,12 @@ $this->menu=array(
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
 </script>
-<<<<<<< HEAD
-=======
 <div>
 <b>INFO: работает только редактирование названий групп/подгрупп и комментариев по двойному клику!</b>
 </div>
->>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044
 <table id="list"></table> 
 <div id="pager"></div> 
+
 
 <script type="text/javascript">
 $(function() {
@@ -43,45 +41,22 @@ $(function() {
         width : '900',
         height : 'auto',
         mtype : 'GET',
-<<<<<<< HEAD
-        colNames : [ 'ID', 'Группа', 'Супергруппа' ],
-        colModel : [ {
-            name : 'id',
-            index : 'id',
-            width : 60
-        }, {
-            name : 'name',
-            index : 'name',
-            width : 150,
-            editable:true
-        }, {
-            name : 'b_name',
-            index : 'b_name',
-            width : 120
-        } ],
-        pager : '#pager',
-        rowNum : 10,
-        rowList : [ 10, 20, 30 ],
-        sortname : 'id',
-        sortorder : 'desc',
-        viewrecords : true,
-=======
         colNames : [ 'IDDB', 'Группа','Комментарий', 'Код', 'Направление', '' ],
         colModel : [
          { name : 'iddb',   index : 'iddb',   width : 20, hidden: true },
-         { name : 'name', index : 'name', width : 150, editable: true, sortable:false },
+         { name : 'name', index : 'name', width : 150, editable: true, sortable:false, editrules:{required:true} },
          { name : 'comment', index : 'comment', width : 150, editable: true, sortable:false },
          { name : 'stamp', index : 'stamp', width : 50, editable: true, sortable:false },
          { name : 'dir', index : 'dir', width : 50, editable: false, sortable:false },
 		 { name : 'btns', index : 'btns', width : 20, sortable:false,formatter:'actions', formatoptions:{keys:true,editbutton:false}},
         ],
->>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044
         caption : 'Группы товаров',
         treeGrid: true,
         treeGridModel: 'adjacency',
         ExpandColumn: 'name',
 //        ExpandColClick: true,
         rowNum : 0,
+        pager: '#pager',
 
 //    	loadError: function(xhr, status, error) {alert(status +error)}
 
@@ -95,14 +70,30 @@ $(function() {
             }
             
         },
-    });
+    }).navGrid('#pager',{view:false, del:true, add:true, edit:true},
+      {
+                editfunc: function (rowid) {
+                    alert('The "Edit" button was clicked with rowid=' + rowid);
+                }
+        
+      }, // default settings for edit
+      {
+
+      }, // default settings for add
+      {}, // delete instead that del:false we need this
+      {
+          closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,
+          sopt:['eq','cn']
+      }, // search options
+
+      {
+      } /* view parameters*/
+      );
+
 
 });
 
 //alert("!");
 
 </script>
-<<<<<<< HEAD
-=======
 <!--<h1>Группы товаров</h1>-->
->>>>>>> 26de9bee05c17008bd98fc7ac3c3c74725b8b044

@@ -235,22 +235,7 @@ class AssetGroupController extends Controller
             $responce = array();
 
             $dataProvider_block = new CActiveDataProvider('Block' , array(
-<<<<<<< .mine                'criteria'=>array(
-                    'order'=>'block_id, name',
-                ),
-                'pagination'=>array(
-                    'pageSize'=>$_GET['rows'],
-                )
-            ));
-            $responce->page = $_GET['page'];
-            $responce->records = $dataProvider->getTotalItemCount();
-            $responce->total = ceil($responce->records / $_GET['rows']);
-            $rows = $dataProvider->getData();
-//            $firstRowIndex = $curPage * $rowsPerPage - $rowsPerPage;
-            foreach ($rows as $i=>$row) {
-                $responce->rows[$i]['id'] = $row['id'];
-                $responce->rows[$i]['cell'] = array($row->id, $row->name, $row->block->name);
-=======                    'criteria'=>array(
+                    'criteria'=>array(
                     'with'=>array('directions'),
                         'order'=>'directions.name, t.name',
                         ),
@@ -299,7 +284,7 @@ class AssetGroupController extends Controller
 				}
 
 
->>>>>>> .theirs            }
+            }
 
 /*			
 			$new_super_block ='';
