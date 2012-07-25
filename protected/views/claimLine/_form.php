@@ -72,7 +72,17 @@
                     } else {
                         echo CHtml::link('Добавить продукт', array('claimLineProduct/create','direction_id'=>$model->claim->direction_id, 'claim_line_id'=>$model->id));
                 } ?> 
-                <?php echo $form->error($model,'position_id'); ?>
+                <?php echo $form->error($model,'product_id'); ?>
+            </div>
+            <div class="row">
+                <b>Характеристики</b>
+                <br>
+                <?php if ($model->findFeaturesAsString($model->id) > '') { 
+                        echo CHtml::link(CHtml::encode($model->findFeaturesAsString($model->id)), array('claimLineFeature/featuresByClaimLine','claim_line_id'=>$model->id));
+                    } else {
+                        echo CHtml::link('Добавить характеристику', array('claimLineFeature/create','direction_id'=>$model->claim->direction_id, 'claim_line_id'=>$model->id));
+                } ?> 
+                <?php echo $form->error($model,'feature_id'); ?>
             </div>
         <?php endif;?>
 	<div class="row buttons">

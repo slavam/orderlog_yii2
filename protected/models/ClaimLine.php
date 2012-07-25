@@ -138,7 +138,7 @@ class ClaimLine extends CActiveRecord
         public function findConsolidatedClaimLines($period_id, $direction_id)
         {
             $lines = ClaimLine::model()->findAllBySql('select * from claim_lines c_l 
-                join claims c on c.id=c_l.claim_id and c.period_id =1844 and c.state_id=2 and c.direction_id=1');
+                join claims c on c.id=c_l.claim_id and c.period_id ='.$period_id.' and c.state_id=2 and c.direction_id='.$direction_id);
             return $lines;
         }
         
@@ -165,6 +165,22 @@ class ClaimLine extends CActiveRecord
                 $s = '';
                 foreach ($claim_line_products as $e) {
                     $s .= $e->product->name.'; ';
+                }
+                return $s;
+            } else {
+                return '';
+            }
+        }
+        public function findFeaturesAsString($claim_line_id)
+        {
+            if ($claim_line_id>'')
+            {
+                $criteria=new CDbCriteria;
+                $criteria->condition="claim_line_id=".$claim_line_id;
+                $claim_line_features = ClaimLineFeature::model()->findAll($criteria);
+                $s = '';
+                foreach ($claim_line_features as $e) {
+                    $s .= $e->feature->name.'; ';
                 }
                 return $s;
             } else {

@@ -20,7 +20,7 @@ $this->breadcrumbs=array(
                 'class'=>'CButtonColumn',
                 'buttons'=>array(
                     'view'=>array('visible'=>'false'),
-                    'update'=>array('visible'=>'false'),
+                    'update'=>array('url'=>'Yii::app()->createUrl("claimLineProduct/update",array("id"=>$data->id,"claim_line_id"=>$data->claim_line_id))'), 
                     'delete'=>array('url'=>'Yii::app()->createUrl("claimLineProduct/delete",array("id"=>$data->id))'), 
                 
                 ),
