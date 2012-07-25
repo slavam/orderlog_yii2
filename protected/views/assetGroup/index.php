@@ -167,7 +167,7 @@ $(function() {
 
 		function after_save(rowID, response ) {
 			  var ret_iddb = $.parseJSON(response.responseText);
-			  alert(ret_iddb);
+//			  alert(ret_iddb);
 			  grid.jqGrid('setCell',rowID,'iddb',ret_iddb);
 		  }
 
