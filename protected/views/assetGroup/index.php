@@ -30,9 +30,9 @@ $this->menu=array(
 <table id="list"></table> 
 <div id="pager"></div> 
 
-<div style="display:none;" id="dialog-add-supergroup" title="Добавить группу">
-<span><p>Название: </p></span>
-<span><input name="supergroup_name" type="text"></span>
+<div style="display:none;" id="dialog-relink" title="Изменить привязку подгруппы">
+<span><p>Выберите новую группу для подгруппы: </p></span>
+<span id="relink"></span>
 </div>
 
 
@@ -108,7 +108,7 @@ $(function() {
 //				                lastSel = last_row_id+1 ;
             },
             //position:'last'
-        })
+        });
         grid.jqGrid('navButtonAdd','#pager',{
             caption: 'Подгруппа',
             title: 'Добавить подгруппу',
@@ -140,16 +140,80 @@ $(function() {
             		
             	} else alert("Выберите группу!");
 
-/*                var gsr = grid.jqGrid('getGridParam','selrow'); 
-                if(gsr){
-                    $(location).attr('href','/documents/update?id='+gsr);
-                } else { alert("!") }
-                */
-//	            var _node = {"rows":[{"id":1235,"iddb":1235,"name":"","comment":"","stamp":"","dir":1,"parent":1234,"isLeaf":true,"expanded":true,"loaded":true}]};
-//				grid.jqGrid ('addChildNode', 1235, _node.rows[0].parent, _node.rows[0]);
-
-//                alert("!");
             },
+        });
+        grid.jqGrid('navButtonAdd','#pager',{
+            caption: 'Подгруппа',
+            title: 'Изменить привязку',
+            buttonicon: 'ui-icon-extlink',
+            onClickButton: function()
+            {
+
+            	var sel_ = grid.getGridParam('selrow');
+            	if(sel_) {
+
+           		var parent_ = grid.getCell(sel_, 'parent');
+
+            	if(parent_!="null"&&parent_!="") {
+
+            	 var iddb_ = grid.getCell(sel_, 'iddb');
+
+
+            	 $("#relink").load('getBlocks');
+
+            	 $("#dialog-relink").dialog({
+                        height:200,
+                        width:400,
+                        modal:true,
+                        buttons:{
+                            'OK': function(){
+                                //alert($("#supergroups-list").val());
+
+                                $.ajax({
+                                    'type': "POST",
+                                    'url':  "relinkRow",
+                                    'data': { 'iddb': iddb_,
+                                        	  'block_id': $("#supergroups-list").val(),
+                                    },
+                                    'dataType': "json",
+                                    'success': function(msg){
+
+                                    	var rowData = grid.getRowData();
+                                    	var new_parent_iddb = $("#supergroups-list").val();
+                                    	var new_parent_id;
+										for(var index in rowData) {
+											  if(rowData[index]['iddb']==new_parent_iddb&&(rowData[index]['parent']=="null"||rowData[index]['parent']=="")) {
+											   		new_parent_id = ++index;
+											   		break;
+											   }
+
+										}
+                                    	var rowData = grid.getRowData(sel_);
+										grid.delTreeNode(sel_);
+										var last_row_id = grid.getGridParam("reccount");
+						                grid.jqGrid ('addChildNode',last_row_id+1, new_parent_id, rowData);
+						                grid.setSelection(last_row_id+1, true);
+
+                                    },
+                                    'error': function(res, status, exeption) {
+                                        alert("error:"+res.responseText);
+                                    },
+                                    'cache'  :false
+                                });
+                                
+                                $(this).dialog('close');
+                            },
+                            'Отмена': function(){
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                } else alert("Выберите подгруппу!");
+              }//if sel_
+              else alert("Выберите подгруппу!");
+
+            },
+            //position:'last'
         });
 
 		function after_restore(rowid) {

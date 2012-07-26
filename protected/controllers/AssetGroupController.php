@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -83,6 +83,21 @@ class AssetGroupController extends Controller
 			'model'=>$model,
 		));
 	}
+
+
+        public function actionRelinkRow()
+        {
+            if(isset($_REQUEST['iddb']))
+            {
+                $model=$this->loadModel($_REQUEST['iddb']);
+                $model->block_id=$_REQUEST['block_id'];
+                if(!$model->save()) 
+                {
+                    //echo CJSON::encode("Error while saving model!");
+                    return false;
+                }
+            }
+        }
 
 	/**
 	 * Updates a particular model.
@@ -149,6 +164,7 @@ class AssetGroupController extends Controller
                     if($model->save())
                     {
                         echo CJSON::encode($model->id);
+                        //redirect with params?!
         		//$this->redirect(array('index'));
                     }
                 }
@@ -269,6 +285,15 @@ class AssetGroupController extends Controller
 
 			$model=Direction::model()->findAll(array('order' => 'short_name'));
 			$ret = CHtml::dropDownList('',null,CHtml::listData($model,'id', 'short_name'),array('empty' => '<Направление>'));
+
+			return print $ret;
+		}
+
+        public function actionGetBlocks()
+        {
+
+			$model=Block::model()->findAll(array('order' => 'name'));
+			$ret = CHtml::dropDownList('supergroups-list',null,CHtml::listData($model,'id', 'name'),array('empty' => '<Группа>'));
 
 			return print $ret;
 		}
