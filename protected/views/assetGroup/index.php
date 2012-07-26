@@ -80,7 +80,7 @@ $(function() {
           		var parent_ = grid.getCell(id, 'parent');
             	if(parent_=="null"||parent_=="") {
 					grid.setColProp('dir',{editable:true});
-            	} else grid.setColProp('dir',{editable:true});
+            	} else grid.setColProp('dir',{editable:false});
                 grid.editRow(id, true);
                 lastSel = id;
             }
