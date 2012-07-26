@@ -89,7 +89,7 @@ $(function() {
     }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true});
         grid.jqGrid('navSeparatorAdd','#pager');
         grid.jqGrid('navButtonAdd','#pager',{
-            //caption: 'Группа',
+            caption: '',//'Группа',
             title: 'Добавить группу',
             buttonicon: 'ui-icon-plusthick',
             onClickButton: function()
@@ -110,7 +110,7 @@ $(function() {
             //position:'last'
         });
         grid.jqGrid('navButtonAdd','#pager',{
-            //caption: 'Подгруппа',
+            caption: '',//'Подгруппа',
             title: 'Добавить подгруппу',
             buttonicon: 'ui-icon-plus',
             onClickButton: function()
@@ -143,7 +143,7 @@ $(function() {
             },
         });
         grid.jqGrid('navButtonAdd','#pager',{
-            //caption: 'Подгруппа',
+            caption: '',//'Подгруппа',
             title: 'Изменить привязку',
             buttonicon: 'ui-icon-extlink',
             onClickButton: function()
