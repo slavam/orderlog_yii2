@@ -27,7 +27,8 @@ class ClaimLineController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams'),
+				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams',
+                                    'createLinesByComplect'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -90,6 +91,43 @@ class ClaimLineController extends Controller
 			'model'=>$model,
 		));
 	}
+        
+        public function actionCreateLinesByComplect()
+        {
+            $complect_id = 0;
+            $business_id = 0;
+            $for_whom = 0;
+            $claim_id = $_GET['claim_id'];
+            if(isset($_POST['complect_id']))
+            {
+                $complect_id = $_POST['complect_id'];
+//                $business_id = $_POST['business_id'];
+                $criteria=new CDbCriteria;
+                $criteria->condition="complect_id=".$complect_id;
+                $complect_lines = ComplectLine::model()->findAll($criteria);
+                foreach ($complect_lines as $c_l) {
+                    $model=new ClaimLine;
+                    $model->claim_id=$claim_id;
+                    $model->business_id=$_POST['business_id'];
+                    $model->for_whom=$_POST['for_whom'];
+                    $model->count = $c_l->amount;
+                    $model->asset_id=$c_l->asset_id;
+                    $asset = Asset::model()->findByPk($c_l->asset_id);
+                    $model->cost=$asset->cost;
+                    $model->amount=$c_l->amount*$asset->cost;
+                    $model->budget_item_id=$asset->budget_item_id;
+                    $model->save();
+                }
+                $this->redirect(array('claim/show','id'=>$model->claim_id));
+            }
+
+            $this->render('createLinesByComplect',array(
+			'claim_id'=>$claim_id,
+                'complect_id'=>$complect_id,
+                'business_id'=>$business_id,
+                'for_whom'=>$for_whom,
+            ));
+        }
 
         /**
 	 * Updates a particular model.
