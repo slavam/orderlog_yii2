@@ -80,6 +80,7 @@ class ClaimLine extends CActiveRecord
                     'position' => array(self::BELONGS_TO, 'Place', 'position_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
+                    'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
 		);
 	}
 

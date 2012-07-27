@@ -77,7 +77,7 @@ class ComplectController extends Controller
 		{
 			$model->attributes=$_POST['Complect'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -101,7 +101,7 @@ class ComplectController extends Controller
 		{
 			$model->attributes=$_POST['Complect'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -118,6 +118,10 @@ class ComplectController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
+                    $lines = $this->loadModel($id)->complectLines;
+                    foreach ($lines as $line) {
+                        $line->delete();
+                    }
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 

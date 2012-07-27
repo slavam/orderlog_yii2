@@ -10,7 +10,7 @@ $this->breadcrumbs=array(
 //);
 ?>
 
-<h1>Комплекты</h1>
+<!--<h1>Комплекты</h1>-->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'complect-grid',
@@ -23,9 +23,6 @@ $this->breadcrumbs=array(
                 array(
                 'name'=>'Название',
                 'value'=>'$data->name'),
-//                array(
-//                'name'=>'Комментарий',
-//                'value'=>'$data->comment'),
                 array(
                   'class'=>'CButtonColumn',
                   'viewButtonUrl'=>'Yii::app()->createUrl("complect/show",array("id"=>$data->id))', 

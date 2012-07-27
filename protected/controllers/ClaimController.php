@@ -124,6 +124,11 @@ class ClaimController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
+                    $lines = $this->loadModel($id)->claimLines;
+                    foreach ($lines as $line) {
+                        $line->delete();
+                    }
+
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 

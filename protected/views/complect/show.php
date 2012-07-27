@@ -1,15 +1,11 @@
 <?php
 $this->breadcrumbs=array(
     'Комплекты'=>array('index'),
-//    $model->claim_number,
+    $model->complectType->name,
 );
 ?>
 
-<?php if ($model->complect_type_id==1): ?>
-    <h1>Шаблон "<?php echo $model->name; ?>"</h1>
-<?php  else : ?>
-    <h1>Набор "<?php echo $model->name; ?>"</h1>
-<?php endif; ?>
+<h2><?php echo $model->name; ?></h2>
 
 <b>Комментарий :</b>
 <?php echo $model->comment; ?>
@@ -40,7 +36,7 @@ $this->breadcrumbs=array(
                 'value'=>'$data->amount'),
                 array(
                   'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("complectLine/show",array("id"=>$data->id))', 
+                  'buttons'=>array('view'=>array('visible'=>'false')),
                   'updateButtonUrl'=>'Yii::app()->createUrl("complectLine/update",array("id"=>$data->id))', 
                   'deleteButtonUrl'=>'Yii::app()->createUrl("complectLine/delete",array("id"=>$data->id))', 
                 ),

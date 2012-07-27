@@ -69,6 +69,13 @@ $this->breadcrumbs=array(
                     'value'=>CHtml::link(CHtml::encode($model->findFeaturesAsString($model->id)),
                              array('claimLineFeature/featuresByClaimLine','claim_line_id'=>$model->id))
                 ),
+                array(               
+                    'label'=>'Добавлена',
+                    'type'=>'raw',
+                    'value'=>($model->complect_id==null ? 'Вручную' : 
+                        ($model->complect_id==2 ? 'Из набора "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"' :
+                        'Из шаблона "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"'))
+                ),
 	),
 )); ?>
 <?php  echo CHtml::link('Редактировать строку', array('update','id'=>$model->id)) ?>

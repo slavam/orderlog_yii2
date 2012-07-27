@@ -79,6 +79,8 @@ class ClaimLineController extends Controller
 		{
 			$model->attributes=$_POST['ClaimLine'];
                         $model->claim_id=$_GET['claim_id'];
+                        $model->how_created = 3;
+                        $model->created_at = date("Y-m-d H:i:s", time());
                         $asset =  Asset::model()->findByPk($model->asset_id);
                         $model->cost=$asset->cost;
                         $model->amount=$model->count*$asset->cost;
@@ -105,9 +107,13 @@ class ClaimLineController extends Controller
                 $criteria=new CDbCriteria;
                 $criteria->condition="complect_id=".$complect_id;
                 $complect_lines = ComplectLine::model()->findAll($criteria);
+                $current_time = date("Y-m-d H:i:s", time());
                 foreach ($complect_lines as $c_l) {
                     $model=new ClaimLine;
                     $model->claim_id=$claim_id;
+                    $model->how_created =$c_l->complect->complect_type_id;
+                    $model->complect_id = $complect_id;
+                    $model->created_at = $current_time;
                     $model->business_id=$_POST['business_id'];
                     $model->for_whom=$_POST['for_whom'];
                     $model->count = $c_l->amount;

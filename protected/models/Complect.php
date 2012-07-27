@@ -52,6 +52,7 @@ class Complect extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'complectLines' => array(self::HAS_MANY, 'ComplectLine', 'complect_id'),
                     'complectType' => array(self::BELONGS_TO, 'ComplectType', 'complect_type_id' ),
 		);
 	}
