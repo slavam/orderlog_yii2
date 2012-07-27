@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -84,6 +84,21 @@ class AssetGroupController extends Controller
 		));
 	}
 
+
+        public function actionRelinkRow()
+        {
+            if(isset($_REQUEST['iddb']))
+            {
+                $model=$this->loadModel($_REQUEST['iddb']);
+                $model->block_id=$_REQUEST['block_id'];
+                if(!$model->save()) 
+                {
+                    //echo CJSON::encode("Error while saving model!");
+                    return false;
+                }
+            }
+        }
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -99,7 +114,7 @@ class AssetGroupController extends Controller
             	TODO: string validation before updating DB! (comment by o.lysenko 23.07.2012 12:17)
             */
 
-                if(isset($_REQUEST['parent'])&&$_REQUEST['parent']!="null") {
+                if(isset($_REQUEST['parent'])&&($_REQUEST['parent']!="null"&&$_REQUEST['parent']!="")) {
                     $model=$this->loadModel($_REQUEST['iddb']);
                     $model->name = $_REQUEST['name'];
                     $model->comment = $_REQUEST['comment'];
@@ -108,13 +123,14 @@ class AssetGroupController extends Controller
     				$this->redirect(array('index'));
                 }
                 
-                if(isset($_REQUEST['parent'])&&$_REQUEST['parent']=="null") {
+                if(isset($_REQUEST['parent'])&&($_REQUEST['parent']=="null"||$_REQUEST['parent']=="")) {
                     $model=Block::model()->findByPk($_REQUEST['iddb']);
                     if($model===null)
 						throw new CHttpException(404,'The requested page does not exist.');
                     $model->name = $_REQUEST['name'];
                     $model->comment = $_REQUEST['comment'];
                     $model->stamp = $_REQUEST['stamp'];
+                    $model->direction_id = $_REQUEST['dir'];
                     if($model->save())
     				$this->redirect(array('index'));
                     
@@ -130,6 +146,42 @@ class AssetGroupController extends Controller
                 //$model->name = $_POST['name'];
                 //if($model->save())
 		//		$this->redirect(array('index'));
+            }
+        }
+
+        public function actionAddRow()
+        {
+            if(isset($_POST['id']))
+            {
+                if(isset($_REQUEST['parent'])&&($_REQUEST['parent']=="null"||$_REQUEST['parent']==""))
+                {
+                    // TODO : Server-side validation!!! especialy direction!
+                    $model = new Block;
+                    $model->name = $_REQUEST['name'];
+                    $model->comment = $_REQUEST['comment'];
+                    $model->stamp = $_REQUEST['stamp'];
+                    $model->direction_id = $_REQUEST['dir'];
+                    if($model->save())
+                    {
+                        echo CJSON::encode($model->id);
+                        //redirect with params?!
+        		//$this->redirect(array('index'));
+                    }
+                }
+                if(isset($_REQUEST['parent'])&&($_REQUEST['parent']!="null"&&$_REQUEST['parent']!=""))
+                {
+                    // TODO : Server-side validation!!! especialy direction!
+                    $model = new AssetGroup;
+                    $model->name = $_REQUEST['name'];
+                    $model->comment = $_REQUEST['comment'];
+                    $model->stamp = $_REQUEST['stamp'];
+                    $model->block_id = $_REQUEST['iddb'];
+                    if($model->save())
+                    {
+                        echo CJSON::encode($model->id);
+        		//$this->redirect(array('index'));
+                    }
+                }
             }
         }
 
@@ -228,6 +280,24 @@ class AssetGroupController extends Controller
 		}
 	}
 
+        public function actionGetDirectionsForSelect()
+        {
+
+			$model=Direction::model()->findAll(array('order' => 'short_name'));
+			$ret = CHtml::dropDownList('',null,CHtml::listData($model,'id', 'short_name'),array('empty' => '<Направление>'));
+
+			return print $ret;
+		}
+
+        public function actionGetBlocks()
+        {
+
+			$model=Block::model()->findAll(array('order' => 'name'));
+			$ret = CHtml::dropDownList('supergroups-list',null,CHtml::listData($model,'id', 'name'),array('empty' => '<Группа>'));
+
+			return print $ret;
+		}
+
         public function actionGetDataForGrid()
         {
             
@@ -257,7 +327,7 @@ class AssetGroupController extends Controller
 				
             foreach ($blocks_ as $i=>$row) {
                 $responce['rows'][$r_i]['id'] = $r_i+1;
-                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp, $row->directions->short_name,'','0','null',false,false,true);
+                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp, $row->directions->short_name,'0','null',false,false,true);
                 $r_i++;
 
 	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
@@ -279,7 +349,7 @@ class AssetGroupController extends Controller
 
 				foreach ($groups_ as $i=>$row) {
 	                $responce['rows'][$r_i]['id'] = $r_i+1;
-	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp,'','','1',"$parent_",true,true,true);
+	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp,'','1',"$parent_",true,true,true);
 	                $r_i++;
 				}
 
