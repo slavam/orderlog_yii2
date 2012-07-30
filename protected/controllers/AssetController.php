@@ -230,8 +230,8 @@ class AssetController extends Controller {
             $dataProvider = new CActiveDataProvider('Asset' , array(
             					'pagination'=>false, 
             					'criteria' => array(
-            						'with' => array('block','assetgroups','direction'),
-	            					'order' => 'block.name,assetgroups.name'))
+            						'with' => array('direction','block','assetgroups'),
+	            					'order' => 'block.name,assetgroups.name,t.name'))
 //	            					'order' => 'block.name,assetGroup.name'))
                   );
             
