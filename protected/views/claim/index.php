@@ -3,10 +3,10 @@ $this->breadcrumbs=array(
 	'Заявки',
 );
 
-$this->menu=array(
-	array('label'=>'Create Claim', 'url'=>array('create')),
-	array('label'=>'Manage Claim', 'url'=>array('admin')),
-);
+//$this->menu=array(
+//	array('label'=>'Create Claim', 'url'=>array('create')),
+//	array('label'=>'Manage Claim', 'url'=>array('admin')),
+//);
 ?>
 
 <h1>Заявки</h1>

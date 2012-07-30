@@ -21,7 +21,7 @@ $this->breadcrumbs=array(
                 'buttons'=>array(
                     'view'=>array('visible'=>'false'),
                     'update'=>array('url'=>'Yii::app()->createUrl("claimLineFeature/update",array("id"=>$data->id,"claim_line_id"=>$data->claim_line_id))'), 
-                    'delete'=>array('url'=>'Yii::app()->createUrl("claimLineFeature/delete",array("id"=>$data->id))'), 
+                    'delete'=>array('url'=>'Yii::app()->createUrl("claimLineFeature/delete",array("id"=>$data->id,"confirm"=>"Are you sure you want to delete this item?"))'), 
                 
                 ),
 )))); ?>

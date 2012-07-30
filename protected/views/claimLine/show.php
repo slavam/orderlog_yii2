@@ -4,13 +4,6 @@ $this->breadcrumbs=array(
 	$model->claim->claim_number,
 );
 
-$this->menu=array(
-	array('label'=>'List ClaimLine', 'url'=>array('index')),
-	array('label'=>'Create ClaimLine', 'url'=>array('create')),
-	array('label'=>'Update ClaimLine', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete ClaimLine', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage ClaimLine', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Строка заявки #<?php echo $model->id; ?></h1>
@@ -75,6 +68,13 @@ $this->menu=array(
                     'type'=>'raw',
                     'value'=>CHtml::link(CHtml::encode($model->findFeaturesAsString($model->id)),
                              array('claimLineFeature/featuresByClaimLine','claim_line_id'=>$model->id))
+                ),
+                array(               
+                    'label'=>'Добавлена',
+                    'type'=>'raw',
+                    'value'=>($model->complect_id==null ? 'Вручную' : 
+                        ($model->complect_id==2 ? 'Из набора "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"' :
+                        'Из шаблона "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"'))
                 ),
 	),
 )); ?>

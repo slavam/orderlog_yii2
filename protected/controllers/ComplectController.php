@@ -1,6 +1,6 @@
 <?php
 
-class ClaimController extends Controller
+class ComplectController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -27,7 +27,7 @@ class ClaimController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','list','changeClaimState'),
+				'actions'=>array('index','view','show','indexJqgrid'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -41,7 +41,6 @@ class ClaimController extends Controller
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
-
 		);
 	}
 
@@ -51,45 +50,39 @@ class ClaimController extends Controller
 	 */
 	public function actionView($id)
 	{
-            $this->render('view',array(
-		'model'=>$this->loadModel($id),
-            ));
+		$this->render('view',array(
+			'model'=>$this->loadModel($id),
+		));
 	}
 
-	public function actionShow($id)
+        public function actionShow($id)
 	{
             $model =$this->loadModel($id);
             $this->render('show',array(
 			'model'=>$model,
             ));
 	}
-        
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
 	public function actionCreate()
 	{
-            $model=new Claim;
+		$model=new Complect;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-            if(isset($_POST['Claim'])) {
-                $model->attributes=$_POST['Claim'];
-                $model->state_id = 1;
-                $model->budgetary = true;
-                $model->create_date = date("Y-m-d H:i:s", time());
-                $model->claim_number = $model->direction->stamp.$model->id;
-                if($model->save()) {
-                    $model->claim_number = $model->direction->stamp.$model->id;
-                    $model->save();
-                    $this->redirect(array('show','id'=>$model->id));
-                }  
-            }
-            $this->render('create',array(
-                'model'=>$model,
-            ));
+		if(isset($_POST['Complect']))
+		{
+			$model->attributes=$_POST['Complect'];
+			if($model->save())
+				$this->redirect(array('index'));
+		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
 	}
 
 	/**
@@ -104,12 +97,13 @@ class ClaimController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Claim']))
+		if(isset($_POST['Complect']))
 		{
-                    $model->attributes=$_POST['Claim'];
-                    if($model->save())
-                            $this->redirect(array('show','id'=>$model->id));
+			$model->attributes=$_POST['Complect'];
+			if($model->save())
+				$this->redirect(array('index'));
 		}
+
 		$this->render('update',array(
 			'model'=>$model,
 		));
@@ -124,11 +118,10 @@ class ClaimController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
-                    $lines = $this->loadModel($id)->claimLines;
+                    $lines = $this->loadModel($id)->complectLines;
                     foreach ($lines as $line) {
                         $line->delete();
                     }
-
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 
@@ -145,35 +138,38 @@ class ClaimController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Claim', array(
+		$dataProvider=new CActiveDataProvider('Complect', array(
                     'pagination'=>false, 
                     'criteria'=>array(
-                        'order'=>'period_id desc, division_id, id',
+                        'order'=>'complect_type_id desc, id',
                         ),
                 ));
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
 	}
-	public function actionList()
+
+        public function actionIndexJqgrid()
 	{
-		$dataProvider=new CActiveDataProvider('Claim');
-                $model=new Claim;
-		$this->render('list',array(
+		$dataProvider=new CActiveDataProvider('Complect', array(
+                    'pagination'=>false, 
+                    'criteria'=>array(
+                        'order'=>'complect_type_id desc, id',
+                        ),
+                ));
+		$this->render('indexJqgrid',array(
 			'dataProvider'=>$dataProvider,
-                        'model'=>$model,
 		));
 	}
-        
 	/**
 	 * Manages all models.
 	 */
 	public function actionAdmin()
 	{
-		$model=new Claim('search');
+		$model=new Complect('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['Claim']))
-			$model->attributes=$_GET['Claim'];
+		if(isset($_GET['Complect']))
+			$model->attributes=$_GET['Complect'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -187,7 +183,7 @@ class ClaimController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Claim::model()->findByPk($id);
+		$model=Complect::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -199,38 +195,10 @@ class ClaimController extends Controller
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='claim-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='complect-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();
 		}
 	}
-
-        public function actionChangeClaimState($id)
-        {
-            $model=Claim::model()->findByPk($id);
-            $new_state = $model->state_id;
-            if ($model->state->documentType->name == "Первичная заявка")
-            {
-                switch ($model->state->stateName->name)
-                {
-                    case "Черновик":
-                        $new_state = 5; // "На согласовании"
-                        break;
-                    case "На согласовании":
-                        $new_state = 2; // "Согласовано"
-                        break;
-                }    
-            }       
-            $model->state_id = $new_state;
-            $model->save();
-            $dataProvider=new CActiveDataProvider('Claim', array(
-                'criteria'=>array(
-                    'order'=>'period_id, division_id, id',
-                ),
-            ));
-            $this->render('index',array(
-                    'dataProvider'=>$dataProvider,
-            ));
-        }
 }
