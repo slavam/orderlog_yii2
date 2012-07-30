@@ -25,7 +25,7 @@ class AssetController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'show', 'updateGrid'),
+                'actions' => array('index', 'view', 'show', 'updateGrid', 'getDataForGrid','getDirectionsForSelect'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -204,4 +204,73 @@ class AssetController extends Controller {
 //        }
     }
 
-}
+    public function actionGetDirectionsForSelect()
+        {
+
+			$model=Direction::model()->findAll(array('order' => 'short_name'));
+			$ret = CHtml::dropDownList('dir_selector',null,CHtml::listData($model,'id', 'short_name'),array('empty' => '<Все>'));
+
+			return print $ret;
+		}
+
+    public function actionGetDataForGrid()  {
+
+            $responce = array();
+
+            /*
+            $dataProvider_FIN = new CActiveDataProvider('BudgetItem' , array(
+            					'pagination'=>false, 
+            					'criteria' => array(
+	            					'order' => 'id')
+	            					)
+                  );
+
+            $articles_ = $dataProvider_FIN->getData();*/
+
+            $dataProvider = new CActiveDataProvider('Asset' , array(
+            					'pagination'=>false, 
+            					'criteria' => array(
+            						'with' => array('block','assetgroups','direction'),
+	            					'order' => 'block.name,assetgroups.name'))
+//	            					'order' => 'block.name,assetGroup.name'))
+                  );
+            
+            if(isset($_REQUEST['dir_selector'])&&$_REQUEST['dir_selector']){
+                $criteria_ = $dataProvider->getCriteria();
+                $criteria_->condition = 't.direction_id='.$_REQUEST['dir_selector'];
+            }
+
+/*                  
+			$pagination = $dataProvider->getPagination();
+			if(isset($_GET['page']))
+                            $pagination->setCurrentPage(0);
+			if(isset($_GET['rows']))
+                            $pagination->setPageSize($_GET['rows']);
+                            */
+
+			$assets_ = $dataProvider->getData();
+
+			$responce['rows']=array();
+
+            foreach ($assets_ as $i=>$row) {
+	                $responce['rows'][$i]['id'] = $row['id'];
+//	                $tmp = $row->assetGroup->block->name;
+					if($row->budget_item_id) {
+						$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
+						$article_name = $articles_->NAME;
+					} else $article_name = 'Н/Д';
+	                $responce['rows'][$i]['cell'] = array(
+	                			$row->id, 
+	                			$row->block->name, 
+	                			$row->assetgroups->name, 
+	                			$row->waretype->short_name, 
+	                			$row->name, 
+	                			$row->cost, 
+	                			$row->part_number, 
+	                			$article_name);
+				}
+
+            echo CJSON::encode($responce);
+
+    }
+}                                                                           	

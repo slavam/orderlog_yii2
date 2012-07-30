@@ -1,49 +1,22 @@
-<!--<script type="text/javascript">
-$(document).ready(function(){
-$('#Asset_cost').live('change', function () {
-    var did = "";
-     did = document.getElementById('Asset_id').value;
-     alert(did);
-            $.ajax({
-                   url: '?r=asset/UpdateGrid',
-                   data:{
-                       'cost' : $(this).value(),
-                       'id' : did
-                   },                   
-                   error : function(){
-                         alert('Error');
-                   },
-                   success: function(){
-                         alert('Поле обновлено');
-                   }
-            });    
-    }); 
-});    
-</script>-->
-<!--<script type="text/javascript">
-$(document).ready(function(){
-$('#Asset_cost').live('change', function () {
-//    var did = $(this).attr("id");
-//  var did = "";
-//     did = $(this).getElementById('Asset_id').value;
-var my_id = "";
-  $(this).next().each(function(){my_id = this.value });
-//  alert(my_id);
-//var did = $('#id_20').get(0).value;
-//    alert(did);
-  var q ='?r=asset/UpdateGrid&id='+my_id;
-//  alert(q);
-//  q = "'url'=>'?r=asset/UpdateGrid', 'data' => 'id='"+did+", 'type'=>'post', 'success'=>'function(msg){alert('Поле обновлено');}', 'error'=>'function(){alert('error');}'";
-    <?php //echo CHtml::ajax(array(
-        //'url'=> "q",
-       // 'data' => '{cost : $(this).value()}',
-        //'data'=>'data',
-       // 'type'=>'post',
-       // 'success'=>"function(msg){alert('Поле обновлено');}",
-       // 'error'=>"function(){alert('error');}"
-   // ))?>
-})});
-</script> -->
+<?php
+$cs = Yii::app()->clientScript;
+ 
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+ 
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqModal.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqDnR.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+
+$this->breadcrumbs=array(
+	'Товары',
+);
+?>
+
 
 <script type="text/javascript">
 $(document).ready(function(){
@@ -60,43 +33,122 @@ $(document).ready(function(){
   })
 });
 </script> 
-<?php
-$this->breadcrumbs=array(
-    'Товары',
-);
 
-$this->menu=array(
-    array('label'=>'Create Asset', 'url'=>array('create')),
-    array('label'=>'Manage Asset', 'url'=>array('admin')),
-);
-?>
 
-<h1>Товары</h1>
+<script type="text/javascript">
+   $.jgrid.no_legacy_api = true;
+   $.jgrid.useJSON = true;
+</script>
+<div id="direction_choser">
+Направление:<span id="dir_select"></span>
+</div>
+<table id="list"></table> 
+<div id="pager"></div> 
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'claim-grid',
-	'dataProvider'=>$dataProvider,
-	'columns'=>array(
-                array(
-                'name'=>'Тип',
-                'value'=>'$data->wareType->short_name'),
-                array(
-                'name'=>'Группа',
-                'value'=>'$data->assetGroup->name'),
-                array(
-                'name'=>'Название',
-                'value'=>' $data->name'),
-                array(
-                'name'=>'Тип цены',
-                'value'=>' $data->priceType->name'),
-                array(
-                'name'=>'Цена',
-                'type'=>'raw',
-                'value'=>'$data->get_price()'),
-                array(
-                  'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("asset/show",array("id"=>$data->id))'),
-        ),
-)); ?>
+
+<script type="text/javascript">
+$(function() {
+    var lastSel;
+    var grid=$("#list");
+    grid.jqGrid( {
+        url : 'getDataForGrid',
+        datatype : 'json',
+        width : '900',
+        height : 'autoheight',
+        mtype : 'GET',
+        colNames : [ 'ID', 'Группа', 'Подгруппа','Тип','Наименование', 'Прайс', 'Код', 'Статья Б.' ],
+        colModel : [
+        { name : 'id', index : 'id', width : 20, hidden:true},
+        { name : 'supergroup', index : 'supergroup', width : 1 }, 
+        { name : 'group', index : 'group', width : 1 }, 
+        { name : 'type', index : 'type', width : 30 }, 
+        { name : 'name', index : 'name', width : 250 },
+        { name : 'price', index : 'price', width : 50 }, 
+        { name : 'code', index : 'code', width : 50 }, 
+        { name : 'article', index : 'article', width : 250 }, 
+        ],
+        pager : '#pager',
+        rowNum : 0,
+        rowList : [ 10, 20, 50, 100, 500, 1000 ],
+        sortname : 'name',
+        sortorder : 'asc',
+//        viewrecords : true,
+        caption : 'Товары',
+
+//  loadonce: true, // to enable sorting on client side
+
+
+  grouping:true, 
+  groupingView : { 
+     groupField : ['supergroup','group'],
+     groupOrder : ['asc','asc'],
+     groupText : ['<b>{0}</b>','<b>{0}</b>'],
+     groupColumnShow : [false,false],
+     groupCollapse : true,
+     groupSummary: [false,false]
+  },
+  
+  
+
+    /*             	
+    loadonce: true, // to enable sorting on client side
+	sortable: true, //to enable sorting
+
+gridComplete: function () {
+$("#list").setGridParam({datatype:'local'});
+},
+
+onPaging : function(which_button) {
+$("#list").setGridParam({datatype:'json'});
+}
+*/
+
+	/*loadComplete: function() {
+    	jQuery("#list").trigger("reloadGrid"); // Call to fix client-side sorting
+	}*/
+	
+   
+/*	    
+        ondblClickRow: function(id) {
+            if (id ) { //&& id != lastSel
+                jQuery("#list").restoreRow(lastSel);
+                jQuery("#list").editRow(id, true);
+                lastSel = id;
+            }
+            
+        },
+*/
+        
+//        editurl: 'index.php/?r=assetGroup/updateRow'
+
+    }).navGrid('#pager',{view:false, del:false, add:true, edit:false},
+      {
+        
+      }, // default settings for edit
+      {
+
+      }, // default settings for add
+      {}, // delete instead that del:false we need this
+      {
+          closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,
+          sopt:['eq','cn']
+      }, // search options
+
+      {
+      } /* view parameters*/
+      );
+
+      $("#dir_select").load('getDirectionsForSelect');
+      $("#dir_select").change(function(){
+//      	alert($("#dir_selector").val());
+			grid.setGridParam({url:'getDataForGrid?'+$('#dir_selector').serialize()}); 
+		    grid.trigger("reloadGrid");
+
+      });
+
+
+});
+</script>
+
 
 <?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>

@@ -113,7 +113,8 @@ class BudgetItem extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-                public function findBudgetItems()
+
+    public function findBudgetItems()
 	{
        		$budgetItems = BudgetItem::model()->findAll(array('order' => 'ID'));
 		return CHtml::listData($budgetItems,'ID','NAME');
