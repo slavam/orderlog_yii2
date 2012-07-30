@@ -79,7 +79,7 @@ $this->menu=array(
 	'columns'=>array(
                 array(
                 'name'=>'Тип',
-                'value'=>'$data->wareType->short_name'),
+                'value'=>'$data->waretype->short_name'),
                 array(
                 'name'=>'Группа',
                 'value'=>'$data->assetGroup->name'),
