@@ -66,13 +66,6 @@ class Asset extends CActiveRecord
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
                     'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
-<<<<<<< HEAD
-                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
-                    'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
-                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
-                    'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
-                    'block'=>array(self::HAS_ONE,'Block',array('block_id'=>'id'),'through'=>'assetGroup')
-=======
 //                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
 					'assetgroups' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
@@ -80,7 +73,6 @@ class Asset extends CActiveRecord
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
                     'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroups'),
 
->>>>>>> 8d0ecd6712288e50ceb56e6c3c8d405890f77cdf
 		);
 	}
 
