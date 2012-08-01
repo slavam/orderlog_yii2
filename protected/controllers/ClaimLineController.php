@@ -62,10 +62,6 @@ class ClaimLineController extends Controller
 		));
 	}
 
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
 	public function actionCreate()
 	{
 		$model=new ClaimLine;
@@ -79,9 +75,9 @@ class ClaimLineController extends Controller
 		{
 			$model->attributes=$_POST['ClaimLine'];
                         $model->claim_id=$_GET['claim_id'];
-                        $model->how_created = 3;
+                        $model->how_created = 3;  // hand make
                         $model->created_at = date("Y-m-d H:i:s", time());
-                        $asset =  Asset::model()->findByPk($model->asset_id);
+                        $asset = Asset::model()->findByPk($model->asset_id);
                         $model->cost=$asset->cost;
                         $model->amount=$model->count*$asset->cost;
                         $model->budget_item_id=$asset->budget_item_id;
@@ -103,7 +99,6 @@ class ClaimLineController extends Controller
             if(isset($_POST['complect_id']))
             {
                 $complect_id = $_POST['complect_id'];
-//                $business_id = $_POST['business_id'];
                 $criteria=new CDbCriteria;
                 $criteria->condition="complect_id=".$complect_id;
                 $complect_lines = ComplectLine::model()->findAll($criteria);
@@ -128,18 +123,13 @@ class ClaimLineController extends Controller
             }
 
             $this->render('createLinesByComplect',array(
-			'claim_id'=>$claim_id,
+		'claim_id'=>$claim_id,
                 'complect_id'=>$complect_id,
                 'business_id'=>$business_id,
                 'for_whom'=>$for_whom,
             ));
         }
 
-        /**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -243,12 +233,11 @@ class ClaimLineController extends Controller
                 $this->redirect(array('claimLine/showConsolidatedClaim',
                     'period_id'=>$_POST['Claim']['period_id'],
                     'direction_id'=>$_POST['Claim']['direction_id']
-                    ));
+                ));
             }
             $this->render('getClaimParams',array(
-			'model'=>$model,));
+                'model'=>$model));
         }
-
         
         public function actionShowConsolidatedClaim()
         {

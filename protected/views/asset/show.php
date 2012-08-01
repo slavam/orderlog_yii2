@@ -21,7 +21,7 @@ $this->menu=array(
                 array(               
                     'label'=>'Тип',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->wareType->name),
+                    'value'=>CHtml::encode($model->waretype->name),
                 ),
                 array(               
                     'label'=>'Группа',

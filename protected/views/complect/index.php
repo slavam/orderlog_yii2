@@ -18,15 +18,14 @@ $this->breadcrumbs=array(
         'enablePagination'=>false,
 	'columns'=>array(
                 array(
-                'name'=>'Тип',
-                'value'=>'$data->complectType->name'),
+                    'name'=>'Тип',
+                    'value'=>'$data->complectType->name'),
                 array(
-                'name'=>'Название',
-                'value'=>'$data->name'),
+                    'name'=>'Название',
+                    'value'=>'$data->name'),
                 array(
-                  'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("complect/show",array("id"=>$data->id))', 
-                ),
+                    'class'=>'CButtonColumn',
+                    'viewButtonUrl'=>'Yii::app()->createUrl("complect/show",array("id"=>$data->id))'),
 	),
 )); ?>
 

@@ -70,7 +70,7 @@ class ProductController extends Controller
 		{
 			$model->attributes=$_POST['Product'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -94,7 +94,7 @@ class ProductController extends Controller
 		{
 			$model->attributes=$_POST['Product'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -127,10 +127,16 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Product');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+            $dataProvider = new CActiveDataProvider('Product', array(
+                'pagination' => false,
+                'criteria' => array(
+                    'order' => 'direction_id, name',
+                ),
+            ));
+
+            $this->render('index',array(
+                'dataProvider'=>$dataProvider,
+            ));
 	}
 
 	/**

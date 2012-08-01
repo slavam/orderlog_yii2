@@ -70,7 +70,7 @@ class FeatureController extends Controller
 		{
 			$model->attributes=$_POST['Feature'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -94,7 +94,7 @@ class FeatureController extends Controller
 		{
 			$model->attributes=$_POST['Feature'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -127,7 +127,13 @@ class FeatureController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Feature');
+            $dataProvider = new CActiveDataProvider('Feature', array(
+                'pagination' => false,
+                'criteria' => array(
+                    'order' => 'direction_id, name',
+                ),
+            ));
+
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));

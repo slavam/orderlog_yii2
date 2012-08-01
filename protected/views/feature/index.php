@@ -1,11 +1,9 @@
 <?php
 $this->breadcrumbs=array(
-	'Характеристики',
-);
-
+	'Характеристики');
 ?>
 
-<h1>Характеристики</h1>
+<!--<h1>Характеристики</h1>-->
 
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'feature-grid',
@@ -18,6 +16,11 @@ $this->breadcrumbs=array(
                 array(
                 'name'=>'Направление',
                 'value'=>'$data->direction->name'),
+            array(
+                'class'=>'CButtonColumn',
+                'buttons'=>array('view'=>array('visible'=>'false')),
+                'updateButtonUrl'=>'Yii::app()->createUrl("feature/update",array("id"=>$data->id))'),
+
 ))); ?>
 
 <?php echo CHtml::link('Добавить характеристику', Yii::app()->createUrl("feature/create"))?>

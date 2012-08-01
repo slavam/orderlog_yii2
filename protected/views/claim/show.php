@@ -51,7 +51,7 @@ $this->breadcrumbs=array(
 	'columns'=>array(
 		array(
                 'name'=>'Тип',
-                'value'=> '$data->asset->wareType->short_name'),
+                'value'=> '$data->asset->waretype->short_name'),
                 array(
                 'name'=>'Название',
                 'value'=> '$data->asset->name'),

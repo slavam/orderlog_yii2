@@ -6,7 +6,7 @@ $this->breadcrumbs=array(
 
 ?>
 
-<h1>Строка заявки #<?php echo $model->id; ?></h1>
+<h2>Строка заявки #<?php echo $model->id; ?></h2>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
