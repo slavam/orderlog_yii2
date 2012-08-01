@@ -4,10 +4,6 @@ $this->breadcrumbs=array(
 	'Создать',
 );
 
-//$this->menu=array(
-//	array('label'=>'List Feature', 'url'=>array('index')),
-//	array('label'=>'Manage Feature', 'url'=>array('admin')),
-//);
 ?>
 
 <h1>Создать характеристику</h1>
