@@ -26,6 +26,11 @@ class Asset extends CActiveRecord
 		return parent::model($className);
 	}
 
+
+        public function getDbConnection(){
+	        return Yii::app()->db;
+        }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -61,11 +66,21 @@ class Asset extends CActiveRecord
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
                     'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
+<<<<<<< HEAD
                     'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
                     'block'=>array(self::HAS_ONE,'Block',array('block_id'=>'id'),'through'=>'assetGroup')
+=======
+//                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
+					'assetgroups' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
+                    'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
+                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
+                    'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
+                    'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroups'),
+
+>>>>>>> 8d0ecd6712288e50ceb56e6c3c8d405890f77cdf
 		);
 	}
 
@@ -106,9 +121,11 @@ class Asset extends CActiveRecord
 		$criteria->compare('budget_item_id',$this->budget_item_id);
 		$criteria->compare('cost',$this->cost);
 		$criteria->compare('direction_id',$this->direction_id);
-		$criteria->compare('asset_group_id',$this->asset_group_id);
-		$criteria->compare('info',$this->info,true);
+		$criteria->compare('asset_group_id',$this->asset_group_id);                                               
+		$criteria->compare('info',$this->info,true);                                                               
 		$criteria->compare('unit_id',$this->unit_id);
+
+		$criteria->together = true;
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

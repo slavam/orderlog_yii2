@@ -10,7 +10,7 @@
         <div class="row">
 		<b>Тип</b>
                 <br>
-		<?php echo $form->dropDownList($model,'ware_type_id',WareType::findWareTypes());?> 
+		<?php echo $form->dropDownList($model,'ware_type_id',Waretype::findWareTypes());?> 
 		<?php echo $form->error($model,'ware_type_id'); ?>
 	</div>    
 	<div class="row">

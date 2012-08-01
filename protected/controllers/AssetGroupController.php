@@ -96,6 +96,7 @@ class AssetGroupController extends Controller
                     //echo CJSON::encode("Error while saving model!");
                     return false;
                 }
+                
             }
         }
 
