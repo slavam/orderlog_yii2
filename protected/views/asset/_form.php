@@ -57,16 +57,22 @@
 		<?php echo $form->error($model,'direction_id'); ?>
 	</div>
 	<div class="row">
+		<b>Единица измерения</b>
+                <br>
+                <?php echo $form->dropDownList($model,'unit_id', Unit::findUnits());?>
+		<?php echo $form->error($model,'unit_id'); ?>
+	</div>
+	<div class="row">
 		<b>Дополнительная информация</b>
                 <br>
 		<?php echo $form->textField($model,'info',array('size'=>80)); ?>
 		<?php echo $form->error($model,'info'); ?>
 	</div>
 	<div class="row">
-		<b>Единица измерения</b>
+		<b>Комментарий</b>
                 <br>
-                <?php echo $form->dropDownList($model,'unit_id', Unit::findUnits());?>
-		<?php echo $form->error($model,'unit_id'); ?>
+		<?php echo $form->textField($model,'comment',array('size'=>80)); ?>
+		<?php echo $form->error($model,'comment'); ?>
 	</div>
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
