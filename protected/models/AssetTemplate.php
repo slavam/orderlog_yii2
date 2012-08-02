@@ -1,42 +1,40 @@
 <?php
 
 /**
- * This is the model class for table "assets".
+ * This is the model class for table "asset_templates".
  *
- * The followings are the available columns in table 'assets':
+ * The followings are the available columns in table 'asset_templates':
  * @property integer $id
  * @property string $name
- * @property string $part_number
  * @property integer $ware_type_id
  * @property integer $budget_item_id
  * @property double $cost
  * @property integer $direction_id
  * @property integer $asset_group_id
- * @property string $info
+ * @property integer $asset_template_id
  * @property integer $unit_id
+ * @property integer $price_type_id
+ * @property string $info
+ * @property string $comment
+ * @property string $part_number
  */
-class Asset extends CActiveRecord
+class AssetTemplate extends CActiveRecord
 {
 	/**
 	 * Returns the static model of the specified AR class.
-	 * @return Asset the static model class
+	 * @return AssetTemplate the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
 	}
 
-
-        public function getDbConnection(){
-	        return Yii::app()->db;
-        }
-
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'assets';
+		return 'asset_templates';
 	}
 
 	/**
@@ -47,12 +45,12 @@ class Asset extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id', 'numerical', 'integerOnly'=>true),
+			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id, price_type_id', 'numerical', 'integerOnly'=>true),
 			array('cost', 'numerical'),
-			array('name, part_number, info, comment', 'safe'),
+			array('name, info, comment, part_number', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id', 'safe', 'on'=>'search'),
+			array('id, name, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, unit_id, price_type_id, info, comment, part_number', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -66,13 +64,11 @@ class Asset extends CActiveRecord
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
                     'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
-//                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
                     'assetgroup' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
                     'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroup'),
-                    'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id' ),
 		);
 	}
 
@@ -84,15 +80,17 @@ class Asset extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
-			'part_number' => 'Part Number',
 			'ware_type_id' => 'Ware Type',
 			'budget_item_id' => 'Budget Item',
 			'cost' => 'Cost',
 			'direction_id' => 'Direction',
 			'asset_group_id' => 'Asset Group',
-			'info' => 'Info',
-                        'comment' => 'Comment',
+//			'asset_template_id' => 'Asset Template',
 			'unit_id' => 'Unit',
+			'price_type_id' => 'Price Type',
+			'info' => 'Info',
+			'comment' => 'Comment',
+			'part_number' => 'Part Number',
 		);
 	}
 
@@ -109,35 +107,25 @@ class Asset extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
-		$criteria->compare('part_number',$this->part_number,true);
 		$criteria->compare('ware_type_id',$this->ware_type_id);
 		$criteria->compare('budget_item_id',$this->budget_item_id);
 		$criteria->compare('cost',$this->cost);
 		$criteria->compare('direction_id',$this->direction_id);
-		$criteria->compare('asset_group_id',$this->asset_group_id);                                               
-		$criteria->compare('info',$this->info,true);                                                               
-                $criteria->compare('comment',$this->comment,true);
+		$criteria->compare('asset_group_id',$this->asset_group_id);
+//		$criteria->compare('asset_template_id',$this->asset_template_id);
 		$criteria->compare('unit_id',$this->unit_id);
-
-		$criteria->together = true;
+		$criteria->compare('price_type_id',$this->price_type_id);
+		$criteria->compare('info',$this->info,true);
+		$criteria->compare('comment',$this->comment,true);
+		$criteria->compare('part_number',$this->part_number,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-        
-        public function findAssets()
+        public function findAssetTemplates()
 	{
-       		$assets = Asset::model()->findAll(array('order' => 'name'));
-		return CHtml::listData($assets,'id','name');
+       		$templates = AssetTemplate::model()->findAll(array('order' => 'name'));
+		return CHtml::listData($templates,'id','name');
 	}
-        public function get_price()
-         {
-//            $s = Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id));
-//            return '<form action="http://127.0.0.1/demos/ordertest/index.php?r=asset/updateGrid&id='.$this->id .'" method="post">'.
-            return '<form action="'.Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id)).'" method="post">'.
-                   @CActiveForm::textField($this,"cost",array("name"=>"Asset[cost]")).
-                   @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
-                   '</form>';
-         }
 }

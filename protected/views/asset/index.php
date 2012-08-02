@@ -82,7 +82,7 @@ $this->menu=array(
                 'value'=>'$data->waretype->short_name'),
                 array(
                 'name'=>'Группа',
-                'value'=>'$data->assetgroups->name'),
+                'value'=>'$data->assetgroup->name'),
                 array(
                 'name'=>'Название',
                 'value'=>' $data->name'),
@@ -100,3 +100,5 @@ $this->menu=array(
 )); ?>
 
 <?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
+<br>
+<?php echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>
