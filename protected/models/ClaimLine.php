@@ -56,12 +56,12 @@ class ClaimLine extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('claim_id', 'required'),
-			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id, position_id', 'numerical', 'integerOnly'=>true),
+			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id, position_id, payer_id', 'numerical', 'integerOnly'=>true),
 			array('amount, cost', 'numerical'),
 			array('description, change_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id, position_id', 'safe', 'on'=>'search'),
+			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id, position_id, payer_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +81,7 @@ class ClaimLine extends CActiveRecord
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
                     'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
+                    'payer' => array(self::BELONGS_TO, 'Division', 'payer_id'),
 		);
 	}
 
@@ -103,6 +104,7 @@ class ClaimLine extends CActiveRecord
 			'cost' => 'Cost',
 			'business_id' => 'Business',
                         'position_id' => 'Position',
+                    'payer_id' => 'Payer',
 		);
 	}
 
@@ -130,6 +132,7 @@ class ClaimLine extends CActiveRecord
 		$criteria->compare('cost',$this->cost);
 		$criteria->compare('business_id',$this->business_id);
                 $criteria->compare('position_id',$this->position_id);
+                $criteria->compare('payer_id', $this->payer_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
