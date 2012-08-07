@@ -1,13 +1,9 @@
 <?php
 $this->breadcrumbs=array(
-	'Claim Lines'=>array('index'),
+	'Заявка'=>array('claim/show', 'id'=>$model->claim_id),
 	'Создать',
 );
 
-$this->menu=array(
-	array('label'=>'List ClaimLine', 'url'=>array('index')),
-	array('label'=>'Manage ClaimLine', 'url'=>array('admin')),
-);
 ?>
 
 <h1>Создать строку заявки</h1>

@@ -26,6 +26,11 @@ class Asset extends CActiveRecord
 		return parent::model($className);
 	}
 
+
+        public function getDbConnection(){
+	        return Yii::app()->db;
+        }
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -44,10 +49,10 @@ class Asset extends CActiveRecord
 		return array(
 			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id', 'numerical', 'integerOnly'=>true),
 			array('cost', 'numerical'),
-			array('name, part_number, info', 'safe'),
+			array('name, part_number, info, comment', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, unit_id', 'safe', 'on'=>'search'),
+			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,11 +65,14 @@ class Asset extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
-                    'wareType' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
-                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
+                    'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
+//                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
+                    'assetgroup' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
+                    'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroup'),
+                    'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id' ),
 		);
 	}
 
@@ -83,6 +91,7 @@ class Asset extends CActiveRecord
 			'direction_id' => 'Direction',
 			'asset_group_id' => 'Asset Group',
 			'info' => 'Info',
+                        'comment' => 'Comment',
 			'unit_id' => 'Unit',
 		);
 	}
@@ -105,9 +114,12 @@ class Asset extends CActiveRecord
 		$criteria->compare('budget_item_id',$this->budget_item_id);
 		$criteria->compare('cost',$this->cost);
 		$criteria->compare('direction_id',$this->direction_id);
-		$criteria->compare('asset_group_id',$this->asset_group_id);
-		$criteria->compare('info',$this->info,true);
+		$criteria->compare('asset_group_id',$this->asset_group_id);                                               
+		$criteria->compare('info',$this->info,true);                                                               
+                $criteria->compare('comment',$this->comment,true);
 		$criteria->compare('unit_id',$this->unit_id);
+
+		$criteria->together = true;
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -128,4 +140,12 @@ class Asset extends CActiveRecord
                    @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
+         public function findAssetsByTemplate($asset_template_id) {
+		$criteria=new CDbCriteria;
+                $criteria->condition="asset_template_id=".$asset_template_id;
+                $criteria->order='name';
+       		$assets = Asset::model()->findAll($criteria);
+		return CHtml::listData($assets,'id','name');
+         }
+                 
 }

@@ -51,7 +51,7 @@ $this->breadcrumbs=array(
 	'columns'=>array(
 		array(
                 'name'=>'Тип',
-                'value'=> '$data->asset->wareType->short_name'),
+                'value'=> '$data->asset->waretype->short_name'),
                 array(
                 'name'=>'Название',
                 'value'=> '$data->asset->name'),
@@ -76,6 +76,8 @@ $this->breadcrumbs=array(
 	),
 )); ?>
 <?php echo CHtml::link(CHtml::encode('Добавить строку'), array('claimLine/create', 'claim_id'=>$model->id)); ?>
+<br/>
+<?php echo CHtml::link(CHtml::encode('Добавить комплект'), array('claimLine/createLinesByComplect', 'claim_id'=>$model->id)); ?>
 <br/>
 <?php 
   if ($model->state->stateName->name != "Согласовано")

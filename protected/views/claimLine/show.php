@@ -4,16 +4,9 @@ $this->breadcrumbs=array(
 	$model->claim->claim_number,
 );
 
-$this->menu=array(
-	array('label'=>'List ClaimLine', 'url'=>array('index')),
-	array('label'=>'Create ClaimLine', 'url'=>array('create')),
-	array('label'=>'Update ClaimLine', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete ClaimLine', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage ClaimLine', 'url'=>array('admin')),
-);
 ?>
 
-<h1>Строка заявки #<?php echo $model->id; ?></h1>
+<h2>Строка заявки #<?php echo $model->id; ?></h2>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
@@ -47,7 +40,8 @@ $this->menu=array(
                 array(               
                     'label'=>'Бизнес',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->business->NAME)
+                    'value'=>CHtml::encode($model->getBusinessName($model->business_id))
+//                    'value'=>CHtml::encode($model->business->NAME)
                 ),
                 array(               
                     'label'=>'Статья бюджета',
@@ -59,10 +53,30 @@ $this->menu=array(
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->findWorker($model->for_whom))
                 ),
-            array(               
+                array(               
                     'label'=>'Расположение объекта',
                     'type'=>'raw',
-                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): 0)
+                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): '')
+                ),
+                array(               
+                    'label'=>'Продукты',
+                    'type'=>'raw',
+                    'value'=>CHtml::link(CHtml::encode($model->findProductsAsString($model->id)),
+                             array('claimLineProduct/indexByLine','claim_line_id'=>$model->id))
+                ),
+                array(               
+                    'label'=>'Характеристики',
+                    'type'=>'raw',
+                    'value'=>CHtml::link(CHtml::encode($model->findFeaturesAsString($model->id)),
+                             array('claimLineFeature/featuresByClaimLine','claim_line_id'=>$model->id))
+                ),
+                array(               
+                    'label'=>'Добавлена',
+                    'type'=>'raw',
+                    'value'=>($model->complect_id==null ? 'Вручную' : 
+                        ($model->complect_id==2 ? 'Из набора "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"' :
+                        'Из шаблона "'.CHtml::link(CHtml::encode($model->complect->name),array('complect/show','id'=>$model->complect_id)).'"'))
                 ),
 	),
 )); ?>
+<?php  echo CHtml::link('Редактировать строку', array('update','id'=>$model->id)) ?>

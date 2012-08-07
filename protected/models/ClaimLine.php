@@ -56,12 +56,12 @@ class ClaimLine extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('claim_id', 'required'),
-			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id', 'numerical', 'integerOnly'=>true),
+			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id, position_id', 'numerical', 'integerOnly'=>true),
 			array('amount, cost', 'numerical'),
 			array('description, change_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id', 'safe', 'on'=>'search'),
+			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id, position_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -77,8 +77,10 @@ class ClaimLine extends CActiveRecord
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id'),
                     'claim' => array(self::BELONGS_TO, 'Claim', 'claim_id'),
                     'business' => array(self::BELONGS_TO, 'Business', 'business_id'),
+                    'position' => array(self::BELONGS_TO, 'Place', 'position_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
+                    'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
 		);
 	}
 
@@ -100,6 +102,7 @@ class ClaimLine extends CActiveRecord
 			'asset_id' => 'Asset',
 			'cost' => 'Cost',
 			'business_id' => 'Business',
+                        'position_id' => 'Position',
 		);
 	}
 
@@ -126,6 +129,7 @@ class ClaimLine extends CActiveRecord
 		$criteria->compare('asset_id',$this->asset_id);
 		$criteria->compare('cost',$this->cost);
 		$criteria->compare('business_id',$this->business_id);
+                $criteria->compare('position_id',$this->position_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -135,7 +139,7 @@ class ClaimLine extends CActiveRecord
         public function findConsolidatedClaimLines($period_id, $direction_id)
         {
             $lines = ClaimLine::model()->findAllBySql('select * from claim_lines c_l 
-                join claims c on c.id=c_l.claim_id and c.period_id =1844 and c.state_id=2 and c.direction_id=1');
+                join claims c on c.id=c_l.claim_id and c.period_id ='.$period_id.' and c.state_id=2 and c.direction_id='.$direction_id);
             return $lines;
         }
         
@@ -152,6 +156,46 @@ class ClaimLine extends CActiveRecord
             return CHtml::encode($position[0]->title); 
 	}
 
+        public function findProductsAsString($claim_line_id)
+        {
+            if ($claim_line_id>'')
+            {
+                $criteria=new CDbCriteria;
+                $criteria->condition="claim_line_id=".$claim_line_id;
+                $claim_line_products = ClaimLineProduct::model()->findAll($criteria);
+                $s = '';
+                foreach ($claim_line_products as $e) {
+                    $s .= $e->product->name.'; ';
+                }
+                return $s;
+            } else {
+                return '';
+            }
+        }
+        public function findFeaturesAsString($claim_line_id)
+        {
+            if ($claim_line_id>'')
+            {
+                $criteria=new CDbCriteria;
+                $criteria->condition="claim_line_id=".$claim_line_id;
+                $claim_line_features = ClaimLineFeature::model()->findAll($criteria);
+                $s = '';
+                foreach ($claim_line_features as $e) {
+                    $s .= $e->feature->name.'; ';
+                }
+                return $s;
+            } else {
+                return '';
+            }
+        }
+        public function getBusinessName($business_id)
+        {
+            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
+            $business = Business::model()->findBySql($sql);
+            return $business->NAME;
+            
+        }
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
 //            return nil;

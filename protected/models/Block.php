@@ -35,9 +35,11 @@ class Block extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('name', 'safe'),
+			array('comment', 'safe'),
+			array('direction_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name', 'safe', 'on'=>'search'),
+			array('id, name, comment, direction_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -49,6 +51,7 @@ class Block extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'directions' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
 		);
 	}
 
@@ -60,6 +63,8 @@ class Block extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'name' => 'Name',
+			'comment' => 'Comment',
+			'direction_id' => 'Directions',
 		);
 	}
 
@@ -76,6 +81,8 @@ class Block extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('name',$this->name,true);
+		$criteria->compare('comment',$this->comment,true);
+		$criteria->compare('direction_id',$this->block_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

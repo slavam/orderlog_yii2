@@ -50,6 +50,7 @@ $(document).ready(function(){
   $('#Asset_cost').live('change', function () {
     var my_id = "";
     $(this).next().each(function(){my_id = this.value });
+    alert(my_id);
     var q ='?r=asset/UpdateGrid&id='+my_id;
     jQuery.ajax({'url'    :q,
                  'data'   :{'Asset[cost]':$(this).val()},
@@ -79,10 +80,10 @@ $this->menu=array(
 	'columns'=>array(
                 array(
                 'name'=>'Тип',
-                'value'=>'$data->wareType->short_name'),
+                'value'=>'$data->waretype->short_name'),
                 array(
                 'name'=>'Группа',
-                'value'=>'$data->assetGroup->name'),
+                'value'=>'$data->assetgroup->name'),
                 array(
                 'name'=>'Название',
                 'value'=>' $data->name'),
@@ -100,3 +101,5 @@ $this->menu=array(
 )); ?>
 
 <?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
+<br>
+<?php echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>

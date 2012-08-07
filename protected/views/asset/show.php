@@ -4,13 +4,13 @@ $this->breadcrumbs=array(
 	$model->name,
 );
 
-$this->menu=array(
-	array('label'=>'List Asset', 'url'=>array('index')),
-	array('label'=>'Create Asset', 'url'=>array('create')),
-	array('label'=>'Update Asset', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete Asset', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage Asset', 'url'=>array('admin')),
-);
+//$this->menu=array(
+//	array('label'=>'List Asset', 'url'=>array('index')),
+//	array('label'=>'Create Asset', 'url'=>array('create')),
+//	array('label'=>'Update Asset', 'url'=>array('update', 'id'=>$model->id)),
+//	array('label'=>'Delete Asset', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
+//	array('label'=>'Manage Asset', 'url'=>array('admin')),
+//);
 ?>
 
 <h1><?php echo $model->name; ?></h1>
@@ -21,17 +21,17 @@ $this->menu=array(
                 array(               
                     'label'=>'Тип',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->wareType->name),
+                    'value'=>CHtml::encode($model->waretype->name),
+                ),
+                array(               
+                    'label'=>'Группа',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->assetgroup->name.'=>'.$model->assetgroup->block->name),
                 ),
                 array(               
                     'label'=>'Название',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->name),
-                ),
-                array(               
-                    'label'=>'Номенклатурный номер',
-                    'type'=>'raw',
-                    'value'=>CHtml::encode($model->part_number),
                 ),
                 array(               
                     'label'=>'Цена',
@@ -44,9 +44,9 @@ $this->menu=array(
                     'value'=>CHtml::encode($model->priceType->name),
                 ),
                 array(               
-                    'label'=>'Группа',
+                    'label'=>'Номенклатурный номер',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->assetGroup->name.'=>'.$model->assetGroup->block->name),
+                    'value'=>CHtml::encode($model->part_number),
                 ),
                 array(               
                     'label'=>'Статья бюджета',
@@ -67,6 +67,16 @@ $this->menu=array(
                     'label'=>'Дополнительная информация',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->info),
+                ),
+                array(               
+                    'label'=>'Комментарий',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->comment),
+                ),
+                array(               
+                    'label'=>'Создан',
+                    'type'=>'raw',
+                    'value'=>($model->asset_template_id>0 ? "По шаблону: ".CHtml::encode($model->assettemplate->name) : "Вручную"),
                 ),
 	),
 )); ?>

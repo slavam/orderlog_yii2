@@ -75,22 +75,21 @@ class ClaimController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Claim']))
-		{
-			$model->attributes=$_POST['Claim'];
-                        $model->state_id = 1;
-                        $model->budgetary = true;
-                        $model->create_date = date("Y-m-d H:i:s", time());
-                        $model->claim_number = $model->direction->stamp.$model->id;
-			if($model->save()) {
-                          $model->claim_number = $model->direction->stamp.$model->id;
-                          $model->save();
-			  $this->redirect(array('show','id'=>$model->id));
-                        }  
-		}
-		$this->render('create',array(
-			'model'=>$model,
-		));
+            if(isset($_POST['Claim'])) {
+                $model->attributes=$_POST['Claim'];
+                $model->state_id = 1;
+                $model->budgetary = true;
+                $model->create_date = date("Y-m-d H:i:s", time());
+                $model->claim_number = $model->direction->stamp.$model->id;
+                if($model->save()) {
+                    $model->claim_number = $model->direction->stamp.$model->id;
+                    $model->save();
+                    $this->redirect(array('show','id'=>$model->id));
+                }  
+            }
+            $this->render('create',array(
+                'model'=>$model,
+            ));
 	}
 
 	/**
@@ -125,6 +124,11 @@ class ClaimController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
+                    $lines = $this->loadModel($id)->claimLines;
+                    foreach ($lines as $line) {
+                        $line->delete();
+                    }
+
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 
