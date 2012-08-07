@@ -77,7 +77,8 @@ class ComplectLineController extends Controller
 		}
 
 		$this->render('create',array(
-			'model'=>$model,
+                    'model'=>$model,
+                    'type'=>$_GET['type']
 		));
 	}
 
@@ -102,6 +103,7 @@ class ComplectLineController extends Controller
 
 		$this->render('update',array(
 			'model'=>$model,
+                    'type'=>$_GET['type']
 		));
 	}
 

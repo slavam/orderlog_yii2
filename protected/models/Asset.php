@@ -140,4 +140,12 @@ class Asset extends CActiveRecord
                    @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
+         public function findAssetsByTemplate($asset_template_id) {
+		$criteria=new CDbCriteria;
+                $criteria->condition="asset_template_id=".$asset_template_id;
+                $criteria->order='name';
+       		$assets = Asset::model()->findAll($criteria);
+		return CHtml::listData($assets,'id','name');
+         }
+                 
 }

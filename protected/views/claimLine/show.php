@@ -40,7 +40,8 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Бизнес',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->business->NAME)
+                    'value'=>CHtml::encode($model->getBusinessName($model->business_id))
+//                    'value'=>CHtml::encode($model->business->NAME)
                 ),
                 array(               
                     'label'=>'Статья бюджета',

@@ -188,6 +188,14 @@ class ClaimLine extends CActiveRecord
                 return '';
             }
         }
+        public function getBusinessName($business_id)
+        {
+            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
+            $business = Business::model()->findBySql($sql);
+            return $business->NAME;
+            
+        }
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
 //            return nil;

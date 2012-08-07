@@ -50,6 +50,7 @@ $(document).ready(function(){
   $('#Asset_cost').live('change', function () {
     var my_id = "";
     $(this).next().each(function(){my_id = this.value });
+    alert(my_id);
     var q ='?r=asset/UpdateGrid&id='+my_id;
     jQuery.ajax({'url'    :q,
                  'data'   :{'Asset[cost]':$(this).val()},

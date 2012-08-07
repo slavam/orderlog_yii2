@@ -36,10 +36,10 @@ class ComplectLine extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('complect_id, asset_id, amount', 'numerical', 'integerOnly'=>true),
+			array('complect_id, asset_id, amount, asset_template_id', 'numerical', 'integerOnly'=>true),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, complect_id, asset_id, amount', 'safe', 'on'=>'search'),
+			array('id, complect_id, asset_id, amount, asset_template_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -53,6 +53,8 @@ class ComplectLine extends CActiveRecord
 		return array(
                     'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id' ),
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id' ),
+                    'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id'),
+
 		);
 	}
 
@@ -66,6 +68,7 @@ class ComplectLine extends CActiveRecord
 			'complect_id' => 'Complect',
 			'asset_id' => 'Asset',
 			'amount' => 'Amount',
+                    'asset_template_id' => 'Asset Template'
 		);
 	}
 
@@ -83,10 +86,12 @@ class ComplectLine extends CActiveRecord
 		$criteria->compare('id',$this->id);
 		$criteria->compare('complect_id',$this->complect_id);
 		$criteria->compare('asset_id',$this->asset_id);
+                $criteria->compare('asset_template_id',  $this->asset_template_id);
 		$criteria->compare('amount',$this->amount);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
+        
 }

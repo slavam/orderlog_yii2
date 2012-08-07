@@ -10,7 +10,7 @@
 		<b>Тип</b>
                 <br>
 		<?php echo $form->dropDownList($model,'complect_type_id',  ComplectType::findComplectTypes());?> 
-		<?php echo $form->error($model,'asset_id'); ?>
+		<?php echo $form->error($model,'complect_type_id'); ?>
 	</div>
 
 	<div class="row">
