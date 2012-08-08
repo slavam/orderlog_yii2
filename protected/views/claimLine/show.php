@@ -54,6 +54,11 @@ $this->breadcrumbs=array(
                     'value'=>CHtml::encode($model->findWorker($model->for_whom))
                 ),
                 array(               
+                    'label'=>'Центр финансовой ответственности',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->payer ? $model->payer->NAME: "Не задан")
+                ),
+                array(               
                     'label'=>'Расположение объекта',
                     'type'=>'raw',
                     'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): '')
