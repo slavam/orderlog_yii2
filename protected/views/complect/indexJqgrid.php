@@ -23,9 +23,6 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 
 <script type="text/javascript">
 $(function() {
-//    var lastSel;
-//    var sel_id;
-//    var new_node;
     var grid=$("#list")
     grid.jqGrid( {
         url : 'getDataForGrid',

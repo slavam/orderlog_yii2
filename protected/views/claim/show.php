@@ -19,6 +19,10 @@ $this->breadcrumbs=array(
 <?php echo $model->division->NAME; ?>
 <br />
 
+<b>Подразделение :</b>
+<?php echo ($model->findDepartment($model->department_id)); ?>
+<br />
+
 <b>Статус :</b>
 <?php echo $model->state->stateName->name; ?>
 <br />

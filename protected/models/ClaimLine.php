@@ -104,7 +104,7 @@ class ClaimLine extends CActiveRecord
 			'cost' => 'Cost',
 			'business_id' => 'Business',
                         'position_id' => 'Position',
-                    'payer_id' => 'Payer',
+                        'payer_id' => 'Payer',
 		);
 	}
 
@@ -197,7 +197,6 @@ class ClaimLine extends CActiveRecord
                     join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
             $business = Business::model()->findBySql($sql);
             return $business->NAME;
-            
         }
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {

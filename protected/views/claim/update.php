@@ -5,12 +5,12 @@ $this->breadcrumbs=array(
 	'Изменить',
 );
 
-$this->menu=array(
-	array('label'=>'List Claim', 'url'=>array('index')),
-	array('label'=>'Create Claim', 'url'=>array('create')),
-	array('label'=>'View Claim', 'url'=>array('view', 'id'=>$model->id)),
-	array('label'=>'Manage Claim', 'url'=>array('admin')),
-);
+//$this->menu=array(
+//	array('label'=>'List Claim', 'url'=>array('index')),
+//	array('label'=>'Create Claim', 'url'=>array('create')),
+//	array('label'=>'View Claim', 'url'=>array('view', 'id'=>$model->id)),
+//	array('label'=>'Manage Claim', 'url'=>array('admin')),
+//);
 ?>
 
 <h1>Изменить заявку <?php echo $model->claim_number; ?></h1>

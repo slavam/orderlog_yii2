@@ -5,7 +5,6 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">

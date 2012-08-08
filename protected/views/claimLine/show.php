@@ -3,7 +3,6 @@ $this->breadcrumbs=array(
 	'Заявка'=>array('claim/show', 'id'=>$model->claim_id),
 	$model->claim->claim_number,
 );
-
 ?>
 
 <h2>Строка заявки #<?php echo $model->id; ?></h2>
@@ -41,7 +40,6 @@ $this->breadcrumbs=array(
                     'label'=>'Бизнес',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->getBusinessName($model->business_id))
-//                    'value'=>CHtml::encode($model->business->NAME)
                 ),
                 array(               
                     'label'=>'Статья бюджета',
