@@ -74,6 +74,12 @@
 		<?php echo $form->textField($model,'comment',array('size'=>80)); ?>
 		<?php echo $form->error($model,'comment'); ?>
 	</div>
+	<div class="row">
+		<b>Расположение</b>
+                <br>
+		<?php echo $form->listBox($model,'selection',Place::findAllTowns(),array('multiple'=>TRUE,'size'=>'10')); ?>
+		<?php echo $form->error($model,'place_id'); ?>
+	</div>
 	<div class="row buttons">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>

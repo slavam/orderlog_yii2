@@ -78,5 +78,11 @@ $this->breadcrumbs=array(
                     'type'=>'raw',
                     'value'=>($model->asset_template_id>0 ? "По шаблону: ".CHtml::encode($model->assettemplate->name) : "Вручную"),
                 ),
+               array(               
+                    'name'=>'place_id',
+                    'type'=>'raw',
+                    'value'=>$this->replacementPlace($model->place_id),
+                ),          
+
 	),
 )); ?>
