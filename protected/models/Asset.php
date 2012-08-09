@@ -75,7 +75,7 @@ class Asset extends CActiveRecord
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
-                    'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroup'),
+//                    'block' => array(self::HAS_ONE,'Block',array('block_id'=>'id'),'through'=>'assetgroup'),
                     'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id' ),
 		);
 	}
