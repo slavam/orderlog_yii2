@@ -53,6 +53,7 @@ class Asset extends CActiveRecord
 			array('selection', 'required'),
 			array('cost', 'numerical'),
 			array('name, part_number, info, comment', 'safe'),
+			array('info','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id, place_id', 'safe', 'on'=>'search'),

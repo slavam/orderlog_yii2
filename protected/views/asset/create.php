@@ -1,4 +1,5 @@
 <?php
+
 $this->breadcrumbs=array(
 	'Товары'=>array('index'),
 	'Создать',

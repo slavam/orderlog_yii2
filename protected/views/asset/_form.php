@@ -1,22 +1,36 @@
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
+	'action'=>'editAsset',
 	'id'=>'asset-form',
-	'enableAjaxValidation'=>false,
+//	'enableAjaxValidation'=>true,
+                               'enableClientValidation' => true,
+//                               'clientOptions' => array(
+//                                    'validateOnSubmit' => true,
+//                                    'validateOnChange' => false,
+//                                ),
+
+
+//,array('readonly'=>true)
+
 )); ?>
+
+    <table>
+    </table>
+
 
     <?php echo $form->errorSummary($model); ?>
 
         <div class="row">
 		<b>Тип</b>
                 <br>
-		<?php echo $form->dropDownList($model,'ware_type_id',Waretype::findWareTypes());?> 
+		<?php echo $form->dropDownList($model,'ware_type_id',WareType::model()->findWareTypes());?> 
 		<?php echo $form->error($model,'ware_type_id'); ?>
 	</div>    
 	<div class="row">
 		<b>Группа</b>
                 <br>
-                <?php echo $form->dropDownList($model,'asset_group_id', AssetGroup::findAssetGroups());?> 
+                <?php echo $form->dropDownList($model,'asset_group_id', AssetGroup::model()->findAssetGroups());?> 
 		<?php echo $form->error($model,'asset_group_id'); ?>
 	</div>
 	<div class="row">
@@ -35,7 +49,7 @@
         <div class="row">
 		<b>Тип цены</b>
                 <br>
-                <?php echo $form->dropDownList($model,'price_type_id', PriceType::findPriceTypes());?> 
+                <?php echo $form->dropDownList($model,'price_type_id', PriceType::model()->findPriceTypes());?> 
 		<?php echo $form->error($model,'price_type_id'); ?>
 	</div>
 	<div class="row">
@@ -47,19 +61,19 @@
 	<div class="row">
 		<b>Статья бюджета</b>
                 <br>
-                <?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::findBudgetItems());?> 
+                <?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->findBudgetItems());?> 
 		<?php echo $form->error($model,'budget_item_id'); ?>
 	</div>
 	<div class="row">
 		<b>Направление</b>
                 <br>
-                <?php echo $form->dropDownList($model,'direction_id', Direction::findDirections());?> 
+                <?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections());?> 
 		<?php echo $form->error($model,'direction_id'); ?>
 	</div>
 	<div class="row">
 		<b>Единица измерения</b>
                 <br>
-                <?php echo $form->dropDownList($model,'unit_id', Unit::findUnits());?>
+                <?php echo $form->dropDownList($model,'unit_id', Unit::model()->findUnits());?>
 		<?php echo $form->error($model,'unit_id'); ?>
 	</div>
 	<div class="row">
@@ -77,11 +91,8 @@
 	<div class="row">
 		<b>Расположение</b>
                 <br>
-		<?php echo $form->listBox($model,'selection',Place::findAllTowns(),array('multiple'=>TRUE,'size'=>'10')); ?>
+		<?php echo $form->listBox($model,'selection',Place::model()->findAllTowns(),array('multiple'=>TRUE,'size'=>'10')); ?>
 		<?php echo $form->error($model,'place_id'); ?>
-	</div>
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
 	</div>
 
 <?php $this->endWidget(); ?>

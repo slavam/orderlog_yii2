@@ -34,6 +34,7 @@ return array(
         
         'urlManager'=>array(
 		'urlFormat'=>'path',
+//		'showScriptName'=>false,
 		'rules'=>array(
         		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
         	),
