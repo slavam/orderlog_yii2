@@ -306,11 +306,11 @@ class AssetController extends Controller {
             $dataProvider = new CActiveDataProvider('Asset' , array(
             					'pagination'=>false, 
             					'criteria' => array(
-            						'with' => array('direction','assetgroup'),
-	            					'order' => 'assetgroup.block_id,assetgroup.name,t.name'))
+            						'with' => array('direction','assetgroup'), //'block',
+	            					'order' => 'assetgroup.block_id,assetgroup.name,t.name')) // assetgroup.name,'))
 //	            					'order' => 'block.name,assetGroup.name'))
                   );
-            
+/*            
             if(isset($_REQUEST['dir_selector'])&&$_REQUEST['dir_selector']){
                 $criteria_ = $dataProvider->getCriteria();
                 $criteria_->condition = 't.direction_id='.$_REQUEST['dir_selector'];
@@ -324,7 +324,7 @@ class AssetController extends Controller {
                 if($criteria_->condition!='') $criteria_->condition.=' AND ';
                 $criteria_->condition.='t.id ='.$_REQUEST['id'];
             }
-
+  */
             
 
 /*            
