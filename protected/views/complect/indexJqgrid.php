@@ -63,15 +63,15 @@ $(function() {
         },
     	loadError: function(xhr, status, error) {alert(status +error)}
 
-//    }).navGrid('#pager',{search:false, view:false, del:true, add:true, edit:false, cloneToTop:true});
-    }).navGrid('#pager',
-     {view:true}, //options
-      {height:290,reloadAfterSubmit:false, jqModal:false, closeOnEscape:true, bottominfo:"Fields marked with (*) are required"}, // edit options
-      {height:290,reloadAfterSubmit:false,jqModal:false, closeOnEscape:true,bottominfo:"Fields marked with (*) are required"}, // add options
-      {reloadAfterSubmit:false,jqModal:false, closeOnEscape:true}, // del options
-      {closeOnEscape:true}, // search options
-      {height: 250, jqModal: false, closeOnEscape: true} // view options
-      );
+    }).navGrid('#pager',{search:false, view:false, del:true, add:true, edit:false, cloneToTop:true});
+//    }).navGrid('#pager',
+//     {view:true}, //options
+//      {height:290,reloadAfterSubmit:false, jqModal:false, closeOnEscape:true, bottominfo:"Fields marked with (*) are required"}, // edit options
+//      {height:290,reloadAfterSubmit:false,jqModal:false, closeOnEscape:true,bottominfo:"Fields marked with (*) are required"}, // add options
+//      {reloadAfterSubmit:false,jqModal:false, closeOnEscape:true}, // del options
+//      {closeOnEscape:true}, // search options
+//      {height: 250, jqModal: false, closeOnEscape: true} // view options
+//      );
 
         grid.jqGrid('navSeparatorAdd','#pager');
 //        grid.jqGrid('navButtonAdd','#pager',{
