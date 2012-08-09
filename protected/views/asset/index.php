@@ -222,18 +222,23 @@ $.ajax({
         */
 
 
-	  $("#list_toppager_right").append ( // here 'pager' part or #pager_left is the id of the pager
-                '<div align="right"><lable>Направление: </lable><select id="dir_selector"></select></div>');
+	  $("#list_toppager_right").append ( 
+                '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_top"></select></div>');
 
    	  $("#pager_right").append ( // here 'pager' part or #pager_left is the id of the pager
-                '<div align="right"><lable>Направление: </lable><select id="dir_selector"></select></div>');
+                '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_bottom"></select></div>');
 
 
-//      $("#dir_selector").load('getDirectionsForSelect');
-      $("#dir_selector").change(function(){
-//	      	alert($("#dir_selector").val());
-			grid.setGridParam({datatype:'json'});
-			grid.setGridParam({url:'getDataForGrid?dir_selector='+$("#dir_selector").val()}); 
+      $(".dir_selector").load('getDirectionsForSelect');
+      $(".dir_selector").change(function(){
+	      	var selected_index=$(this).prop("selectedIndex");
+	      	var selected_value=$(this).val();
+//	      	alert(selected_index);
+	      	//may not work on some bworsers - in FF10 - works well
+	      	$("#dir_selector_top").get(0).selectedIndex=selected_index;
+	      	$("#dir_selector_bottom").get(0).selectedIndex=selected_index;
+	      	grid.setGridParam({datatype:'json'});
+			grid.setGridParam({url:'getDataForGrid?dir_selector='+selected_value}); 
 		    grid.trigger("reloadGrid");
 
       });
