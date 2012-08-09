@@ -1,5 +1,7 @@
 protected/runtime/application.log
 protected/runtime/application.log.1
 protected/runtime/application.log.2
-nbproject/*
+nbproject/
+nbproject/*.*
+
 
