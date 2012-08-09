@@ -73,7 +73,7 @@
 	<div class="row">
 		<b>Единица измерения</b>
                 <br>
-                <?php echo $form->dropDownList($model,'unit_id', Unit::findUnits());?>
+                <?php echo $form->dropDownList($model,'unit_id', Unit::model()->findUnits());?>
 		<?php echo $form->error($model,'unit_id'); ?>
 	</div>
 	<div class="row">
@@ -91,7 +91,7 @@
 	<div class="row">
 		<b>Расположение</b>
                 <br>
-		<?php echo $form->listBox($model,'selection',Place::findAllTowns(),array('multiple'=>TRUE,'size'=>'10')); ?>
+		<?php echo $form->listBox($model,'selection',Place::model()->findAllTowns(),array('multiple'=>TRUE,'size'=>'10')); ?>
 		<?php echo $form->error($model,'place_id'); ?>
 	</div>
 

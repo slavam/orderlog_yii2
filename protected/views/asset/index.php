@@ -41,7 +41,7 @@ $(function() {
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
-        width : '1260',
+        width : '1160',
         height : '600',
         mtype : 'GET',
         colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
@@ -222,11 +222,14 @@ $.ajax({
         */
 
 
-	  $("#list_toppager_left table.navtable tbody tr").append ( // here 'pager' part or #pager_left is the id of the pager
-                '<td><div><lable>Направление: </lable><select id="dir_selector"></select></div></td>');
+	  $("#list_toppager_right").append ( // here 'pager' part or #pager_left is the id of the pager
+                '<div align="right"><lable>Направление: </lable><select id="dir_selector"></select></div>');
+
+   	  $("#pager_right").append ( // here 'pager' part or #pager_left is the id of the pager
+                '<div align="right"><lable>Направление: </lable><select id="dir_selector"></select></div>');
 
 
-      $("#dir_selector").load('getDirectionsForSelect');
+//      $("#dir_selector").load('getDirectionsForSelect');
       $("#dir_selector").change(function(){
 //	      	alert($("#dir_selector").val());
 			grid.setGridParam({datatype:'json'});
