@@ -11,7 +11,9 @@ $this->menu=array(
 
 <h1>Адреса</h1>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
+<?php 
+//var_dump($dataProvider);
+$this->widget('zii.widgets.grid.CGridView', array(
 	'id'=>'place-grid',
 	'dataProvider'=>$dataProvider,
 //        'enablePagination'=>false,

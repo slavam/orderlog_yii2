@@ -28,5 +28,11 @@ $this->menu=array(
 		'asset_group_id',
 		'info',
 		'unit_id',
+                    array(               
+                    'name'=>'place_id',
+                    'type'=>'raw',
+                    'value'=>$this->replacementPlace($model->place_id),
+                ),          
+//		'place_id',
 	),
 )); ?>

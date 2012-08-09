@@ -12,4 +12,4 @@ $this->breadcrumbs=array(
 
 <h1>Создать строку комплекта "<?php echo $model->complect->name?>"</h1>
 
-<?php echo $this->renderPartial('_form', array('model'=>$model)); ?>
+<?php echo $this->renderPartial('_form', array('model'=>$model, 'type'=>$type)); ?>

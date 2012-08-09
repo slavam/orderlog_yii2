@@ -3,10 +3,9 @@ $this->breadcrumbs=array(
 	'Заявка'=>array('claim/show', 'id'=>$model->claim_id),
 	$model->claim->claim_number,
 );
-
 ?>
 
-<h1>Строка заявки #<?php echo $model->id; ?></h1>
+<h2>Строка заявки #<?php echo $model->id; ?></h2>
 
 <?php $this->widget('zii.widgets.CDetailView', array(
 	'data'=>$model,
@@ -40,7 +39,7 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Бизнес',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->business->NAME)
+                    'value'=>CHtml::encode($model->getBusinessName($model->business_id))
                 ),
                 array(               
                     'label'=>'Статья бюджета',
@@ -51,6 +50,11 @@ $this->breadcrumbs=array(
                     'label'=>'Для кого',
                     'type'=>'raw',
                     'value'=>CHtml::encode($model->findWorker($model->for_whom))
+                ),
+                array(               
+                    'label'=>'Центр финансовой ответственности',
+                    'type'=>'raw',
+                    'value'=>CHtml::encode($model->payer ? $model->payer->NAME: "Не задан")
                 ),
                 array(               
                     'label'=>'Расположение объекта',

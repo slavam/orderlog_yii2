@@ -28,7 +28,7 @@ class ClaimLineController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams',
-                                    'createLinesByComplect'),
+                                    'createLinesByComplect','getWaresForTemplatesByComplect'), //'selectWaresFromTemplates'), //,'isTemplatesIntoComplect'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -62,10 +62,6 @@ class ClaimLineController extends Controller
 		));
 	}
 
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
 	public function actionCreate()
 	{
 		$model=new ClaimLine;
@@ -79,9 +75,9 @@ class ClaimLineController extends Controller
 		{
 			$model->attributes=$_POST['ClaimLine'];
                         $model->claim_id=$_GET['claim_id'];
-                        $model->how_created = 3;
+                        $model->how_created = 3;  // hand make
                         $model->created_at = date("Y-m-d H:i:s", time());
-                        $asset =  Asset::model()->findByPk($model->asset_id);
+                        $asset = Asset::model()->findByPk($model->asset_id);
                         $model->cost=$asset->cost;
                         $model->amount=$model->count*$asset->cost;
                         $model->budget_item_id=$asset->budget_item_id;
@@ -93,7 +89,15 @@ class ClaimLineController extends Controller
 			'model'=>$model,
 		));
 	}
-        
+//        private function isTemplatesIntoComplect($complect_id)
+//        {
+//            $criteria=new CDbCriteria;
+//            $criteria->condition="asset_template_id>0 and complect_id=".$complect_id;
+//            if (ComplectLine::model()->findAll($criteria))
+//                return TRUE;
+//            else
+//                return false;
+//        }
         public function actionCreateLinesByComplect()
         {
             $complect_id = 0;
@@ -103,19 +107,68 @@ class ClaimLineController extends Controller
             if(isset($_POST['complect_id']))
             {
                 $complect_id = $_POST['complect_id'];
-//                $business_id = $_POST['business_id'];
                 $criteria=new CDbCriteria;
-                $criteria->condition="complect_id=".$complect_id;
-                $complect_lines = ComplectLine::model()->findAll($criteria);
+                $criteria->condition="asset_template_id>0 and complect_id=".$complect_id;
+                if (ComplectLine::model()->count($criteria)>0)
+//                    $this->redirect(array('claimLine/selectWaresFromTemplates','complect_id'=>$complect_id,'claim_id'=>$claim_id));
+                    $this->redirect(array('claimLine/getWaresForTemplatesByComplect','complect_id'=>$complect_id,'claim_id'=>$claim_id,'for_whom'=>$_POST['for_whom'],'business_id'=>$_POST['business_id']));
+                else {
+                    $criteria->condition=null;
+                    $criteria->condition="complect_id=".$complect_id;
+                    $complect_lines = ComplectLine::model()->findAll($criteria);
+                    $current_time = date("Y-m-d H:i:s", time());
+                    foreach ($complect_lines as $c_l) {
+                        $model=new ClaimLine;
+                        $model->claim_id=$claim_id;
+                        $model->how_created =$c_l->complect->complect_type_id;
+                        $model->complect_id = $complect_id;
+                        $model->created_at = $current_time;
+                        $model->business_id=$_POST['business_id'];
+                        $model->for_whom=$_POST['for_whom'];
+                        $model->count = $c_l->amount;
+                        $model->asset_id=$c_l->asset_id;
+                        $asset = Asset::model()->findByPk($c_l->asset_id);
+                        $model->cost=$asset->cost;
+                        $model->amount=$c_l->amount*$asset->cost;
+                        $model->budget_item_id=$asset->budget_item_id;
+                        $model->save();
+                    }
+                    $this->redirect(array('claim/show','id'=>$model->claim_id));
+                }
+            }
+
+            $this->render('createLinesByComplect',array(
+		'claim_id'=>$claim_id,
+                'complect_id'=>$complect_id,
+                'business_id'=>$business_id,
+                'for_whom'=>$for_whom,
+            ));
+        }
+
+        public function actionGetWaresForTemplatesByComplect()
+        {
+            $claim_id = $_GET['claim_id'];
+            $complect_id = $_GET['complect_id'];
+            $business_id=$_GET['business_id'];
+            $for_whom=$_GET['for_whom'];
+            $criteria=new CDbCriteria;
+            $criteria->condition="complect_id=".$complect_id;
+            $criteria->order='id';
+            $complect_lines = ComplectLine::model()->findAll($criteria);
+            if(isset($_POST['my_button']))
+            {
                 $current_time = date("Y-m-d H:i:s", time());
                 foreach ($complect_lines as $c_l) {
+                    if ($c_l->asset_id<1) {
+                        $c_l->asset_id = $_POST['asset_id_'.$c_l->id];
+                    }
                     $model=new ClaimLine;
                     $model->claim_id=$claim_id;
                     $model->how_created =$c_l->complect->complect_type_id;
                     $model->complect_id = $complect_id;
                     $model->created_at = $current_time;
-                    $model->business_id=$_POST['business_id'];
-                    $model->for_whom=$_POST['for_whom'];
+                    $model->business_id=$business_id;
+                    $model->for_whom=$for_whom;
                     $model->count = $c_l->amount;
                     $model->asset_id=$c_l->asset_id;
                     $asset = Asset::model()->findByPk($c_l->asset_id);
@@ -126,21 +179,12 @@ class ClaimLineController extends Controller
                 }
                 $this->redirect(array('claim/show','id'=>$model->claim_id));
             }
-
-            $this->render('createLinesByComplect',array(
-			'claim_id'=>$claim_id,
+            $this->render('getWaresForTemplatesByComplect',array(
                 'complect_id'=>$complect_id,
-                'business_id'=>$business_id,
-                'for_whom'=>$for_whom,
-            ));
+                'complect_lines'=>$complect_lines,
+            ));            
         }
-
-        /**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate($id)
+        public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
 
@@ -243,12 +287,11 @@ class ClaimLineController extends Controller
                 $this->redirect(array('claimLine/showConsolidatedClaim',
                     'period_id'=>$_POST['Claim']['period_id'],
                     'direction_id'=>$_POST['Claim']['direction_id']
-                    ));
+                ));
             }
             $this->render('getClaimParams',array(
-			'model'=>$model,));
+                'model'=>$model));
         }
-
         
         public function actionShowConsolidatedClaim()
         {

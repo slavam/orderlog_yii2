@@ -27,7 +27,7 @@ class ComplectController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','indexJqgrid'),
+				'actions'=>array('index','view','show','indexJqgrid','getDataForGrid','getDataForSubGrid'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -62,11 +62,8 @@ class ComplectController extends Controller
 			'model'=>$model,
             ));
 	}
-	/**
-	 * Creates a new model.
-	 * If creation is successful, the browser will be redirected to the 'view' page.
-	 */
-	public function actionCreate()
+
+        public function actionCreate()
 	{
 		$model=new Complect;
 
@@ -85,11 +82,6 @@ class ComplectController extends Controller
 		));
 	}
 
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
@@ -201,4 +193,39 @@ class ComplectController extends Controller
 			Yii::app()->end();
 		}
 	}
+        public function actionGetDataForGrid()
+	{
+            $dataProvider=new CActiveDataProvider('Complect', array(
+                'criteria'=>array(
+                    'order'=>'complect_type_id desc, id',
+                    ),
+            ));
+//            $pagination_block = $dataProvider->getPagination();
+            $complects = $dataProvider->getData();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array($row->id, $row->complectType->name, $row->name);
+            }
+            echo CJSON::encode($responce);
+        }
+
+        public function actionGetDataForSubGrid()
+        {
+            $dataProvider=new CActiveDataProvider('ComplectLine', array(
+                'pagination'=>false,
+                'criteria'=>array(
+                    'condition'=>'complect_id='.$_GET['line_id'],
+                    'order'=>'id',
+                    ),
+            ));
+            
+            $complects = $dataProvider->getData();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array($row->asset->waretype->short_name, $row->asset->name, $row->amount);
+            }
+            echo CJSON::encode($responce);
+        }
 }

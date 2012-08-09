@@ -1,15 +1,11 @@
 <?php
 $this->breadcrumbs=array(
-	'Features'=>array('index'),
-	'Create',
+	'Характеристики'=>array('index'),
+	'Создать',
 );
 
-$this->menu=array(
-	array('label'=>'List Feature', 'url'=>array('index')),
-	array('label'=>'Manage Feature', 'url'=>array('admin')),
-);
 ?>
 
-<h1>Create Feature</h1>
+<h1>Создать характеристику</h1>
 
 <?php echo $this->renderPartial('_form', array('model'=>$model)); ?>

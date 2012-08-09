@@ -373,4 +373,16 @@ class AssetController extends Controller {
 
             echo CJSON::encode($responce);
     }
+
+    public function replacementPlace($place_id)
+  {
+        $PlaceArr = explode(',',$place_id);
+        foreach($PlaceArr as $key) {
+            $PlaceName = Place::model()->findTown($key);
+		$ret_str .= "<b>".$PlaceName->title."</b>"."<br>";
+        }
+        return 	$ret_str;	
+	
+  }
+ 
 }                                                                           	

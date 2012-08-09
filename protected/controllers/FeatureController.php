@@ -70,7 +70,7 @@ class FeatureController extends Controller
 		{
 			$model->attributes=$_POST['Feature'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -94,7 +94,7 @@ class FeatureController extends Controller
 		{
 			$model->attributes=$_POST['Feature'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -119,7 +119,7 @@ class FeatureController extends Controller
 				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+                    throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
 	/**
@@ -127,10 +127,16 @@ class FeatureController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Feature');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+            $dataProvider = new CActiveDataProvider('Feature', array(
+                'pagination' => false,
+                'criteria' => array(
+                    'order' => 'direction_id, name',
+                ),
+            ));
+
+            $this->render('index',array(
+                    'dataProvider'=>$dataProvider,
+            ));
 	}
 
 	/**

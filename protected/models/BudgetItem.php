@@ -114,10 +114,14 @@ class BudgetItem extends CActiveRecord
 		));
 	}
 
-    public function findBudgetItems()
+        public function findBudgetItems()
 	{
-       		$budgetItems = BudgetItem::model()->findAll(array('order' => 'ID'));
-		return CHtml::listData($budgetItems,'ID','NAME');
+            $criteria=new CDbCriteria;
+            $criteria->select="ID, CONCAT('('||CODE||') ',NAME) as NAME";
+            $criteria->condition='BUDGET_GROUPS_ID in (9,7)';
+            $criteria->order='CODE';
+            $budgetItems = BudgetItem::model()->findAll($criteria);
+            return CHtml::listData($budgetItems,'ID','NAME');
 	}
 
 }

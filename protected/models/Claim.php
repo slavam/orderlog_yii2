@@ -48,11 +48,11 @@ class Claim extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('claim_number, division_id, create_date', 'required'),
-			array('division_id, direction_id, state_id, period_id', 'numerical', 'integerOnly'=>true),
-			array('budgetary, comment, description', 'safe'),
+			array('division_id, direction_id, state_id, period_id, department_id', 'numerical', 'integerOnly'=>true),
+			array('budgetary, comment, description, department_id', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, claim_number, division_id, create_date, budgetary, direction_id, state_id, period_id, comment, description', 'safe', 'on'=>'search'),
+			array('id, claim_number, division_id, create_date, budgetary, direction_id, state_id, period_id, comment, description, department_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -64,12 +64,13 @@ class Claim extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'accounts' => array(self::HAS_MANY, 'Accounts', 'claim_id'),
-			'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
-			'division' => array(self::BELONGS_TO, 'Division', 'division_id'),
-			'period' => array(self::BELONGS_TO, 'Period', 'period_id'),
-			'state' => array(self::BELONGS_TO, 'State', 'state_id'),
-                        'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'claim_id'),
+                    'accounts' => array(self::HAS_MANY, 'Accounts', 'claim_id'),
+                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
+                    'division' => array(self::BELONGS_TO, 'Division', 'division_id'),
+                    'period' => array(self::BELONGS_TO, 'Period', 'period_id'),
+                    'state' => array(self::BELONGS_TO, 'State', 'state_id'),
+                    'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'claim_id'),
+                    'department' => array(self::BELONGS_TO, 'Department', 'department_id'),
 		);
 	}
 
@@ -79,16 +80,17 @@ class Claim extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'claim_number' => 'Claim Number',
-			'division_id' => 'Division',
-			'create_date' => 'Create Date',
-			'budgetary' => 'Budgetary',
-			'direction_id' => 'Direction',
-			'state_id' => 'State',
-			'period_id' => 'Period',
-			'comment' => 'Comment',
-			'description' => 'Description',
+                    'id' => 'ID',
+                    'claim_number' => 'Claim Number',
+                    'division_id' => 'Division',
+                    'create_date' => 'Create Date',
+                    'budgetary' => 'Budgetary',
+                    'direction_id' => 'Direction',
+                    'state_id' => 'State',
+                    'period_id' => 'Period',
+                    'comment' => 'Comment',
+                    'description' => 'Description',
+                    'department_id' => 'Department',
 		);
 	}
 
@@ -113,10 +115,37 @@ class Claim extends CActiveRecord
 		$criteria->compare('period_id',$this->period_id);
 		$criteria->compare('comment',$this->comment,true);
 		$criteria->compare('description',$this->description,true);
+                $criteria->compare('department_id',  $this->department_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
 		));
 	}
-
+        
+        public function findDepartment($departmen_id)
+	{
+            if ($departmen_id<1) return '';
+            $sql = '
+                with Hierachy(ID_DIVISION, PARENT_ID, DIVISION, Level)
+                as
+                (
+                select ID_DIVISION, PARENT_ID, DIVISION, 0 as Level
+                    from div2doc c
+                    where c.ID_DIVISION = '.$departmen_id.' 
+                    union all
+                    select c.ID_DIVISION, c.PARENT_ID, c.DIVISION, ch.Level + 1
+                    from div2doc c
+                    inner join Hierachy ch
+                    on ch.parent_id = c.ID_DIVISION
+                )
+                select ID_DIVISION, PARENT_ID, DIVISION
+                from Hierachy
+                where Level >= 0 order by Level desc';
+            $departments = Department::model()->findAllBySql($sql);
+            $s = '';
+            foreach ($departments as $d) {
+                $s .= $d->DIVISION.'; ';
+            }
+            return $s;
+	}
 }

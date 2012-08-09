@@ -5,7 +5,6 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-
 	<?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
@@ -43,6 +42,12 @@
 		<?php echo $form->error($model,'for_whom'); ?>
 	</div>
 
+        <div class="row">
+            <b>Центр финансовой ответственности</b>
+            <br>
+            <?php echo $form->dropDownList($model,'payer_id', Division::All());?> 
+            <?php echo $form->error($model,'payer_id'); ?>
+	</div>
 	<div class="row">
 		<b>Бизнес</b>
                 <br>

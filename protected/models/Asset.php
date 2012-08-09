@@ -14,9 +14,11 @@
  * @property integer $asset_group_id
  * @property string $info
  * @property integer $unit_id
+ * @property integer[] $place_id
  */
 class Asset extends CActiveRecord
 {
+	public $selection;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Asset the static model class
@@ -48,12 +50,13 @@ class Asset extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id', 'numerical', 'integerOnly'=>true),
+			array('selection', 'required'),
 			array('cost', 'numerical'),
-			array('name, part_number, info', 'safe'),
+			array('name, part_number, info, comment', 'safe'),
 			array('info','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, unit_id', 'safe', 'on'=>'search'),
+			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id, place_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -68,12 +71,12 @@ class Asset extends CActiveRecord
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
                     'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
 //                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
-					'assetgroups' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
+                    'assetgroup' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
-                    'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroups'),
-
+                    'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroup'),
+                    'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id' ),
 		);
 	}
 
@@ -92,7 +95,9 @@ class Asset extends CActiveRecord
 			'direction_id' => 'Direction',
 			'asset_group_id' => 'Asset Group',
 			'info' => 'Info',
+                        'comment' => 'Comment',
 			'unit_id' => 'Unit',
+			'place_id' => 'Расположение',
 		);
 	}
 
@@ -116,7 +121,9 @@ class Asset extends CActiveRecord
 		$criteria->compare('direction_id',$this->direction_id);
 		$criteria->compare('asset_group_id',$this->asset_group_id);                                               
 		$criteria->compare('info',$this->info,true);                                                               
+                $criteria->compare('comment',$this->comment,true);
 		$criteria->compare('unit_id',$this->unit_id);
+		$criteria->compare('place_id',$this->place_id);
 
 		$criteria->together = true;
 
@@ -124,7 +131,28 @@ class Asset extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+	public function afterFind() {
+
+		$this->place_id = trim($this->place_id,"{}");
+		$this->selection = explode(',',$this->place_id);
+		return true;
+	}
         
+	/**
+	 * This is invoked before the record is saved.
+	 * @return boolean whether the record should be saved.
+	 */
+	protected function beforeSave()
+	{
+		if(count($this->selection) > 1) {
+			$this->place_id=implode(',',$this->selection);
+		} else {
+			$this->place_id=$this->selection;
+		}
+       		$this->place_id = "{".$this->place_id."}";
+		return parent::beforeSave();
+	}
+
         public function findAssets()
 	{
        		$assets = Asset::model()->findAll(array('order' => 'name'));
@@ -139,4 +167,12 @@ class Asset extends CActiveRecord
                    @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
+         public function findAssetsByTemplate($asset_template_id) {
+		$criteria=new CDbCriteria;
+                $criteria->condition="asset_template_id=".$asset_template_id;
+                $criteria->order='name';
+       		$assets = Asset::model()->findAll($criteria);
+		return CHtml::listData($assets,'id','name');
+         }
+                 
 }
