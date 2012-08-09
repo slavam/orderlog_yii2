@@ -2,7 +2,8 @@ protected/runtime/application.log
 protected/runtime/application.log.1
 protected/runtime/application.log.2
 nbproject/
-runtime/*.log
+nbproject/*.*
+protected/runtime/*.log
 nbproject/private/private.properties
 nbproject/project.properties
 
