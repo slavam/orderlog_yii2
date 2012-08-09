@@ -25,7 +25,7 @@ class AssetController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'show', 'updateGrid', 'getDataForGrid','getDirectionsForSelect'),
+                'actions' => array('index', 'view', 'show', 'updateGrid', 'getDataForGrid','getDirectionsForSelect','updateRow','editAssetDialog','editAsset'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -62,21 +62,54 @@ class AssetController extends Controller {
      * Creates a new model.
      * If creation is successful, the browser will be redirected to the 'view' page.
      */
-    public function actionCreate() {
-        $model = new Asset;
+    public function actionEditAsset($id) {
+
+    $model = $this->loadModel($id);
+//    $this->performAjaxValidation($model);
+
+    if (isset($_POST['Asset'])) {
+        $model->attributes = $_POST['Asset'];
+        if($model->validate()){
+            if ($model->save()) { 
+            	//$_POST['id_return'] = $model->id;
+                if (Yii::app()->request->isAjaxRequest) {
+                    $this->actionGetDataForGrid(); //encode json only one asset by id
+                    Yii::app()->end();
+                } else echo 'get out!';
+            }//model->save
+        }//validate
+        else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+    }
+    else
+    if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+     
+     
+        
+        
+/*        $model = new Asset;
 
         // Uncomment the following line if AJAX validation is needed
         // $this->performAjaxValidation($model);
 
         if (isset($_POST['Asset'])) {
             $model->attributes = $_POST['Asset'];
-            if ($model->save())
-                $this->redirect(array('view', 'id' => $model->id));
+            //if ($model->save())
+                //$this->redirect(array('view', 'id' => $model->id));
+                
         }
 
         $this->render('create', array(
             'model' => $model,
         ));
+        */
     }
 
     /**
@@ -85,6 +118,7 @@ class AssetController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
+
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
@@ -204,6 +238,48 @@ class AssetController extends Controller {
 //        }
     }
 
+
+    public function actionEditAssetDialog($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            //$this->layout='//layouts/ajax';
+
+            //$model = new Asset;
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+			Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+			Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('_form',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+
+    public function actionUpdateRow()
+        {
+            if(isset($_REQUEST['id']))
+            {
+
+
+            /*
+            	TODO: string validation before updating DB! (comment by o.lysenko 23.07.2012 12:17)
+            */
+
+                    $model=$this->loadModel($_REQUEST['id']);
+                //    $model->name = $_REQUEST['name'];
+                    $model->comment = $_REQUEST['comment'];
+                  //  $model->part_number = $_REQUEST['part_number'];
+                    $model->cost = $_REQUEST['cost'];
+                    if($model->save())
+    				$this->redirect(array('index'));
+    				
+            }
+        }
+
+
     public function actionGetDirectionsForSelect()
         {
 
@@ -239,17 +315,37 @@ class AssetController extends Controller {
                 $criteria_ = $dataProvider->getCriteria();
                 $criteria_->condition = 't.direction_id='.$_REQUEST['dir_selector'];
             }
+            
+            
+            // if cal goes from EditAsset action to retrieve only one Asset
+            if(isset($_REQUEST['id'])&&$_REQUEST['id'])
+            {
+                $criteria_ = $dataProvider->getCriteria();
+                if($criteria_->condition!='') $criteria_->condition.=' AND ';
+                $criteria_->condition.='t.id ='.$_REQUEST['id'];
+            }
 
-/*                  
+            
+
+/*            
 			$pagination = $dataProvider->getPagination();
 			if(isset($_GET['page']))
-                            $pagination->setCurrentPage(0);
+                            $pagination->setCurrentPage($_GET['page']-1);
 			if(isset($_GET['rows']))
                             $pagination->setPageSize($_GET['rows']);
-                            */
-
+*/
 			$assets_ = $dataProvider->getData();
 
+                        /*
+			if(isset($_GET['page']))
+				$responce['page'] = $_GET['page'];
+			else $responce['page'] = $pagination->getCurrentPage();*/
+
+        //    $responce['page'] = $pagination->getCurrentPage();
+//            $responce['records'] = $dataProvider->getTotalItemCount();
+//            $responce['total'] = "2";//ceil($responce['records'] / $_GET['rows']); 
+
+			$responce['status']='ok';
 			$responce['rows']=array();
 
             foreach ($assets_ as $i=>$row) {
@@ -258,19 +354,23 @@ class AssetController extends Controller {
 					if($row->budget_item_id) {
 						$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
 						$article_name = $articles_->NAME;
-					} else $article_name = 'Н/Д';
+						$article_code = $articles_->CODE;
+					} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
 	                $responce['rows'][$i]['cell'] = array(
 	                			$row->id, 
+	                			'?', /*Тип записи*/
+	                			$row->waretype->short_name, 
 	                			$row->block->name, 
 	                			$row->assetgroups->name, 
-	                			$row->waretype->short_name, 
 	                			$row->name, 
-	                			$row->cost, 
 	                			$row->part_number, 
-	                			$article_name);
+	                			$row->cost, 
+	                			$row->comment,
+	                			$article_name,
+	                			$article_code
+	                			);
 				}
 
             echo CJSON::encode($responce);
-
     }
 }                                                                           	

@@ -86,8 +86,8 @@ $(function() {
             }
         },
 
-    }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true});
-        grid.jqGrid('navSeparatorAdd','#pager');
+    }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true, refresh:false});
+//        grid.jqGrid('navSeparatorAdd','#pager');
         grid.jqGrid('navButtonAdd','#pager',{
             caption: '',//'Группа',
             title: 'Добавить группу',
