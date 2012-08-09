@@ -306,8 +306,8 @@ class AssetController extends Controller {
             $dataProvider = new CActiveDataProvider('Asset' , array(
             					'pagination'=>false, 
             					'criteria' => array(
-            						'with' => array('direction','block','assetgroup'),
-	            					'order' => 'block.name,assetgroup.name,t.name'))
+            						'with' => array('direction','assetgroup'),
+	            					'order' => 'assetgroup.block_id,assetgroup.name,t.name'))
 //	            					'order' => 'block.name,assetGroup.name'))
                   );
             
@@ -360,7 +360,7 @@ class AssetController extends Controller {
 	                			$row->id, 
 	                			'?', /*Тип записи*/
 	                			$row->waretype->short_name, 
-	                			$row->block->name, 
+	                			$row->assetgroup->block->name, 
 	                			$row->assetgroup->name, 
 	                			$row->name, 
 	                			$row->part_number, 
