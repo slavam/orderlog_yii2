@@ -133,7 +133,43 @@ public $PATH;
             }			
             return $data;
         }
-                public function findAllAddresses()
+        public function findAllTowns()
+        {
+            $positions = Place::model()->findAllBySql("
+                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
+                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
+                    FROM places T1 WHERE T1.parent_id IS NULL
+                  union
+                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
+                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
+                  select id, path as title from temp1 where level=2 ORDER BY PATH");
+//            $data = array(''=>'Задайте расположение');
+            foreach($positions as $position){
+                    $data[$position->id] = $position->title;
+            }			
+            return $data;
+        }
+        public function findTown($town_id)
+        {
+//            $positions = Place::model()->findAllBySql("
+            return Place::model()->findBySql("
+                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
+                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
+                    FROM places T1 WHERE T1.parent_id IS NULL
+                  union
+                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
+                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
+                  select id, path as title from temp1 where level=2 and id=$town_id ORDER BY PATH");
+//            foreach($positions as $position){
+//                    $data[$position->id] = $position->title;
+//            }			
+//            return $data;
+//            return $positions->title;
+        }
+
+        
+        
+        public function findAllAddresses()
         {
             return Place::model()->findAllBySql("
                 WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
