@@ -27,7 +27,7 @@ class ClaimController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','list','changeClaimState'),
+				'actions'=>array('index','view','show','list','changeClaimState','indexJqgrid','getDataForGrid','getDataForSubGrid'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -232,5 +232,68 @@ class ClaimController extends Controller
             $this->render('index',array(
                     'dataProvider'=>$dataProvider,
             ));
+        }
+        
+                public function actionIndexJqgrid()
+	{
+		$dataProvider=new CActiveDataProvider('Claim', array(
+                    'pagination'=>false, 
+                    'criteria'=>array(
+                        'order'=>'period_id desc, division_id, id',
+                        ),
+                ));
+		$this->render('indexJqgrid',array(
+			'dataProvider'=>$dataProvider,
+		));
+	}
+
+        public function actionGetDataForGrid()
+	{
+            $dataProvider=new CActiveDataProvider('Claim', array(
+                'criteria'=>array(
+                    'order'=>'period_id desc, division_id, id',
+                    ),
+            ));
+//            $pagination_block = $dataProvider->getPagination();
+            $claims = $dataProvider->getData();
+            $responce['rows']=array();
+            foreach ($claims as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->id, 
+                    $row->period->NAME, 
+                    $row->claim_number,
+                    $row->state->stateName->name,
+                    $row->division->NAME,
+                    $row->comment
+                    );
+            }
+            echo CJSON::encode($responce);
+        }
+
+        public function actionGetDataForSubGrid()
+        {
+            $dataProvider=new CActiveDataProvider('ClaimLine', array(
+                'pagination'=>false,
+                'criteria'=>array(
+                    'condition'=>'claim_id='.$_GET['claim_id'],
+                    'order'=>'id',
+                    ),
+            ));
+            
+            $complects = $dataProvider->getData();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->asset->waretype->short_name, 
+                    $row->asset->name, 
+                    $row->count,
+                    $row->cost,
+                    $row->amount,
+                    $row->description,
+                    );
+            }
+            echo CJSON::encode($responce);
         }
 }
