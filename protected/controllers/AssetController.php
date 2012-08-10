@@ -302,14 +302,12 @@ class AssetController extends Controller {
                   );
 
             $articles_ = $dataProvider_FIN->getData();*/
-
             $dataProvider = new CActiveDataProvider('Asset' , array(
-            					'pagination'=>false, 
-            					'criteria' => array(
-            						'with' => array('direction','assetgroup'),
-	            					'order' => 'assetgroup.block_id,assetgroup.name,t.name')) // assetgroup.name,'))
-//	            					'order' => 'block.name,assetGroup.name'))
-                  );
+                'pagination'=>false, 
+                    'criteria' => array(
+                        'with' => array('direction','assetgroup','assetgroup.block'=>array('alias'=>'block')),
+                        'order' => 'block.name,assetgroup.name,t.name')
+                  ));
             
             if(isset($_REQUEST['dir_selector'])&&$_REQUEST['dir_selector']){
                 $criteria_ = $dataProvider->getCriteria();
