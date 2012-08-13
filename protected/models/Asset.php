@@ -70,12 +70,10 @@ class Asset extends CActiveRecord
 		return array(
                     'unit' => array(self::BELONGS_TO, 'Unit', 'unit_id'),
                     'waretype' => array(self::BELONGS_TO, 'WareType', 'ware_type_id' ),
-//                    'assetGroup' => array(self::BELONGS_TO, 'AssetGroup', 'asset_group_id'),
                     'assetgroup' => array(self::BELONGS_TO,'AssetGroup','asset_group_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
-//                    'block' => array(self::HAS_ONE,'Block',array('block_id'=>'id'),'through'=>'assetgroup'),
                     'assettemplate' => array(self::BELONGS_TO, 'AssetTemplate', 'asset_template_id' ),
 		);
 	}

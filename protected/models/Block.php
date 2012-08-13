@@ -52,6 +52,8 @@ class Block extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'directions' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
+                    'assetgroup' => array(self::HAS_ONE, 'AssetGroup','block_id'),
+                    'asset' => array(self::HAS_ONE, 'Asset',array('id'=>'asset_group_id'),'through'=>'assetgroup')
 		);
 	}
 

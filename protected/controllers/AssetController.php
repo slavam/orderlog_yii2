@@ -291,6 +291,8 @@ class AssetController extends Controller {
 
     public function actionGetDataForGrid()  {
 
+
+    Yii::beginProfile('blockID');
             $responce = array();
 
             /*
@@ -302,15 +304,13 @@ class AssetController extends Controller {
                   );
 
             $articles_ = $dataProvider_FIN->getData();*/
-
             $dataProvider = new CActiveDataProvider('Asset' , array(
-            					'pagination'=>false, 
-            					'criteria' => array(
-            						'with' => array('direction','assetgroup'), //'block',
-	            					'order' => 'assetgroup.block_id,assetgroup.name,t.name')) // assetgroup.name,'))
-//	            					'order' => 'block.name,assetGroup.name'))
-                  );
-/*            
+                'pagination'=>false, 
+                    'criteria' => array(
+                        'with' => array('direction','assetgroup','assetgroup.block'=>array('alias'=>'block')),
+                        'order' => 'block.name,assetgroup.name,t.name')
+                  ));
+            
             if(isset($_REQUEST['dir_selector'])&&$_REQUEST['dir_selector']){
                 $criteria_ = $dataProvider->getCriteria();
                 $criteria_->condition = 't.direction_id='.$_REQUEST['dir_selector'];
@@ -324,7 +324,7 @@ class AssetController extends Controller {
                 if($criteria_->condition!='') $criteria_->condition.=' AND ';
                 $criteria_->condition.='t.id ='.$_REQUEST['id'];
             }
-  */
+  
             
 
 /*            
@@ -372,6 +372,9 @@ class AssetController extends Controller {
 				}
 
             echo CJSON::encode($responce);
+
+            Yii::endProfile('blockID');
+
     }
 
     public function replacementPlace($place_id)
