@@ -113,7 +113,7 @@ public function actionUpdate()
 
         if ($model->validate()) {
             $model->save(false);
-            $this->redirect('/dogovor_archiv/documents/view');
+            $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
         }
     }
     if ($this->getViewFile($model->templ_name.'_form'))
@@ -148,7 +148,7 @@ if ($form->submitted('login')) {
         }
      if ($result == true)
       {
-          $this->redirect($this->createUrl('/dogovor_archiv/documents/view'));
+          $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
       }
    }
    
