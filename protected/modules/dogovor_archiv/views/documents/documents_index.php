@@ -96,7 +96,7 @@
 <script type="text/javascript">
     $(function() {
         jQuery("#jqgrid").jqGrid( {
-            url : '/index.php/dogovor_archiv/documents/Jqgrid/',
+            url : '<?echo Yii::app()->createUrl('/index.php/dogovor_archiv/documents/Jqgrid/')?>',
             datatype : 'json',
             mtype : 'GET',
             width:'100%',
