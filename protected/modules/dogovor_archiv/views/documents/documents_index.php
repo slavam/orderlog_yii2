@@ -96,7 +96,7 @@
 <script type="text/javascript">
     $(function() {
         jQuery("#jqgrid").jqGrid( {
-            url : '<?echo Yii::app()->createUrl('/index.php/dogovor_archiv/documents/Jqgrid/')?>',
+            url : '<?echo Yii::app()->createUrl('dogovor_archiv/documents/Jqgrid')?>',
             datatype : 'json',
             mtype : 'GET',
             width:'100%',
@@ -125,7 +125,7 @@
 	    subgrid_table_id = subgrid_id+'_t';
 	    $('#'+subgrid_id).html('<table id="'+subgrid_table_id+'"></table><div id="'+subgrid_table_id+'_pager"></div>');
 	    $('#'+subgrid_table_id).jqGrid({
-	        url: '/index.php/dogovor_archiv/documents/jqgrid/?action=sub',
+	        url: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/Jqgrid',array('action'=>'sub'))?>',
 	        datatype: 'json',
 	        mtype: 'POST',
 	        postData: {'get':'subgrid','id':row_id},
@@ -189,7 +189,7 @@
                     $('#jqgrid').jqGrid('setRowData',rows[i],false, {color:cl});
                 }
             },
-            editurl: '/index.php/dogovor_archiv/documents/Update'
+            editurl: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/update')?>'
         }).jqGrid('navGrid', '#pager',{add: false, del: false, edit: false, search: true},
         {},{},{},
         {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['eq','cn'],groupOps: false});//search settings
@@ -206,7 +206,7 @@
                 //			height: 140,
                 //			modal: true
                 //		})
-                $(location).attr('href','/index.php/dogovor_archiv/documents/add');
+                $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/add');?>');
             },
             position:'last'
         })
@@ -218,7 +218,7 @@
             {
                 var gsr = jQuery("#jqgrid").jqGrid('getGridParam','selrow'); 
                 if(gsr){
-                    $(location).attr('href','/index.php/dogovor_archiv/documents/update/?id='+gsr);
+                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+gsr);
                 } else { alert("Выберите запись") }
             },
             position:'last'
