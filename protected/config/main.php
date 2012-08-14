@@ -15,6 +15,9 @@ return array(
     'import' => array(
         'application.models.*',
         'application.components.*',
+	'ext.YiiMongoDbSuite.*',
+        'ext.ModelRulesBuilder.*',
+        'zii.widgets.jui.*',
     ),
     'modules' => array(
         'gii' => array(
@@ -23,6 +26,11 @@ return array(
         // If removed, Gii defaults to localhost only. Edit carefully to taste.
         //'ipFilters'=>array('127.0.0.1','::1'),
         ),
+	'dogovor_archiv'=>array(
+	'modulename'=>'Electro Arhiv',
+	//'layoutPath'=>"protected/modules/dogovor_archiv/views/layouts",
+	//'layout'=>'/layouts/dogovor_archiv_main'
+	)
     ),
     // application components
     'components' => array(
@@ -37,6 +45,7 @@ return array(
 //		'showScriptName'=>false,
 		'rules'=>array(
         		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+			'<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>'
         	),
         ),
         
@@ -44,16 +53,18 @@ return array(
 
 
         // uncomment the following to enable URLs in path-format
-        /*
+        
           'urlManager'=>array(
           'urlFormat'=>'path',
           'rules'=>array(
           '<controller:\w+>/<id:\d+>'=>'<controller>/view',
           '<controller:\w+>/<action:\w+>/<id:\d+>'=>'<controller>/<action>',
           '<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+	  '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
+          '<module:\w+>/<controller:\w+>' => '<module>/<controller>',
           ),
           ),
-         */
+         
         'db' => array(
             'connectionString' => 'pgsql:host=dev1-d00;port=5432;dbname=orderlog_development',
             'username' => 'postgres',
@@ -84,6 +95,15 @@ return array(
             'charset' => 'UTF8',
             'enableProfiling' => true,
         ),
+	'mongodb' => array(
+            'class' => 'EMongoDB',
+            'connectionString' => 'mongodb://localhost:27017',
+            'dbName' => 'arhivdb',
+            'fsyncFlag' => false,
+            'safeFlag' => false,
+            'useCursor' => false
+        ),
+        'modelrulesbuider' => array(),
         'errorHandler' => array(
             // use 'site/error' action to display errors
             'errorAction' => 'site/error',
