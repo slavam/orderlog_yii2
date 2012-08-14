@@ -39,6 +39,7 @@
 				array('label'=>'Товары', 'url'=>array('/asset/index')),
                                 array('label'=>'Группы', 'url'=>array('/assetGroup/index')),
                                 array('label'=>'Супергруппы', 'url'=>array('/block/index')),
+                                array('label'=>'Модуль Договора', 'url'=>array('/dogovor_archiv/')),
 				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
 				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
 			),
