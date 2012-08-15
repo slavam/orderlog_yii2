@@ -1,11 +1,13 @@
 <div class="form">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
-	'id'=>'claim-form',
-	'enableAjaxValidation'=>false,
+    'action'=>'editClaim',
+    'id'=>'claim-form',
+    'enableAjaxValidation'=>false,
+    'enableClientValidation' => true,
 )); ?>
 
-	<?php echo $form->errorSummary($model); ?>
+    <?php echo $form->errorSummary($model); ?>
 
 	<div class="row">
             <b>Отделение</b>
@@ -54,9 +56,9 @@
 		<?php echo $form->error($model,'description'); ?>
 	</div>
 
-	<div class="row buttons">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
-	</div>
+<!--	<div class="row buttons">
+		<?php // echo CHtml::submitButton($model->isNewRecord ? 'Создать' : 'Изменить'); ?>
+	</div>-->
 
 <?php $this->endWidget(); ?>
 

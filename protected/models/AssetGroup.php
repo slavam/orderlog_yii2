@@ -52,6 +52,7 @@ class AssetGroup extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
                     'assets' => array(self::HAS_MANY, 'Asset', 'asset_group_id'),
+//                    'asset' => array(self::HAS_ONE, 'Asset', 'asset_group_id'),
                     'block' => array(self::BELONGS_TO, 'Block', 'block_id'),
 		);
 	}

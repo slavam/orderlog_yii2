@@ -28,7 +28,8 @@ class ClaimLineController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams',
-                                    'createLinesByComplect','getWaresForTemplatesByComplect'), //'selectWaresFromTemplates'), //,'isTemplatesIntoComplect'),
+                                    'createLinesByComplect','getWaresForTemplatesByComplect',
+                                    'editClaimLineDialog','editClaimLine'), //'selectWaresFromTemplates'), //,'isTemplatesIntoComplect'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -304,7 +305,51 @@ class ClaimLineController extends Controller
                 'model'=>$model,
 		));
         }
-        
+
+//    public function actionEditClaimLineDialog($id)
+//    {
+//    	if(Yii::app()->request->isAjaxRequest)
+//        {
+//            $model = $this->loadModel($id);
+//
+//            // For jQuery core, Yii switches between the human-readable and minified
+//			// versions based on DEBUG status; so make sure to catch both of them
+//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+//
+//            $this->renderPartial('_form',array('model'=>$model),false,true);
+//            Yii::app()->end();
+//        } 
+//    }
+//    public function actionEditClaimLine($id) {
+//        $model = $this->loadModel($id);
+//        if (isset($_POST['ClaimLine'])) {
+//            $model->attributes = $_POST['ClaimLine'];
+//            if($model->validate()){
+//                if ($model->save()) { 
+//                    if (Yii::app()->request->isAjaxRequest) {
+//                        $this->actionGetDataForGrid(); //encode json only one asset by id
+//                        Yii::app()->end();
+//                    } else 
+//                        echo 'get out!';
+//                }//model->save
+//            } else {
+//                echo CJSON::encode(CActiveForm::validate($model)); 
+//                Yii::app()->end();
+//            }
+//        } else
+//            if (Yii::app()->request->isAjaxRequest) {
+//                echo CJSON::encode(array(
+//                    'status' => 'err',
+//                    'message' => 'no ClaimLine form passed!',
+//                ));
+//                Yii::app()->end();
+//            } else {
+//                echo 'get out!';
+//            }
+//    }
+
+
 //WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
 //SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
 //    FROM places T1 WHERE T1.parent_id IS NULL

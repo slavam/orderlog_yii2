@@ -27,7 +27,9 @@ class ClaimController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','list','changeClaimState','indexJqgrid','getDataForGrid','getDataForSubGrid'),
+				'actions'=>array('index','view','show','list','changeClaimState',
+                                    'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
+                                    'editClaimLineDialog','editClaimLine','claimLineDelete'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -132,9 +134,15 @@ class ClaimController extends Controller
 			// we only allow deletion via POST request
 			$this->loadModel($id)->delete();
 
+
+                        
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+//			if(!isset($_GET['ajax']))
+                        if (!Yii::app()->request->isAjaxRequest) 
+                            $this->render('indexJqgrid',array(
+                		'dataProvider'=>null, //$dataProvider,
+        		));
+//				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
@@ -234,29 +242,49 @@ class ClaimController extends Controller
             ));
         }
         
-                public function actionIndexJqgrid()
+        public function actionIndexJqgrid()
 	{
-		$dataProvider=new CActiveDataProvider('Claim', array(
-                    'pagination'=>false, 
-                    'criteria'=>array(
-                        'order'=>'period_id desc, division_id, id',
-                        ),
-                ));
+//		$dataProvider=new CActiveDataProvider('Claim', array(
+//                    'pagination'=>false, 
+//                    'criteria'=>array(
+//                        'order'=>'period_id desc, division_id, id',
+//                        ),
+//                ));
 		$this->render('indexJqgrid',array(
-			'dataProvider'=>$dataProvider,
+			'dataProvider'=>null, //$dataProvider,
 		));
 	}
 
         public function actionGetDataForGrid()
 	{
             $dataProvider=new CActiveDataProvider('Claim', array(
+                'pagination'=>false,
                 'criteria'=>array(
                     'order'=>'period_id desc, division_id, id',
                     ),
             ));
+            
+//            if(isset($_REQUEST['dir_selector'])&&$_REQUEST['dir_selector']){
+//                $criteria_ = $dataProvider->getCriteria();
+//                $criteria_->condition = 't.direction_id='.$_REQUEST['dir_selector'];
+//            }
+//            
+//            
+//            // if cal goes from EditAsset action to retrieve only one Asset
+//            if(isset($_REQUEST['id'])&&$_REQUEST['id'])
+//            {
+//                $criteria_ = $dataProvider->getCriteria();
+//                if($criteria_->condition!='') $criteria_->condition.=' AND ';
+//                $criteria_->condition.='t.id ='.$_REQUEST['id'];
+//            }
+//            
+//            $assets_ = $dataProvider->getData();
+            $responce['status']='ok';
+            $responce['rows']=array();
+
 //            $pagination_block = $dataProvider->getPagination();
             $claims = $dataProvider->getData();
-            $responce['rows']=array();
+            
             foreach ($claims as $i=>$row) {
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
@@ -265,6 +293,7 @@ class ClaimController extends Controller
                     $row->claim_number,
                     $row->state->stateName->name,
                     $row->division->NAME,
+                    $row->findDepartment($row->department_id),
                     $row->comment
                     );
             }
@@ -280,12 +309,13 @@ class ClaimController extends Controller
                     'order'=>'id',
                     ),
             ));
-            
+            $responce['status']='ok';
             $complects = $dataProvider->getData();
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
+                    $row->id,
                     $row->asset->waretype->short_name, 
                     $row->asset->name, 
                     $row->count,
@@ -296,4 +326,107 @@ class ClaimController extends Controller
             }
             echo CJSON::encode($responce);
         }
+    public function actionEditClaimDialog($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('_form',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+    public function actionEditClaim($id) {
+        $model = $this->loadModel($id);
+        if (isset($_POST['Claim'])) {
+            $model->attributes = $_POST['Claim'];
+            if($model->validate()){
+                if ($model->save()) { 
+                    if (Yii::app()->request->isAjaxRequest) {
+                        $this->actionGetDataForGrid(); //encode json only one asset by id
+                        Yii::app()->end();
+                    } else 
+                        echo 'get out!';
+                }//model->save
+            } else {
+                echo CJSON::encode(CActiveForm::validate($model)); 
+                Yii::app()->end();
+            }
+        } else
+            if (Yii::app()->request->isAjaxRequest) {
+                echo CJSON::encode(array(
+                    'status' => 'err',
+                    'message' => 'no Claim form passed!',
+                ));
+                Yii::app()->end();
+            } else {
+                echo 'get out!';
+            }
+    }
+
+    public function actionEditClaimLineDialog($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            $model = ClaimLine::model()->findByPk($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('/claimLine/_form',array('model'=>$model,'claim_id'=>$model->claim_id),false,true);
+            Yii::app()->end();
+        } 
+    }
+    public function actionEditClaimLine($id) {
+        $model = ClaimLine::model()->findByPk($id);
+        if (isset($_POST['ClaimLine'])) {
+            $model->attributes = $_POST['ClaimLine'];
+            if($model->validate()){
+                if ($model->save()) { 
+                    if (Yii::app()->request->isAjaxRequest) {
+                        $_GET['claim_id'] = $model->claim_id;
+                        $this->actionGetDataForSubGrid(); //encode json only one asset by id
+                        Yii::app()->end();
+                    } else 
+                        echo 'get out!';
+                }//model->save
+            } else {
+                echo CJSON::encode(CActiveForm::validate($model)); 
+                Yii::app()->end();
+            }
+        } else
+            if (Yii::app()->request->isAjaxRequest) {
+                echo CJSON::encode(array(
+                    'status' => 'err',
+                    'message' => 'no Claim form passed!',
+                ));
+                Yii::app()->end();
+            } else {
+                echo 'get out!';
+            }
+    }
+
+    public function actionClaimLineDelete($id)
+	{
+		if(Yii::app()->request->isPostRequest)
+		{
+			// we only allow deletion via POST request
+			$claimLine = ClaimLine::model()->findByPk($id);
+                        $claimLine->delete();
+
+			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+//			if(!isset($_GET['ajax']))
+//				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		}
+		else
+			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+	}
+
 }
