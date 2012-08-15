@@ -291,6 +291,8 @@ class AssetController extends Controller {
 
     public function actionGetDataForGrid()  {
 
+
+    Yii::beginProfile('blockID');
             $responce = array();
 
             /*
@@ -370,6 +372,9 @@ class AssetController extends Controller {
 				}
 
             echo CJSON::encode($responce);
+
+            Yii::endProfile('blockID');
+
     }
 
     public function replacementPlace($place_id)
