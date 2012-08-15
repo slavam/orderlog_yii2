@@ -81,7 +81,8 @@ $this->breadcrumbs=array(
                array(               
                     'name'=>'place_id',
                     'type'=>'raw',
-                    'value'=>$this->replacementPlace($model->place_id),
+                    'value'=>$model->place_id,
+//                    'value'=>$this->replacementPlace($model->place_id),
                 ),          
 
 	),

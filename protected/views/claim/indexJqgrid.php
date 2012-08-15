@@ -45,15 +45,15 @@ $(function() {
         colNames : ['ID','Период','Номер','Статус','Отделение','Подразделение','Комментарий'],
         colModel : [
             {name:'id',index:'id', width:20, hidden:true},
-            {name:'period',index:'period', width:100},
-            {name:'name',index:'name', width:100},
+            {name:'period',index:'period', width:100, sortable:false},
+            {name:'name',index:'name', width:100, sortable:true},
             {name:'state',index:'state', width:100},
             {name:'division',index:'division', width:300},
-            {name:'department',index:'department', width:300},
-            {name:'comment',index:'comment', width:300},
+            {name:'department',index:'department', width:300, sortable:false},
+            {name:'comment',index:'comment', width:300, sortable:false},
         ],
         caption : 'Заявки',
-        rowNum : 0,
+        rowNum : 300000,
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
         viewrecords: true,
@@ -210,7 +210,7 @@ $(function() {
 //            alert('onPaging')
 //        },
     	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager',{search:false, view:true, del:false, add:false, edit:false, refresh:false, cloneToTop:true});
+    }).navGrid('#pager',{search:true, view:true, del:false, add:false, edit:false, refresh:false, cloneToTop:true});
     
     
 

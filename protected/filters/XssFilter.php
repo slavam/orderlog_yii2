@@ -1,4 +1,5 @@
-<?/**
+<?php
+/* * 
    *  @author  Opeykin A. &lt;andrey.opeykin.ru&; &lt;aopeykin@gmail.com&gt;
    *  @version 0.0.1
    *  @package filters
