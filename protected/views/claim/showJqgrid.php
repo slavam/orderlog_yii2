@@ -55,61 +55,16 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <br />
 <br />
 
-<!--<table id="claim_list"></table> 
-<div id="claim_pager"></div> -->
+<table id="claim_list"></table> 
+<div id="claim_pager"></div> 
 
-<?php $dataProvider=new CActiveDataProvider('ClaimLine', array(
-           'criteria'=>array(
-             'condition'=>'claim_id='.$model->id,
-             'order'=>'id',
-            ),
-             'pagination'=>array(
-             'pageSize'=>20,
-           ),
-          )); ?>
 
-<?php $this->widget('zii.widgets.grid.CGridView', array(
-	'id'=>'claim-line-grid',
-	'dataProvider'=>$dataProvider,
-	'columns'=>array(
-		array(
-                'name'=>'Тип',
-                'value'=> '$data->asset->waretype->short_name'),
-                array(
-                'name'=>'Название',
-                'value'=> '$data->asset->name'),
-                array(
-                'name'=>'Количество',
-                'value'=>'$data->count." ".$data->asset->unit->sign'),
-                array(
-                'name'=>'Цена',
-                'value'=>'$data->cost'),
-                array(
-                'name'=>'Сумма',
-                'value'=>'$data->amount'),
-                array(
-                'name'=>'Примечание',
-                'value'=>'$data->description'),
-                array(
-                  'class'=>'CButtonColumn',
-                  'viewButtonUrl'=>'Yii::app()->createUrl("claimLine/show",array("id"=>$data->id))', 
-                  'updateButtonUrl'=>'Yii::app()->createUrl("claimLine/update",array("id"=>$data->id))', 
-                  'deleteButtonUrl'=>'Yii::app()->createUrl("claimLine/delete",array("id"=>$data->id))', 
-                ),
-	),
-)); ?>
-  
 <script type="text/javascript">
 $(function() {
     var grid=$("#claim_list");
-    var pager_selector = "#claim_pager";
-//    var sel_ = jQuery("#list").getGridParam('selrow');
-//    if(sel_) {
-//        var id_ = jQuery("#list").getCell(sel_, 'id');
-////    alert(id_);
-//    }
+    var id_ = <?echo $model->id;?>;
     grid.jqGrid( {
-        url : "getDataForSubGrid?claim_id=207",
+        url : "getDataForSubGrid?claim_id="+id_,
         datatype : 'json',
         width : '800',
         height : 'auto',
@@ -132,8 +87,7 @@ $(function() {
         sortorder: "asc",
         sortname: "name",
         pager: '#claim_pager',
-//        subGrid: true,
-//        loadonce: true,
+        loadonce: true,
         gridComplete: function () {
 //            alert("gridComplete");
             grid.setGridParam({datatype:'local'});
