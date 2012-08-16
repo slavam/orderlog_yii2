@@ -29,7 +29,8 @@ class ClaimController extends Controller
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','list','changeClaimState',
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
-                                    'editClaimLineDialog','editClaimLine','claimLineDelete'),
+                                    'editClaimLineDialog','editClaimLine','claimLineDelete',
+                                    'viewClaimWithLines'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -429,4 +430,20 @@ class ClaimController extends Controller
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
+        public function actionViewClaimWithLines($id)
+        {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('showJqgrid',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+            
+        }
 }
