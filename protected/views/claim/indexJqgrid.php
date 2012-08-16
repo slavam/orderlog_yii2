@@ -52,7 +52,7 @@ $(function() {
             {name:'department',index:'department', width:300, sortable:false},
             {name:'comment',index:'comment', width:300, sortable:false},
         ],
-        caption : 'Заявки',
+        caption : 'Журнал регистрации заявок',
         rowNum : 300000,
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
@@ -71,7 +71,7 @@ $(function() {
             $("#" + subgridTableId).jqGrid({
                 url : "getDataForSubGrid?claim_id="+cont,
                 datatype : 'json',
-                height : '200',
+                height : 'auto',
 //                loadonce:true,
                 colNames: ['ID','Тип','Название','Количество','Цена','Сумма','Примечание'],
                 colModel: [
@@ -83,11 +83,11 @@ $(function() {
                     {name: 'amount', width: 60 },
                     {name: 'description', width: 200 }
                 ],
-            pager: pager_id,
+            pager: null, //pager_id,
             pgbuttons: false,     // disable page control like next, back button
             pgtext: null,  
-            viewrecords: true,
-            caption : 'Строки заявки'
+            viewrecords: false
+//            caption : 'Строки заявки'
             });
             jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
             
