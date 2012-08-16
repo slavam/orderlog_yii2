@@ -24,6 +24,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     <table class="ui-jqgrid" id="create_dialog_table"></table>
 </div>
 
+<div id="create_claim_view" style="display:none;">
+    <table class="ui-jqgrid" id="create_dialog_table"></table>
+</div>
+
 <div id="create_del_dialog" style="display:none;">
     <table class="ui-jqgrid" id="create_dialog_table"></table>
 </div>
@@ -210,7 +214,7 @@ $(function() {
 //            alert('onPaging')
 //        },
     	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager',{search:true, view:true, del:false, add:false, edit:false, refresh:false, cloneToTop:true});
+    }).navGrid('#pager',{search:true, view:false, del:false, add:false, edit:false, refresh:false}); //, cloneToTop:true});
     
     
 
@@ -277,6 +281,29 @@ $(function() {
                 alert('Выберите заявку!');
             }
         });
+        
+        top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Просмотреть заявку со строками!',
+        buttonicon: 'ui-icon-document',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) 
+                var id_ = grid.getCell(sel_, 'id');
+            if(id_) {
+                $("#create_claim_view").load('viewClaimWithLines?id='+id_);
+                $("#create_claim_view").dialog({
+                    title: 'Заявка',
+                    modal:true,
+                    width:900,
+                    height:500
+                })
+            } else 
+                alert('Выберите заявку!');
+        }
+        });
+        
         top_bottom_pager_ButtonAdd ({
         caption: '',
         title: 'Удалить заявку со строками!',
@@ -295,8 +322,7 @@ $(function() {
                     buttons:{
                         'Да': function(){
                             var options = { 
-//                                url: 'delete/?id='+id_,
-                                url: '<?php echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
+                                url: '<?php  echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
@@ -308,8 +334,6 @@ $(function() {
                                 }
                             }; 
                             $('#claim-form').ajaxSubmit(options); 
-//                            alert(options['url']);
-//                            $("#create_dialog").ajaxSubmit(options); 
                         },
                         'Нет': function(){
                             $(this).dialog('close');
@@ -320,7 +344,5 @@ $(function() {
                 };
         }
         });
-
-
 });
 </script>
