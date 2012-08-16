@@ -134,7 +134,7 @@ grid.setGridParam({datatype:'json'});
              	$("#create_dialog").dialog({
              			title: 'Редактировать товар',
                         modal:true,
-                        width:600,
+                        width:800,
                         height:700,
                         buttons:{
                             'OK': function(){
