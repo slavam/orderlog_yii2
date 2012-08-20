@@ -36,9 +36,12 @@ class AssetController extends Controller {
                 'actions' => array('admin', 'delete'),
                 'users' => array('admin'),
             ),
+            /*
             array('deny', // deny all users
                 'users' => array('*'),
             ),
+             * 
+             */
         );
     }
 
@@ -382,7 +385,7 @@ class AssetController extends Controller {
         $PlaceArr = explode(',',$place_id);
         foreach($PlaceArr as $key) {
             $PlaceName = Place::model()->findTown($key);
-		$ret_str .= "<b>".$PlaceName->title."</b>"."<br>";
+		$ret_str .= "<b>".$PlaceName->title."</b>"."; ";
         }
         return 	$ret_str;	
 	

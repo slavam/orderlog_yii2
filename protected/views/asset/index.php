@@ -134,8 +134,8 @@ grid.setGridParam({datatype:'json'});
              	$("#create_dialog").dialog({
              			title: 'Редактировать товар',
                         modal:true,
-                        width:600,
-                        height:700,
+                        width:1160,
+                        height:450,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());

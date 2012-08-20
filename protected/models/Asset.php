@@ -14,7 +14,13 @@
  * @property integer $asset_group_id
  * @property string $info
  * @property integer $unit_id
+ * @property integer $price_type_id       !
+ * @property string $comment              !
+ * @property integer $asset_template_id   !
  * @property integer[] $place_id
+ * @property integer[] $manufacturer_id
+ * @property integer[] $product_id
+ * @property integer[] $feature_id
  */
 class Asset extends CActiveRecord
 {
@@ -56,7 +62,7 @@ class Asset extends CActiveRecord
 			array('info','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id, place_id', 'safe', 'on'=>'search'),
+			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, comment, unit_id, place_id, manufacturer_id, product_id, feature_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -95,7 +101,11 @@ class Asset extends CActiveRecord
 			'info' => 'Info',
                         'comment' => 'Comment',
 			'unit_id' => 'Unit',
+			'asset_template_id' => 'Шаблоны товаров',
 			'place_id' => 'Расположение',
+			'manufacturer_id' => 'Производитель',
+			'product_id' => 'Продукты',
+			'feature_id' => 'Характеристики',
 		);
 	}
 
@@ -122,6 +132,8 @@ class Asset extends CActiveRecord
                 $criteria->compare('comment',$this->comment,true);
 		$criteria->compare('unit_id',$this->unit_id);
 		$criteria->compare('place_id',$this->place_id);
+		$criteria->compare('manufacturer_id',$this->manufacturer_id);
+		$criteria->compare('product_id',$this->product_id);
 
 		$criteria->together = true;
 
@@ -156,6 +168,7 @@ class Asset extends CActiveRecord
        		$assets = Asset::model()->findAll(array('order' => 'name'));
 		return CHtml::listData($assets,'id','name');
 	}
+
         public function get_price()
          {
 //            $s = Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id));
@@ -165,6 +178,7 @@ class Asset extends CActiveRecord
                    @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
+
          public function findAssetsByTemplate($asset_template_id) {
 		$criteria=new CDbCriteria;
                 $criteria->condition="asset_template_id=".$asset_template_id;
