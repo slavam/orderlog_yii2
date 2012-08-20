@@ -331,6 +331,7 @@ class ClaimController extends Controller
                     $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
                     $row->findFeaturesAsString($row->id),
                     $row->findProductsAsString($row->id),
+                    $row->asset->info,
                     $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );
             }

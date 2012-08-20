@@ -10,10 +10,6 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 ?>
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
@@ -77,7 +73,8 @@ $(function() {
         mtype : 'GET',
                 colNames: ['ID','Тип','Название','Количество','Цена','Сумма',
                     'Примечание','Группа','Ед. измерения','Для кого','Бизнес',
-                    'Статья бюджета','Расположение','Характеристики','Продукты','Добавлена'],
+                    'Статья бюджета','Расположение','Характеристики','Продукты',
+                    'Информация', 'Добавлена'],
                 colModel: [
                     {name:'id',index:'id', width:20, hidden:true, frozen: true},
                     {name: 'type', width: 50, frozen: true},
@@ -94,6 +91,7 @@ $(function() {
                     {name: 'position', width: 300, frozen:false },
                     {name: 'features', width: 300, frozen:false },
                     {name: 'products', width: 300, frozen:false },
+                    {name: 'asset_info', width: 300, frozen:false },
                     {name: 'created', width: 100, frozen:false }
                 ],
 //        caption : 'Строки заявки',

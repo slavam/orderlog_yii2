@@ -43,7 +43,7 @@ $(function() {
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
-        width : '1100',
+        width : '1160',
         height : '400',
         mtype : 'GET',
         colNames : ['ID','Период','Номер','Статус','Отделение','Подразделение','Комментарий'],
@@ -214,7 +214,15 @@ $(function() {
 //            alert('onPaging')
 //        },
     	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager',{search:true, view:false, del:false, add:false, edit:false, refresh:false}); //, cloneToTop:true});
+    }).navGrid('#pager',{view:false, del:false, add:false, edit:false, refresh:false},
+    {}, // default settings for edit
+   {}, // default settings for add
+   {}, // delete
+   {closeOnEscape: true, multipleSearch: true, 
+       sopt:['cn','eq','ne','bw','bn'],
+         closeAfterSearch: true }, // search options
+   {}
+    ); //, cloneToTop:true});
     
     
 
@@ -257,7 +265,8 @@ $(function() {
                                             'name':rd[2],
                                             'state':rd[3],
                                             'division':rd[4],
-                                            'comment':rd[5]});
+                                            'department':rd[5],
+                                            'comment':rd[6]});
                                         $("#create_dialog").dialog('close');
                                     } else if(status=="err"){
                                         alert("error:"+data['message']);
@@ -296,7 +305,7 @@ $(function() {
                 $("#create_claim_view").dialog({
                     title: 'Заявка',
                     modal:true,
-                    width:900,
+                    width:1160,
                     height:500
                 })
             } else 
