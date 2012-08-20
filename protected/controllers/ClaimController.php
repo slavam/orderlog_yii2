@@ -323,6 +323,15 @@ class ClaimController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->description,
+                    $row->asset->assetgroup->name,
+                    $row->asset->unit->sign,
+                    $row->for_whom>0? $row->findWorker($row->for_whom): '',
+                    $row->getBusinessName($row->business_id),
+                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
+                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
+                    $row->findFeaturesAsString($row->id),
+                    $row->findProductsAsString($row->id),
+                    $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );
             }
             echo CJSON::encode($responce);

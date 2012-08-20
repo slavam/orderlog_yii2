@@ -39,16 +39,16 @@ return array(
             'allowAutoLogin' => true,
         ),
 
-        
-        'urlManager'=>array(
-		'urlFormat'=>'path',
-//		'showScriptName'=>false,
-		'rules'=>array(
-        		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
-			'<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>'
-        	),
-        ),
-        
+//        
+//        'urlManager'=>array(
+//		'urlFormat'=>'path',
+////		'showScriptName'=>false,
+//		'rules'=>array(
+//        		'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
+//			'<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>'
+//        	),
+//        ),
+//        
 
 
 

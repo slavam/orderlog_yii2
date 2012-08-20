@@ -55,6 +55,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <br />
 <br />
 
+<div id="create_del_dialog_" style="display:none;">
+    <table class="ui-jqgrid" id="create_dialog_table"></table>
+</div>
+
 <table id="claim_list"></table> 
 <div id="claim_pager"></div> 
 
@@ -62,24 +66,37 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <script type="text/javascript">
 $(function() {
     var grid=$("#claim_list");
+    var pager_selector = "#claim_pager";
     var id_ = <?echo $model->id;?>;
     grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+id_,
         datatype : 'json',
         width : '800',
         height : 'auto',
+        shrinkToFit : false,
         mtype : 'GET',
-                colNames: ['ID','Тип','Название','Количество','Цена','Сумма','Примечание'],
+                colNames: ['ID','Тип','Название','Количество','Цена','Сумма',
+                    'Примечание','Группа','Ед. измерения','Для кого','Бизнес',
+                    'Статья бюджета','Расположение','Характеристики','Продукты','Добавлена'],
                 colModel: [
-                    {name:'id',index:'id', width:20, hidden:true},
-                    {name: 'type', width: 50 },
-                    {name:'name',index:'name', width:300},
-                    {name: 'quantity', width: 70 },
-                    {name: 'cost', width: 60 },
-                    {name: 'amount', width: 60 },
-                    {name: 'description', width: 200 }
+                    {name:'id',index:'id', width:20, hidden:true, frozen: true},
+                    {name: 'type', width: 50, frozen: true},
+                    {name:'name',index:'name', width:300, frozen: true},
+                    {name: 'quantity', width: 70, frozen:false},
+                    {name: 'cost', width: 60, frozen:false },
+                    {name: 'amount', width: 60, frozen:false },
+                    {name: 'description', width: 200, frozen:false },
+                    {name: 'assetgroup', width: 200, frozen:false },
+                    {name: 'unit', width: 60, frozen:false },
+                    {name: 'for_whom', width: 300, frozen:false },
+                    {name: 'business', width: 100, frozen:false },
+                    {name: 'budget_item', width: 300, frozen:false },
+                    {name: 'position', width: 300, frozen:false },
+                    {name: 'features', width: 300, frozen:false },
+                    {name: 'products', width: 300, frozen:false },
+                    {name: 'created', width: 100, frozen:false }
                 ],
-        caption : 'Строки заявки',
+//        caption : 'Строки заявки',
         rowNum : 300000,
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
@@ -89,11 +106,59 @@ $(function() {
         pager: '#claim_pager',
         loadonce: true,
         gridComplete: function () {
-//            alert("gridComplete");
             grid.setGridParam({datatype:'local'});
         },
     	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#claim_pager',{search:true, view:false, del:false, add:false, edit:false, refresh:false}); 
-    //alert(grid.options['url']);
+    }).navGrid('#claim_pager',{search:false, view:false, del:false, add:false, edit:false, refresh:false}); 
+    grid.jqGrid('setFrozenColumns');
+    
+    subgrid_pager_add_buttons = function(options) {
+        grid.jqGrid('navButtonAdd',pager_selector,options);
+    };
+
+    subgrid_pager_add_buttons ({
+        caption: '',
+        title: 'Удалить строку заявки',
+        buttonicon: 'ui-icon-trash',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) {
+                var id_ = grid.getCell(sel_, 'id');
+            };
+
+            if(id_) {
+                $("#create_del_dialog_").dialog({
+                    title: 'Удалить строку заявки?',
+                    modal:true,
+                    width:200,
+                    height:100,
+                    buttons:{
+                        'Да': function(){
+                            var options = { 
+                                url: "<?php echo Yii::app()->createUrl('claim/claimLineDelete',array('id'=>''))?>"+id_,
+                                type: 'post',
+                                dataType: 'json',
+                                error: function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                                },
+                                success:  function(data) {
+                                    grid.jqGrid('delRowData',sel_);
+                                    $('#create_del_dialog_').dialog('close');
+                                }
+                            }; 
+
+                            $("#claim_list").ajaxSubmit(options); 
+                        },
+                        'Нет': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            } else 
+                alert('Выберите строку заявки!');
+        }
+    });
+
 });
 </script>
