@@ -63,7 +63,7 @@ return array(
 	  '<module:\w+>/<controller:\w+>/<action:\w+>' => '<module>/<controller>/<action>',
           '<module:\w+>/<controller:\w+>' => '<module>/<controller>',
           ),
-			'showScriptName'=>false,
+//			'showScriptName'=>true,
 
           ),
          
