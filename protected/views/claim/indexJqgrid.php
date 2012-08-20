@@ -67,10 +67,13 @@ $(function() {
         subGrid: true,
         loadonce: true,
         subGridRowExpanded: function (subgridDivId, rowId) {
+//            grid.setCell (row,col,val,{background:'#ff0000'});
             var cont = $('#list').getCell(rowId, 'id');
             var subgridTableId = subgridDivId + "_t";
             var pager_id = "p_"+subgridTableId;
             var subgrid_pager_selector = pager_id;
+            $(".subgrid-cell").css('background','#ddd');
+            $(".subgrid-data").css('background','#ddd');
             $("#" + subgridDivId).html("<table id='"+subgridTableId+"' class='scroll'></table><div id='"+ pager_id +"' class='scroll'></div>");
             $("#" + subgridTableId).jqGrid({
                 url : "getDataForSubGrid?claim_id="+cont,
@@ -90,8 +93,10 @@ $(function() {
             pager: null, //pager_id,
             pgbuttons: false,     // disable page control like next, back button
             pgtext: null,  
-            viewrecords: false
-//            caption : 'Строки заявки'
+            viewrecords: false,
+            gridComplete: function () {
+//                $(".subgrid-data").css('background','#ddd');
+            }
             });
             jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
             
@@ -208,6 +213,7 @@ $(function() {
         },
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
+            $(".subgrid-data").css('background','#ddd');
         },
 //        onPaging : function(which_button) {
 //            grid.setGridParam({datatype:'json'});
