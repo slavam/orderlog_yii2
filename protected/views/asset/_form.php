@@ -79,22 +79,22 @@
 		<td><b>Расположение</b></td>
 		<td colspan="5"><?php echo ($model->place_id> 0 ? $this->replacementPlace($model->place_id):""); 
                                       echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Производитель</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Продукты</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Характеристики</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Примечание</b></td>
