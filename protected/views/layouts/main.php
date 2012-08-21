@@ -29,7 +29,7 @@
 		<?php $this->widget('zii.widgets.CMenu',array(
 			'items'=>array(
 //				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'Заявки', 'url'=>array('/claim/index')),
+				array('label'=>'Заявки', 'url'=>array('/claim/indexJqgrid')),
                                 array('label'=>'К-заявки', 'url'=>array('/claimLine/getClaimParams')),
                                 array('label'=>'Расположение', 'url'=>array('/place/tree')),
                                 array('label'=>'Продукты', 'url'=>array('/product/index')),

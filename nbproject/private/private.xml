@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/1">
+        <file>file:/C:/sites/site2/www/goods/protected/models/AssetTemplate.php</file>
+        <file>file:/C:/sites/site2/www/goods/protected/views/asset/_form.php</file>
+        <file>file:/C:/sites/site2/www/goods/protected/models/Asset.php</file>
+        <file>file:/C:/sites/site2/www/goods/protected/views/asset/show.php</file>
+        <file>file:/C:/sites/site2/www/goods/protected/controllers/AssetController.php</file>
+        <file>file:/C:/sites/site2/www/goods/protected/views/asset/index.php</file>
+    </open-files>
 </project-private>
