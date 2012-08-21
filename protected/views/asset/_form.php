@@ -67,6 +67,15 @@
 		<?php echo $form->error($model,'price_type_id'); ?></td>
 	</tr>
 	<tr>
+		<td colspan="2"></td>
+		<td><b>Кол-во</b></td>
+		<td><?php echo $form->textField($model,'quantity',array('size'=>10)); ?>
+		<?php echo $form->error($model,'cost'); ?></td>
+		<td><b>Тип Кол-ва</b></td>
+		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All());?> 
+		<?php echo $form->error($model,'quantity_type_id'); ?></td>
+	</tr>
+	<tr>
 		<td><b>Статья бюджета</b></td>
 		<td><?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->findBudgetItems());?> 
 		<?php echo $form->error($model,'budget_item_id'); ?></td>

@@ -135,7 +135,7 @@ grid.setGridParam({datatype:'json'});
              			title: 'Редактировать товар',
                         modal:true,
                         width:1160,
-                        height:450,
+                        height:500,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());
