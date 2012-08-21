@@ -106,7 +106,7 @@ class EMongoDB extends CApplicationComponent
 	 * If set to null, component will not use temporary storage
 	 * @var string $gridFStemporaryFolder
 	 */
-	public $gridFStemporaryFolder = null;
+	public $gridFStemporaryFolder = "D:\phptemp\upload\\";
 
 	/**
 	 * Connect to DB if connection is already connected this method doeas nothing

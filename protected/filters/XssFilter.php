@@ -34,12 +34,13 @@ class XssFilter extends CFilter
   'GET'    =>&$_GET,
   'POST'   =>&$_POST,
   'COOKIE' =>&$_COOKIE,
-  'FILES'  =>&$_FILES
+  'FILES'  =>&$_FILES,
+  'REQUEST'=>&$_REQUEST
   );
  
   if($this->clean === 'ALL' || $this->clean === '*')
   {
-    $this->clean = 'GET,POST,COOKIE,FILES';
+    $this->clean = 'GET,POST,COOKIE,FILES,REQUEST';
   }
   $dataForClean = explode(',',$this->clean);
   if(count($dataForClean))

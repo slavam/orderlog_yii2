@@ -201,24 +201,33 @@
             buttonicon: 'ui-icon-plus',
             onClickButton: function()
             {
-              
-                //                 $('#jqgrid').dialog({
-                //			height: 140,
-                //			modal: true
-                //		})
                 $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/add');?>');
             },
             position:'last'
-        })
+        });
         $('#jqgrid').jqGrid('navButtonAdd','#pager',{
             caption: 'Редактировать',
             title: 'Редактировать запись',
             buttonicon: 'ui-icon-wrench',
             onClickButton: function()
             {
-                var gsr = jQuery("#jqgrid").jqGrid('getGridParam','selrow'); 
-                if(gsr){
-                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+gsr);
+                var rowid = jQuery("#jqgrid").jqGrid('getGridParam','selrow'); 
+                if(rowid){
+                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+                } else { alert("Выберите запись") }
+            },
+            position:'last'
+        })
+        $('#jqgrid').jqGrid('navButtonAdd','#pager',{
+            caption: 'Удалить',
+            title: 'Создать документ',
+            buttonicon: 'ui-icon-trash',
+            onClickButton: function()
+            {
+                var rowid = jQuery("#jqgrid").jqGrid('getGridParam','selrow'); 
+                if(rowid){
+                    $.post('<?echo Yii::app()->createUrl('dogovor_archiv/documents/delete');?>',{id:rowid}, function(data) {alert(data)});
+                    jQuery("#jqgrid").jqGrid().trigger('reloadGrid');
                 } else { alert("Выберите запись") }
             },
             position:'last'

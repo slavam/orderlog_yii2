@@ -37,7 +37,8 @@ $this->endWidget('zii.widgets.jui.CJuiDialog');
       <? echo $notice;?>
   </div>  
     <?endif;?>
-<?echo CHtml::link(CHtml::image('/images/add.png').'Добавить главный договор', '#', array(
+<?
+echo CHtml::link(CHtml::image('/images/add.png').'Добавить главный договор', '#', array(
    'onclick'=>'$("#dog_select").dialog("open").load(\'/index.php/dogovor_archiv/documents/view\'); return false;',
 ));
 echo $form->renderBegin();
@@ -175,6 +176,8 @@ echo CHtml::tag('p',array('id'=>'document_identify'),'Главный догов�
 <?php 
 foreach($form->getButtons() as $element)
     echo $element->render();
-echo $form->renderEnd();
+    
+echo $form->renderEnd(); //endform
+echo $scancopies;
 ?>
 </div>

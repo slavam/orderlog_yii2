@@ -1,0 +1,41 @@
+<?php
+/**
+ * Description of DocAttachmentBlock
+ * Формирует блок приложений к документу. 
+ * Если в режиме редактирования, выводит форму добавления приложений
+ * 
+ * @author v.kriuchkov
+ */
+class DocAttachmentBlock extends CWidget{
+    public $model;
+    public $title;
+    public function run() {
+//    $cs = Yii::app()->clientScript;
+//    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_BEGIN);
+   
+//    $cs->registerScript('uploadifyinit',
+//    '$(function() {
+//        $("#upload").uploadify({
+//        "swf":"/js/uploadify/uploadify.swf",
+//        "uploader":"'.Yii::app()->createUrl("/dogovor_archiv/scancopies/editfile").'",
+//        "fileObjName":"attachments",
+//        "formData":{"parent_document":"'.(string)$this->model->_id.'"}
+//        });})');
+//    $cs->registerCssFile(Yii::app()->request->baseUrl.'/css/uploadify.css');
+//    $cs->registerCoreScript('jquery');
+    
+//        
+        $criteria = new EMongoCriteria;
+        $criteria->addCond('parent_document', '==', (string)$this->model->_id);
+        $attachments = new EMongoDocumentDataProvider('Scancopies',
+                    array(
+                    'criteria' => $criteria,
+                    'keyField'=>"_id",
+                    'pagination' => array('pageSize' => 50),
+                        )
+                );
+        $this->render('doc_attachment_block_view',array('attachments'=>$attachments,'title'=>$this->title,'parent_document'=>$this->model->_id));
+        }
+}
+
+?>

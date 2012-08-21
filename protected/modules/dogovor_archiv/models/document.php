@@ -13,6 +13,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
     private $form_reference;
     public $attrs = array();
     public $dop_sogl;
+    public $scancopies;
     private $references = array('status', 'pay_system', 'dog_kind', 'tarif_type');
 
     function __construct($scenario='insert') {
@@ -207,6 +208,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
 
                     $rules = CJSON::decode($_GET['filters']);
                     foreach ($rules['rules'] as $key => $data) {
+                        
                         if ($data['op'] != 'cn') {
                             $criteria->addCond('attrs.' . $data['field'], $data['op'], $data['data']);
                         } else {
