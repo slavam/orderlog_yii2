@@ -9,6 +9,7 @@
 class DocAttachmentBlock extends CWidget{
     public $model;
     public $title;
+    public $parent_id;
     public function run() {
 //    $cs = Yii::app()->clientScript;
 //    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_BEGIN);
@@ -24,9 +25,22 @@ class DocAttachmentBlock extends CWidget{
 //    $cs->registerCssFile(Yii::app()->request->baseUrl.'/css/uploadify.css');
 //    $cs->registerCoreScript('jquery');
     
-//        
+//      
+        if ($this->model)
+        {
+         $parent_id=  $this->model->_id;
+        }  
+        elseif (isset($this->parent_id)) {
+            $parent_id = $this->parent_id;
+        }
+        else
+        {
+            throw new CException('Должно быть установлено свойство $model или $parent_id');
+        }
+        
         $criteria = new EMongoCriteria;
-        $criteria->addCond('parent_document', '==', (string)$this->model->_id);
+        
+        $criteria->addCond('parent_document', '==', (string)$parent_id);
         $attachments = new EMongoDocumentDataProvider('Scancopies',
                     array(
                     'criteria' => $criteria,

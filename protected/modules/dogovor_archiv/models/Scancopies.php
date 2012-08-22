@@ -13,7 +13,7 @@
 class Scancopies extends EMongoGridFS{
     public $metadata = array();
     public $parent_document;
-    public $filedescription;
+    //public $filedescription;
 //    public $CC
     public function getCollectionName()
     {
@@ -24,10 +24,18 @@ class Scancopies extends EMongoGridFS{
     {
         return array(
             array('filename, metadata, parent_document,filedescription','safe'),
-            array('filename','required'),
+//            array('filename,filedescription','required'),
         );
     }
- 
+    
+    public function attributeLabels() {
+        return array(
+            'filename'=>'Файл',
+            'filedescription'=>'Описание файла'
+        );
+    }
+
+
     public static function GetAttachmentType($attachmentType='')
     {
     switch ($attachmentType) {
@@ -46,6 +54,14 @@ class Scancopies extends EMongoGridFS{
         return parent::model($className);
     }
     
+    public function getFileDescription()
+    {
+        return $this->metadata['description'];
+    }
+//    public function setFiledDescription($value)
+//    {
+//        $this->metadata['filedescription'] = $value;
+//    }
     
 }
 

@@ -21,19 +21,7 @@ function filters() {
     
     
 function actionView() {
-//    $assetpath = Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('zii.widgets.assets')).'/jqgrid';
-    $cs=Yii::app()->getClientScript();
-//    $cs->registerScriptFile($assetpath.'/jquery.jqGrid.min.js',CClientScript::POS_HEAD);
-//    $cs->registerCssFile($assetpath.'/themes/redmond/jquery-ui-custom.css');
-//    $cs->registerCssFile($assetpath.'/themes/ui.jqgrid.css');
-//    $cs->registerScriptFile($assetpath.'/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/grid.common.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jquery-ui-custom.min.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jqDnR.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jqModal.js',CClientScript::POS_HEAD);
-//    $cs->registerCoreScript('jquery');
-    
- 
+$cs = Yii::app()->clientScript;    
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
@@ -41,7 +29,8 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
 
-$cs = Yii::app()->clientScript;    
+
+
 
     $criteria = new EMongoCriteria();
     $atr_array=array();
@@ -53,6 +42,7 @@ $cs = Yii::app()->clientScript;
         }
     $atr_array['model']=$this->_model;
     $grid = $this->_model->jqformbuilder();
+    
     $atr_array['colModel'] = CJSON::encode($grid['colModel']);
     $atr_array['cols']=CJSON::encode($grid['cols']);
     
@@ -88,7 +78,7 @@ function actionJqgrid()
         $row->attrs['dog_kind'] = Reference::model()->getReferenceItemById($row->attrs['dog_kind']);
         $row->attrs['pay_system'] = Reference::model()->getReferenceItemById($row->attrs['pay_system']);
         $row->attrs['doc_type'] = $row->templ_description;
-        
+        $row->attrs['additional']= CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id)));
         $responce->rows[$i]['id'] = (string)$row['_id'];
         
         foreach ($form['colModel'] as $index=>$colkey)
@@ -99,6 +89,7 @@ function actionJqgrid()
             }
             else $responce->rows[$i]['cell'][]='';
         }
+        
     }
     echo CJSON::encode($responce);
 }
@@ -112,6 +103,7 @@ public function actionUpdate()
     $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/js/jquery.lightbox-0.5.min.js', CClientScript::POS_END);
     $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/lightboxinit.js' ,CClientScript::POS_END);
     $cs->registerCssFile(Yii::app()->request->baseUrl.'/js/lightbox/css/jquery.lightbox-0.5.css');
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     $cs->registerCoreScript('jquery');
     
     

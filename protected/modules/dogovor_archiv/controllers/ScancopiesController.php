@@ -14,20 +14,37 @@ if ($pk = $_REQUEST['image_id'])
     $image = Scancopies::model()->findByPk(new MongoId($pk));
 }
 else $image = new Scancopies;
-if ($_FILES['attachments'])
-{
-    $image->filename = 'attachments';
-    $image->metadata['contenttype']=$_FILES['attachments']['type'];
-}
-    $image->parent_document=$_REQUEST['parent_document'];
-    $image->metadata = array('description'=>$_REQUEST['filedescription']);
-    $res = $image->save(false,array('filename','parent_document','metadata'));
 
-if ($res==true)
-{
-    $this->redirect(Yii::app()->createUrl('/dogovor_archiv/documents/update/?id='.$_REQUEST['parent_document']));
-}
-$this->render('scancopies_index',array('model'=>$model));
+    if ($image->scenario =='insert')
+    {
+        $image->filename = 'filename';
+        $image->metadata['contenttype']=$_FILES['filename']['type'];
+    }
+    $image->parent_document=$_REQUEST['parent_document'];
+    $image->metadata['description']=$_REQUEST['Scancopies']['filedescription'];
+        
+    if ($image->validate())
+    {
+        $res = $image->save(false,array('filename','parent_document','metadata'));
+        if ($res==true)
+        {
+            echo CJSON::encode(array('status'=>'ok','message'=>'Сохранено'));
+            Yii::app()->end();
+        }
+        else echo 'Не сохранено';
+    }
+    else {
+        echo CJSON::encode(CActiveForm::validate($image)); Yii::app()->end();
+        }
+    
+    
+//    if (Yii::app()->request->isAjaxRequest)
+//            {
+//                echo "Сохранено";
+//                Yii::app()->end();
+//            }
+//            $this->redirect(Yii::app()->createUrl('/dogovor_archiv/documents/update/?id='.$_REQUEST['parent_document']));
+//$this->render('scancopies_index',array('model'=>$model));
 }
     
     function actionEditFileMetadata()
@@ -37,13 +54,17 @@ $this->render('scancopies_index',array('model'=>$model));
                 $model = Scancopies::model()->findByPk(new MongoId($pk));
             }
             else $model = new Scancopies;
-        if ($_REQUEST['Scancopies'])
-        {
-            
-        }
        if (Yii::app()->request->isAjaxRequest)
        {
-        echo $this->renderPartial('scancopies_filemetadataform',array('model'=>$model),true,false);
+            if ($model instanceof Scancopies)
+            {
+               echo $this->renderPartial('scancopies_filemetadataform',array('model'=>$model),true,false);
+                
+            }
+            else   {
+            echo 'Ошибка загрузки файла приложения';
+            Yii::app()->end();
+        }
         Yii::app()->end();
        }
        else $this->render('scancopies_filemetadataform',array('model'=>$model));
@@ -70,7 +91,14 @@ $this->render('scancopies_index',array('model'=>$model));
         }
         else return;
     }
-  
+    
+    public function actionFilesList()
+    {
+        $parent_id=$_REQUEST['parent_id'];
+        $this->render('scancopies_files_list',array('parent_id'=>$parent_id));
+    }
+
+
     /**
      * Изменение размера картинки
      */
