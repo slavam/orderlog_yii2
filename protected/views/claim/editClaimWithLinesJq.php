@@ -110,7 +110,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 </table>
 
 <table id="list_"></table> 
-<div id="pager_"></div> 
+<div id="pager_"></div>
 <?php $this->endWidget(); ?>
 
 <script type="text/javascript">
@@ -153,11 +153,12 @@ $(function() {
         pgtext: null,  
         viewrecords: false,
         onSelectRow: function(id){ 
-            var id_ = grid.getCell(id, 'asset_info');
-            alert(id_); 
+            var hint = grid.getCell(id, 'asset_info');
+            $(".hint").html('<div>'+hint+'</div>');
         },
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
+            $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
         },
         ondblClickRow: function(id) {
 //            alert(id+' '+lastSel);
