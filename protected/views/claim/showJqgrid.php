@@ -67,7 +67,7 @@ $(function() {
     grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+id_,
         datatype : 'json',
-        width : '800',
+        width : '1100',
         height : 'auto',
         shrinkToFit : false,
         mtype : 'GET',
