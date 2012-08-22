@@ -28,23 +28,33 @@ $(function() {
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
-        width : '900',
+        width : '1160',
         height : 'auto',
         mtype : 'GET',
-        colNames : ['ID','Название'],
+        colNames : ['ID','Название','Статья Затрат','Код Статьи','Инфо','Комментарий'],
         colModel : [
-            {name:'id',index:'id', width:20}, //, hidden:true},
-            {name:'name',index:'name', width:100},
+            {name:'id',index:'id', width:20, hidden:true},
+            {name:'name', index:'group', width:150},
+            {name:'article',index:'article', width:75},
+            {name:'article_code',index:'article_code', width:50},
+            {name:'info',index:'info', width:100},
+            {name:'comment',index:'comment', width:100},
         ],
         caption : 'Шаблоны',
-        rowList:[15,30,50],
-        rowNum : 15,
-        viewrecords: true,
+//        rowList:[15,30,50],
+        rowNum : 0,
+        viewrecords: false,
         sortorder: "asc",
         sortname: "name",
         pager: '#pager',
-        subGrid: true,
-        subGridRowExpanded: function (subgridDivId, rowId) {
+
+        treeGrid: true,
+        treeGridModel: 'adjacency',
+        ExpandColumn: 'name',
+
+//        subGrid: true,
+
+/*        subGridRowExpanded: function (subgridDivId, rowId) {
             var cont = $('#list').getCell(rowId, 'id');
             var subgridTableId = subgridDivId + "_t";
             $("#" + subgridDivId).html("<table >" + 
@@ -52,6 +62,7 @@ $(function() {
                 "</table>");
         },
     	loadError: function(xhr, status, error) {alert(status +error)}
+*/
 
     }).navGrid('#pager',{search:false, view:false, del:true, add:true, edit:false, cloneToTop:true});
 
@@ -59,20 +70,20 @@ grid.jqGrid('navSeparatorAdd','#pager');
 		function after_restore(rowid) {
 			if(new_node){
 //				alert(rowid);
-				grid.delTreeNode(rowid);
+//				grid.delTreeNode(rowid);
 			}
 		};
 
 		function add_success(rowid, response) {
 //			if(new_node){
-				alert("!");
+//				alert("!");
 //			}
 		};
 
 		function after_save(rowID, response ) {
-			  var ret_iddb = $.parseJSON(response.responseText);
+//			  var ret_iddb = $.parseJSON(response.responseText);
 //			  alert(ret_iddb);
-			  grid.jqGrid('setCell',rowID,'iddb',ret_iddb);
+//			  grid.jqGrid('setCell',rowID,'iddb',ret_iddb);
 		  }
 
 
