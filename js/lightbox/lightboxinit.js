@@ -5,5 +5,6 @@ $(function() {
         ,imageBtnPrev  : "/js/lightbox/images/lightbox-btn-prev.gif"
         ,imageBtnNext  : "/js/lightbox/images/lightbox-btn-next.gif"
         ,imageBlank    : "/js/lightbox/images/lightbox-blank.gif"
+        ,width:400
     });
 });

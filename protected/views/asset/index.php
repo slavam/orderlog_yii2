@@ -168,14 +168,15 @@ var options = {
                 			else if(status=="err"){
 	                				alert("error:"+data['message']);
 	                			}
-                			else{
-	                            var response= jQuery.parseJSON (data);
-	
-	                            $.each(response, function(key, value) { 
-	                              $("#"+key+"_em_").show();
-	                              $("#"+key+"_em_").html(value[0]);
-	                            });
-	                        }
+                			else
+                                        {
+                                            var response= jQuery.parseJSON (data);
+
+                                            $.each(response, function(key, value) { 
+                                            $("#"+key+"_em_").show();
+                                            $("#"+key+"_em_").html(value[0]);
+                                            });
+                                        }
                     },
 
             }; 

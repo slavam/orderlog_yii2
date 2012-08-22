@@ -24,6 +24,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     <table class="ui-jqgrid" id="create_dialog_table"></table>
 </div>
 
+<div id="create_dialog_edit_whole_claim" style="display:none;">
+    <table class="ui-jqgrid" id="create_dialog_table"></table>
+</div>
+
 <div id="create_claim_view" style="display:none;">
     <table class="ui-jqgrid" id="create_dialog_table"></table>
 </div>
@@ -79,6 +83,7 @@ $(function() {
                 url : "getDataForSubGrid?claim_id="+cont,
                 datatype : 'json',
                 height : 'auto',
+                width : '1000',
 //                loadonce:true,
                 colNames: ['ID','Тип','Название','Количество','Цена','Сумма','Примечание'],
                 colModel: [
@@ -359,5 +364,67 @@ $(function() {
                 };
         }
         });
+
+    top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Редактировать заявку со строками',
+        buttonicon: 'ui-icon-pencil',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) 
+                var id_ = grid.getCell(sel_, 'id');
+            if(id_) {
+                $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
+                $("#create_dialog_edit_whole_claim").dialog({
+                    title: 'Редактировать заявку и строки',
+                    modal:true,
+                    width:1100,
+                    height:500,
+                    buttons:{
+                        'OK': function(){
+                            var options = { 
+                                url: 'editClaim/?id='+id_,
+                                type: 'post',
+                                dataType: 'json',
+                                error: function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                                },
+                                success:  function(data) {
+                                    var status=data['status'];
+                                    if(status=="ok"){
+                                        grid.setGridParam({datatype:'json'});
+					rd = data['rows'][sel_-1]['cell']; //row data
+					grid.jqGrid('setRowData',sel_,{
+                                            'period':rd[1],
+                                            'name':rd[2],
+                                            'state':rd[3],
+                                            'division':rd[4],
+                                            'department':rd[5],
+                                            'comment':rd[6]});
+                                        $("#create_dialog").dialog('close');
+                                    } else if(status=="err"){
+                                        alert("error:"+data['message']);
+                                    } else {
+                                        var response= jQuery.parseJSON (data);
+                                        $.each(response, function(key, value) { 
+                                            $("#"+key+"_em_").show();
+                                            $("#"+key+"_em_").html(value[0]);
+                                        });
+                                    }
+                                }
+                            }; 
+                            $('#whole-claim-form').ajaxSubmit(options); 
+                        },
+                        'Close': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+            } else 
+                alert('Выберите заявку!');
+            }
+        });
+
 });
 </script>

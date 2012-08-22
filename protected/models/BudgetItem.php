@@ -124,4 +124,13 @@ class BudgetItem extends CActiveRecord
             return CHtml::listData($budgetItems,'ID','NAME');
 	}
 
+        public function get2LevelNameBudgetItem($id){
+            $sql = "
+                select p.name ||' => '||bd.name as name
+                from FIN.budget_directory bd 
+                join FIN.budget_directory p on bd.parent_id=p.id
+                where bd.id=".$id;
+            $bi = BudgetItem::model()->findBySql($sql);
+            return $bi->NAME;
+        }
 }
