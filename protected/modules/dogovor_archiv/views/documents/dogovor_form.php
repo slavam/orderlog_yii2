@@ -2,7 +2,8 @@
 <?php
 echo $form->renderBegin();
 ?> 
-    <table class="document_wrapper">
+    <div class="block_wrapper">
+    <table width="900">
           <thead>
             <tr>
                 <th>Классификация документа</th>
@@ -84,10 +85,10 @@ echo $form->renderBegin();
        </td>
         
 </table>
+</div>    
     
-    
-    
-    <table class="document_wrapper">
+<div class="block_wrapper">    
+    <table width="900">
         <thead>
             <tr>
                 <th>Сведения контрагента</th>
@@ -129,10 +130,12 @@ echo $form->renderBegin();
             <td><?echo $form['delegation'];?></td>
         </tr>
     </table>
-    
+</div>    
 <?php 
 foreach($form->getButtons() as $element)
     echo $element->render();
 echo $form->renderEnd();
+
+$this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
 ?>
 </div>

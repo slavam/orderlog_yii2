@@ -287,7 +287,7 @@ text-align:center;
 width:246px;
 }
 
-.slogan, .block-head
+.slogan
 {
 font-size: 1.5em;
 font-family:"Times New Roman";
@@ -297,18 +297,23 @@ line-height:1.5em;
 
 .block-head
 {
-padding: 2px 5px;
-margin-bottom:5px;
-background-color: #F4F4F4;
-border: 1px solid #ECECE8;
-border-radius: 5px;
--moz-border-radius: 5px;
--webkit-border-radius: 5px;
-vertical-align: middle;
-height:25px;
-text-align:center !important;
+text-align: center!important;
+font-weight: bold;
+margin:0px!important;
 }
-.block-head img
+
+.block-yellow
+{
+    background-color: rgba(255, 239, 202, 0.7)!important;
+}
+.block-attachment
+{
+    background: url("/images/attachment.png") no-repeat center left #05594B!important;
+}
+.block-attachment p{
+    margin-left: 25px!important;
+}
+/*.block-head img
 {
 float:right;
 margin-top:5px;
@@ -316,7 +321,7 @@ margin-top:5px;
 .block-head h3
 {
 float:left;
-}
+}*/
 .slogan{
 margin:20px;
 }
@@ -635,7 +640,7 @@ color:#444;
     background: #E5ECF9;
 }
 
-.document_wrapper
+.block_wrapper
 {
    background-color: #F5F5F5;
     border-color: #F9F9F9 #DDDDDD #DDDDDD #F9F9F9;
@@ -645,16 +650,22 @@ color:#444;
     margin-bottom: 1em;
     padding: 0.5em;
     width: 900px;
+    overflow: hidden;
 }
-.document_wrapper td{
+.block_wrapper td{
     padding: 0 2px;
     vertical-align:middle;
 }
-.document_wrapper th{
+.block_wrapper th,.block-head{
     background: #05594B;
     color: #fff;
     padding: 2px;
 }
+
+.block-content{
+
+}
+
 #Document_provider,#Document_provider_contact,#Document_recipient,#Document_subject,#Document_note{
     width:700px;
 }
@@ -672,4 +683,11 @@ input[type="checkbox"]
 #Document_dog_type
 {
     height: 58px;
+}
+.item-description
+{
+    padding: 0;
+    margin: 0;
+    color: #999;
+    font-size: 1em;
 }

@@ -13,6 +13,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
     private $form_reference;
     public $attrs = array();
     public $dop_sogl;
+    public $scancopies;
     private $references = array('status', 'pay_system', 'dog_kind', 'tarif_type');
 
     function __construct($scenario='insert') {
@@ -207,6 +208,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
 
                     $rules = CJSON::decode($_GET['filters']);
                     foreach ($rules['rules'] as $key => $data) {
+                        
                         if ($data['op'] != 'cn') {
                             $criteria->addCond('attrs.' . $data['field'], $data['op'], $data['data']);
                         } else {
@@ -260,8 +262,10 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
         //uksort($this->form, 'Document::form_sort');
 //    $grid['cols'][0]="";
 //    $grid['colModel'][0]="";
-        $grid['cols'][0]="Документ";
-        $grid['colModel'][0]=$this->setColElementModel('doc_type');
+        $grid['cols'][0]="";
+        $grid['colModel'][0]=$this->setColElementModel('additional',array('width'=>40));
+        $grid['cols'][1]="Документ";
+        $grid['colModel'][1]=$this->setColElementModel('doc_type');
         foreach ($this->form as $key => $element) {
             $grid['cols'][] = $this->model()->getAttributeLabel($element);
             $grid['colModel'][] = $this->setColElementModel($element);
@@ -269,10 +273,14 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
         return $grid;
     }
 
-    public function setColElementModel($element) {
+    public function setColElementModel($element,$parameters=null) {
         $col['name'] = $element;
         $col['index'] = $element;
         $col['editable'] = true;
+        if (is_array($parameters))
+        {
+        $col['width']=$parameters['width'];
+        }
         //if ($element == 'stop_date') $col["classes"] =$this->checkExpiredDate($element)? "expired" : "unexpired";
         return $col;
     }

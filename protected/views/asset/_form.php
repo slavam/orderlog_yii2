@@ -67,6 +67,15 @@
 		<?php echo $form->error($model,'price_type_id'); ?></td>
 	</tr>
 	<tr>
+		<td colspan="2"></td>
+		<td><b>Кол-во</b></td>
+		<td><?php echo $form->textField($model,'quantity',array('size'=>10)); ?>
+		<?php echo $form->error($model,'cost'); ?></td>
+		<td><b>Тип Кол-ва</b></td>
+		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All());?> 
+		<?php echo $form->error($model,'quantity_type_id'); ?></td>
+	</tr>
+	<tr>
 		<td><b>Статья бюджета</b></td>
 		<td><?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->findBudgetItems());?> 
 		<?php echo $form->error($model,'budget_item_id'); ?></td>
@@ -79,22 +88,22 @@
 		<td><b>Расположение</b></td>
 		<td colspan="5"><?php echo ($model->place_id> 0 ? $this->replacementPlace($model->place_id):""); 
                                       echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Производитель</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Продукты</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Характеристики</b></td>
 		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->urlManager->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
+                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположени');?></td>
 	</tr>
 	<tr>
 		<td><b>Примечание</b></td>

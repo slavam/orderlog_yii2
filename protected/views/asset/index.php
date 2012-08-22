@@ -135,7 +135,7 @@ grid.setGridParam({datatype:'json'});
              			title: 'Редактировать товар',
                         modal:true,
                         width:1160,
-                        height:450,
+                        height:500,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());
@@ -168,14 +168,15 @@ var options = {
                 			else if(status=="err"){
 	                				alert("error:"+data['message']);
 	                			}
-                			else{
-	                            var response= jQuery.parseJSON (data);
-	
-	                            $.each(response, function(key, value) { 
-	                              $("#"+key+"_em_").show();
-	                              $("#"+key+"_em_").html(value[0]);
-	                            });
-	                        }
+                			else
+                                        {
+                                            var response= jQuery.parseJSON (data);
+
+                                            $.each(response, function(key, value) { 
+                                            $("#"+key+"_em_").show();
+                                            $("#"+key+"_em_").html(value[0]);
+                                            });
+                                        }
                     },
 
             }; 

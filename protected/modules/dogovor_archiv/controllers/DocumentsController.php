@@ -21,19 +21,7 @@ function filters() {
     
     
 function actionView() {
-//    $assetpath = Yii::app()->getAssetManager()->publish(Yii::getPathOfAlias('zii.widgets.assets')).'/jqgrid';
-    $cs=Yii::app()->getClientScript();
-//    $cs->registerScriptFile($assetpath.'/jquery.jqGrid.min.js',CClientScript::POS_HEAD);
-//    $cs->registerCssFile($assetpath.'/themes/redmond/jquery-ui-custom.css');
-//    $cs->registerCssFile($assetpath.'/themes/ui.jqgrid.css');
-//    $cs->registerScriptFile($assetpath.'/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/grid.common.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jquery-ui-custom.min.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jqDnR.js',CClientScript::POS_HEAD);
-//    $cs->registerScriptFile($assetpath.'/jqModal.js',CClientScript::POS_HEAD);
-//    $cs->registerCoreScript('jquery');
-    
- 
+$cs = Yii::app()->clientScript;    
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
@@ -41,7 +29,8 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
 
-$cs = Yii::app()->clientScript;    
+
+
 
     $criteria = new EMongoCriteria();
     $atr_array=array();
@@ -53,6 +42,7 @@ $cs = Yii::app()->clientScript;
         }
     $atr_array['model']=$this->_model;
     $grid = $this->_model->jqformbuilder();
+    
     $atr_array['colModel'] = CJSON::encode($grid['colModel']);
     $atr_array['cols']=CJSON::encode($grid['cols']);
     
@@ -88,7 +78,7 @@ function actionJqgrid()
         $row->attrs['dog_kind'] = Reference::model()->getReferenceItemById($row->attrs['dog_kind']);
         $row->attrs['pay_system'] = Reference::model()->getReferenceItemById($row->attrs['pay_system']);
         $row->attrs['doc_type'] = $row->templ_description;
-        
+        $row->attrs['additional']= CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id)));
         $responce->rows[$i]['id'] = (string)$row['_id'];
         
         foreach ($form['colModel'] as $index=>$colkey)
@@ -99,14 +89,24 @@ function actionJqgrid()
             }
             else $responce->rows[$i]['cell'][]='';
         }
+        
     }
     echo CJSON::encode($responce);
 }
 
 public function actionUpdate()
 {
+    
     $model=$this->loadModel();
     $form = new CForm($model->form_builder(), $model);
+    $cs = Yii::app()->clientScript;   
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/js/jquery.lightbox-0.5.min.js', CClientScript::POS_END);
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/lightboxinit.js' ,CClientScript::POS_END);
+    $cs->registerCssFile(Yii::app()->request->baseUrl.'/js/lightbox/css/jquery.lightbox-0.5.css');
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+    $cs->registerCoreScript('jquery');
+    
+    
     if ($form->submitted('login')) {
         $model->attributes = $_POST['Document'];
 //        $model->doc_type=$model->templ_description;
@@ -116,6 +116,7 @@ public function actionUpdate()
             $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
         }
     }
+    
     if ($this->getViewFile($model->templ_name.'_form'))
     {
         $this->render($model->templ_name.'_form', array('form' => $form,'model'=>$model));
@@ -186,15 +187,15 @@ private function dop_soglashenie_edit()
     $parent_model->dop_sogl[$index]->templ_id ='501a648de5d1316813000000';
     $parent_model->dop_sogl[$index]->_id = (string)$id;
     
-        if ($parent_model->validate())
+    if ($parent_model->validate())
+    {
+        if ($parent_model->save())
         {
-            if ($parent_model->save())
-            {
-                Yii::app()->user->setFlash('notice','Документ сохранен');
-                return true;
-            }
-            else return false;
+            Yii::app()->user->setFlash('notice','Документ сохранен');
+            return true;
         }
+        else return false;
+    }
     }
     else {
         Yii::app()->user->setFlash('notice','Не выбран главный документ');
@@ -207,12 +208,18 @@ public function actionDelete()
 {
     if(Yii::app()->request->isPostRequest)
     {
-            // we only allow deletion via POST request
-            $this->loadModel()->delete();
-
+        $model = $this->loadModel();
+        $data = explode('=', $model->status);
+        if ($data[1]=='0'){
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            if(!isset($_GET['ajax']))
+            $model->delete();
+            if(!Yii::app()->request->isAjaxRequest)
+            {
                     $this->redirect(array('index'));
+            }
+            else echo 'Документ удален';
+        }
+        else echo 'Нельзя удалять документ';
     }
     else
             throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
@@ -227,9 +234,9 @@ public function loadModel($id=null)
 {
     if($this->_model===null)
     {
-        if($id == null && isset($_GET['id']))
+        if($id == null && isset($_REQUEST['id']))
         {
-           $this->_model=Document::model()->findByPk(new Mongoid($_GET['id']));
+           $this->_model=Document::model()->findByPk(new Mongoid($_REQUEST['id']));
         }
         else {
             $this->_model=Document::model()->findByPk(new Mongoid($id));
@@ -240,7 +247,8 @@ public function loadModel($id=null)
     }
     return $this->_model;
 }
-        
+
+
 public function actionCheckExpiredDate()
 {
     if (Yii::app()->request->isAjaxRequest)
