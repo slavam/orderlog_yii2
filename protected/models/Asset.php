@@ -57,14 +57,14 @@ class Asset extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id, price_type_id, asset_template_id, quantity_type_id, quantity', 'numerical', 'integerOnly'=>true),
-			array('selection', 'required'),
+			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id, price_type_id', 'numerical', 'integerOnly'=>true),
+//			array('selection', 'required'),
 			array('cost', 'numerical'),
-			array('name, part_number, info, comment', 'safe'),
+			array('name, part_number, info, comment,place_id, manufacturer_id, product_id, feature_id, place_id, manufacturer_id, product_id, feature_id, quantity_type_id, quantity', 'safe'),
 			array('info','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, unit_id, price_type_id, comment, asset_template_id, place_id, manufacturer_id, product_id, feature_id, quantity_type_id, quantity', 'safe', 'on'=>'search'),
+			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, unit_id, comment, price_type_id, asset_template_id, place_id, manufacturer_id, product_id, feature_id, quantity_type_id, quantity', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -148,26 +148,38 @@ class Asset extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-	public function afterFind() {
-
-		$this->place_id = trim($this->place_id,"{}");
-		$this->selection = explode(',',$this->place_id);
-		return true;
-	}
         
+	public function afterFind() {
+            
+            if (isset($this->place_id)) {
+                $this->place_id = trim($this->place_id,"{}");
+		$this->selection = explode(',',$this->place_id);
+            } else {
+                $this->selection = NULL;
+            }
+	}
 	/**
 	 * This is invoked before the record is saved.
 	 * @return boolean whether the record should be saved.
 	 */
 	protected function beforeSave()
 	{
+        if (isset($this->selection)) {
+                
+                $tmpcount = count($this->selection);
+                
 		if(count($this->selection) > 1) {
 			$this->place_id=implode(',',$this->selection);
 		} else {
 			$this->place_id=$this->selection;
 		}
        		$this->place_id = "{".$this->place_id."}";
+        } else {
+                $this->place_id = NULL;
+        }
 		return parent::beforeSave();
+//       		return TRUE;
+
 	}
 
         public function findAssets()

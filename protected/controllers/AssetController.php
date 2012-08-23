@@ -82,6 +82,13 @@ class AssetController extends Controller {
             }//model->save
         }//validate
         else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+/*       else {
+            $y=CActiveForm::validate($model);
+            $x=CJSON::encode(CActiveForm::validate($model)); 
+            echo $x;
+            Yii::app()->end();}
+ * 
+ */
     }
     else
     if (Yii::app()->request->isAjaxRequest) {
