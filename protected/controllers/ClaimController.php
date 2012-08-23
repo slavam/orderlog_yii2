@@ -30,7 +30,8 @@ class ClaimController extends Controller
 				'actions'=>array('index','view','show','list','changeClaimState',
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
-                                    'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision'),
+                                    'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision',
+                                    'editWholeClaim'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -477,5 +478,63 @@ class ClaimController extends Controller
         $departments = Department::model()->findDepartmentsByDivision($division_id);
         echo CJSON::encode($departments);
         Yii::app()->end();
+    }
+    public function actionEditWholeClaim($id){
+        $model = $this->loadModel($id);
+        if (isset($_POST['Claim'])) {
+            $new_claim_fields = $_POST['Claim'];
+            foreach ($new_claim_fields as $field => $value) {
+                $model[key($new_claim_fields[$field])] = current($value);
+            }
+            if ($model->save()) { 
+                $new_claim_lines = $_POST['ClaimLines'];
+
+                foreach ($new_claim_lines as $line => $value) {
+                    $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
+                    $model_line->count = $new_claim_lines[$line]['count'];
+        //            $model_line->attributes = $new_claim_lines[$line];
+//                    foreach ($new_claim_lines[$line] as $key => $value) {
+//                        
+//                        $model[$key] = $value;
+//                    }
+                    if (!$model_line->save())
+                    {        
+                        echo "Error"; // to do correct message
+                        return;
+                    }
+                }
+//            if($model->validate()){
+                
+                    if (Yii::app()->request->isAjaxRequest) {
+//                        $this->actionGetDataForGrid(); //encode json only one asset by id
+  //          $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            echo CJSON::encode(array(
+  //          'status' => 'ok',
+    //            'message' => 'no Asset form passed!',
+     //   ));            
+             
+                    } else echo 'get out!';
+                }//model->save
+//            }//validate
+//            else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+        } else
+        if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+                
+//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+//            $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            Yii::app()->end();
+//        } 
+        
     }
 }

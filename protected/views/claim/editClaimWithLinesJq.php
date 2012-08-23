@@ -19,10 +19,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <div class="form">
 <?php $form=$this->beginWidget('CActiveForm', array(
-    'action'=>'editClaim',
+//    'action'=>'editClaim',
     'id'=>'whole-claim-form',
     'enableAjaxValidation'=>false,
-    'enableClientValidation' => true,
+//    'enableClientValidation' => true,
 )); ?>
 <?php echo $form->errorSummary($model); ?>
 
@@ -74,22 +74,22 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
         <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
             <?php echo $form->error($model,'direction_id'); ?></td>
         <td><b>Период</b></td>
-        <td><?php echo $form->dropDownList($model,'period_id', Period::findPeriods());?> 
+        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
             <?php echo $form->error($model,'period_id'); ?></td>
     </tr>
     
     <tr>
         <td><b>Отделение</b></td>
         <td>
-            <?php echo $form->dropDownList($model,'division_id', Division::All(),array('onChange'=>'getDepartments()'));?> 
+            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
             <?php echo $form->error($model,'division_id'); ?>
         </td>        
         <td><b>Подразделение</b></td>
         <td>
             <?php if ($model->division_id>0) {
-                echo $form->dropDownList($model,'department_id', Department::findDepartmentsByDivision($model->division_id));
+                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
             } else {
-                echo $form->dropDownList($model,'department_id', Department::findDepartments());
+                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
             }
             ?> 
             <?php echo $form->error($model,'department_id'); ?>
@@ -109,13 +109,13 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     </tr>
 </table>
 
-<table id="list_"></table> 
+<table id="claim_line_list"></table> 
 <div id="pager_"></div>
 <?php $this->endWidget(); ?>
 
 <script type="text/javascript">
 $(function() {
-    var grid=$("#list_");
+    var grid=$("#claim_line_list");
 //    var pager_selector = "#pager_";
     grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
@@ -130,10 +130,10 @@ $(function() {
             'Статья бюджета','Расположение','Характеристики','Продукты',
             'Информация', 'Добавлена'],
         colModel: [
-            {name:'id',index:'id', width:20, hidden:true, frozen: true},
+            {name:'iddb',index:'iddb', width:20, hidden:true, frozen: true},
             {name: 'type', width: 50, frozen: true},
             {name:'name',index:'name', width:300, frozen: true},
-            {name: 'quantity', width: 70, frozen:false, editable:true},
+            {name: 'count', width: 70, frozen:false, editable:true},
             {name: 'cost', width: 60, frozen:false },
             {name: 'amount', width: 60, frozen:false },
             {name: 'description', width: 200, frozen:false },
@@ -164,53 +164,13 @@ $(function() {
 //            alert(id+' '+lastSel);
             if (id && id != lastSel) { 
                 grid.restoreRow(lastSel);
-            	grid.setGridParam({editurl:'updateRow'});
+            	grid.setGridParam({editurl:'#'});
 		grid.setGridParam({datatype:'json'});
                 grid.editRow(id, true);
                 lastSel = id;
             }
         },
-       	loadError: function(xhr, status, error) {alert(status +error)},
-        buttons:{
-            'OK': function(){
-                var options = { 
-                    url: 'editClaim/?id='+id_,
-                    type: 'post',
-                    dataType: 'json',
-                    error: function(res, status, exeption) {
-                        alert("error:"+res.responseText);
-                    },
-                    success:  function(data) {
-                        var status=data['status'];
-                        if(status=="ok"){
-                            grid.setGridParam({datatype:'json'});
-                            rd = data['rows'][sel_-1]['cell']; //row data
-                            grid.jqGrid('setRowData',sel_,{
-                                'period':rd[1],
-                                'name':rd[2],
-                                'state':rd[3],
-                                'division':rd[4],
-                                'department':rd[5],
-                                'comment':rd[6]});
-                            $("#create_dialog").dialog('close');
-                        } else if(status=="err"){
-                            alert("error:"+data['message']);
-                        } else {
-                            var response= jQuery.parseJSON (data);
-                            $.each(response, function(key, value) { 
-                                $("#"+key+"_em_").show();
-                                $("#"+key+"_em_").html(value[0]);
-                            });
-                        }
-                    }
-                }; 
-                $('#claim-form').ajaxSubmit(options); 
-            },
-            'Close': function(){
-                $(this).dialog('close');
-            }
-        }
-             
+       	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false});
     grid.jqGrid('setFrozenColumns');
 });

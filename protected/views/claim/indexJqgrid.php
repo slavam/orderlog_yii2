@@ -383,38 +383,58 @@ $(function() {
                     height:500,
                     buttons:{
                         'OK': function(){
-                            var options = { 
-                                url: 'editClaim/?id='+id_,
-                                type: 'post',
-                                dataType: 'json',
-                                error: function(res, status, exeption) {
+                            var rows= jQuery("#claim_line_list").jqGrid('getRowData');
+                            var lines=new Array();
+                            for(var i=0;i<rows.length;i++){
+                                var row=rows[i];
+                                lines.push(row);
+                            } 
+                            //JSON.stringify(row)
+                            //  alert(paras[0]['name']);
+                            var values = {};
+                            var x = $.makeArray(lines);
+                            $.each($('#whole-claim-form').serializeArray(), function(i, field) {
+//                                alert(field.name.substr(6,field.name.length-7));
+                                values[field.name.substr(6,field.name.length-7)] = field.value;
+                            });
+
+                            $.ajax( {                                //'f2[]':$("#whole-claim-form").serialize()
+//                                'data': {'ClaimLines[]':JSON.stringify(paras), 'Claim[]':values}, 
+                                'data': {'ClaimLines':x, 'Claim[]':values}, 
+                                'url': "editWholeClaim?id="+id_,
+                                'type': "POST",
+                                'dataType': "json",
+                                'error': function(res, status, exeption) {
                                     alert("error:"+res.responseText);
                                 },
-                                success:  function(data) {
-                                    var status=data['status'];
-                                    if(status=="ok"){
-                                        grid.setGridParam({datatype:'json'});
-					rd = data['rows'][sel_-1]['cell']; //row data
-					grid.jqGrid('setRowData',sel_,{
-                                            'period':rd[1],
-                                            'name':rd[2],
-                                            'state':rd[3],
-                                            'division':rd[4],
-                                            'department':rd[5],
-                                            'comment':rd[6]});
-                                        $("#create_dialog").dialog('close');
-                                    } else if(status=="err"){
-                                        alert("error:"+data['message']);
-                                    } else {
-                                        var response= jQuery.parseJSON (data);
-                                        $.each(response, function(key, value) { 
-                                            $("#"+key+"_em_").show();
-                                            $("#"+key+"_em_").html(value[0]);
-                                        });
+                                'success':  function(data) {
+//                                    var status=data['status'];
+//                                    if(status=="ok"){
+//                                        grid.setGridParam({datatype:'json'});
+//					rd = data['rows'][sel_-1]['cell']; //row data
+//					grid.jqGrid('setRowData',sel_,{
+//                                            'period':rd[1],
+//                                            'name':rd[2],
+//                                            'state':rd[3],
+//                                            'division':rd[4],
+//                                            'department':rd[5],
+//                                            'comment':rd[6]});
+                                        $("#create_dialog_edit_whole_claim").dialog('close');
+//                                    } else if(status=="err"){
+//                                        alert("error:"+data['message']);
+//                                    } else {
+//                                        var response= jQuery.parseJSON (data);
+//                                        $.each(response, function(key, value) { 
+//                                            $("#"+key+"_em_").show();
+//                                            $("#"+key+"_em_").html(value[0]);
+//                                        }
+//                                        );
                                     }
-                                }
-                            }; 
-                            $('#whole-claim-form').ajaxSubmit(options); 
+//                                }
+                            }); 
+
+                            //$.ajax(options); 
+//                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
                             $(this).dialog('close');
