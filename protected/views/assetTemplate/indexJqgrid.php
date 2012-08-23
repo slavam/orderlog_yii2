@@ -13,6 +13,22 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
  * and open the template in the editor.
  */
 ?>
+
+<style type="text/css">
+        .ui-jqgrid tr.jqgrow td {
+            word-wrap: break-word; /* IE 5.5+ CSS3 see http://www.w3.org/TR/css3-text/#text-wrap */
+            white-space: pre-wrap; /* CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap; /* Opera 4-6 */
+            white-space: -o-pre-wrap; /* Opera 7 */
+            overflow: hidden;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 3px;
+            padding-bottom: 3px
+        }
+    </style>
+
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
@@ -64,6 +80,12 @@ $(function() {
     	loadError: function(xhr, status, error) {alert(status +error)}
 */
 
+gridComplete: function()
+{
+	var data=grid.jqGrid('getRowData');
+	alert("!");
+}
+
     }).navGrid('#pager',{search:false, view:false, del:true, add:true, edit:false, cloneToTop:true});
 
 grid.jqGrid('navSeparatorAdd','#pager');
@@ -90,6 +112,5 @@ grid.jqGrid('navSeparatorAdd','#pager');
 
 });
 
-//alert("!");
 
 </script>

@@ -306,9 +306,12 @@ class AssetTemplateController extends Controller
 		                $responce['rows'][$r_i]['id'] = $r_i+1;                       //art,art_id,info,comment
 
 						if($row->budget_item_id) {
+						
 							$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
-							$article_name = $articles_->NAME;
+							//$article_name = $articles_->NAME;
 							$article_code = $articles_->CODE;
+						    $article_name = $articles_->get2LevelNameBudgetItem($row->budget_item_id);
+
 						} else { $article_name = 'Í/Ä'; $article_code = 'Í/Ä'; }
 
 		                $responce['rows'][$r_i]['cell'] = array($row->id,  $row->name,$article_name,$article_code,$row->info,$row->comment ,'2',"$parent_t",true,true,true);
