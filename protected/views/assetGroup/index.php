@@ -214,7 +214,7 @@ $(function() {
 
             },
             //position:'last'
-        });
+        })
 
 		function after_restore(rowid) {
 			if(new_node){

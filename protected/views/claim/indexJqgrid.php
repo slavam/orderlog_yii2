@@ -18,22 +18,23 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
+
 </script>
 
 <div id="create_dialog" style="display:none;">
-    <table class="ui-jqgrid" id="create_dialog_table"></table>
+<!--    <table class="ui-jqgrid" id="create_dialog_table"></table> -->
 </div>
 
 <div id="create_dialog_edit_whole_claim" style="display:none;">
-    <table class="ui-jqgrid" id="create_dialog_table"></table>
+<!--    <table class="ui-jqgrid" id="create_dialog_table"></table> -->
 </div>
 
 <div id="create_claim_view" style="display:none;">
-    <table class="ui-jqgrid" id="create_dialog_table"></table>
+<!--    <table class="ui-jqgrid" id="create_dialog_table"></table> -->
 </div>
 
 <div id="create_del_dialog" style="display:none;">
-    <table class="ui-jqgrid" id="create_dialog_table"></table>
+<!--    <table class="ui-jqgrid" id="create_dialog_table"></table> -->
 </div>
 
 <table id="list"></table> 
@@ -101,121 +102,13 @@ $(function() {
             viewrecords: false,
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
+
             }
             });
-            jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
-            
-            subgrid_pager_add_buttons = function(options) {
-                grid.jqGrid('navButtonAdd',subgrid_pager_selector,options);
-            };
-
-            subgrid_pager_add_buttons ({
-                caption: '',
-                title: 'Удалить строку заявки',
-                buttonicon: 'ui-icon-trash',
-                onClickButton: function()
-                {
-                    var sel_ = jQuery("#"+subgridTableId).getGridParam('selrow');
-                    if(sel_) {
-                        var id_ = jQuery("#"+subgridTableId).getCell(sel_, 'id');
-                    };
-
-                    if(id_) {
-                        $("#create_del_dialog").dialog({
-                            title: 'Удалить строку заявки?',
-                            modal:true,
-                            width:200,
-                            height:100,
-                            buttons:{
-                                'Да': function(){
-                                    var options = { 
-                                        url: '<?php echo Yii::app()->createUrl('claim/claimLineDelete',array('id'=>''))?>'+id_,
-                                        type: 'post',
-                                        dataType: 'json',
-                                        error: function(res, status, exeption) {
-                                            alert("error:"+res.responseText);
-                                        },
-                                        success:  function(data) {
-                                            jQuery("#"+subgridTableId).jqGrid('delRowData',sel_);
-                                            $("#create_del_dialog").dialog('close');
-                                        }
-                                    }; 
-                                    
-                                    $('#claim-line-del-form').ajaxSubmit(options); 
-                                },
-                                'Нет': function(){
-                                    $(this).dialog('close');
-                                }
-                            }
-                        });
-                    } else 
-                        alert('Выберите строку заявки!');
-                }
-            });
-
-            subgrid_pager_add_buttons ({
-                caption: '',
-                title: 'Редактировать строку заявки',
-                buttonicon: 'ui-icon-pencil',
-                onClickButton: function()
-                {
-                    var sel_ = jQuery("#"+subgridTableId).getGridParam('selrow');
-                    if(sel_) {
-                        var id_ = jQuery("#"+subgridTableId).getCell(sel_, 'id');
-                    }
-                    if(id_) {
-                        $("#create_dialog").load('editClaimLineDialog?id='+id_);
-                        $("#create_dialog").dialog({
-                            title: 'Редактировать строку заявки',
-                            modal:true,
-                            width:650,
-                            height:600,
-                            buttons:{
-                                'OK': function(){
-                                    var options = { 
-                                        url: 'editClaimLine/?id='+id_,
-                                        type: 'post',
-                                        dataType: 'json',
-                                        error: function(res, status, exeption) {
-                                            alert("error:"+res.responseText);
-                                        },
-                                        success:  function(data) {
-                                            var status=data['status'];
-                                            if(status=="ok"){
-                                                jQuery("#"+subgridTableId).setGridParam({datatype:'json'});
-                                                rd = data['rows'][sel_-1]['cell']; //row data
-                                                jQuery("#"+subgridTableId).jqGrid('setRowData',sel_,{
-                                                    'type':rd[1],
-                                                    'name':rd[2],
-                                                    'quantity':rd[3],
-                                                    'cost':rd[4],
-                                                    'amount':rd[5],
-                                                    'description':rd[6]});
-                                                $("#create_dialog").dialog('close');
-                                            } else if(status=="err"){
-                                                alert("error:"+data['message']);
-                                            } else {
-                                                var response= jQuery.parseJSON (data);
-                                                $.each(response, function(key, value) { 
-                                                    $("#"+key+"_em_").show();
-                                                    $("#"+key+"_em_").html(value[0]);
-                                                });
-                                            }
-                                        }
-                                    }; 
-                                    $('#claim-line-form').ajaxSubmit(options); 
-                                },
-                                'Close': function(){
-                                    $(this).dialog('close');
-                                }
-                            }
-                        });
-                    } else 
-                        alert('Выберите строку заявки!');
-                    }
-                });
+//            jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
             
         },
+        
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
             $(".subgrid-data").css('background','#ddd');
@@ -243,130 +136,6 @@ $(function() {
 
     top_bottom_pager_ButtonAdd ({
         caption: '',
-        title: 'Редактировать заявку',
-        buttonicon: 'ui-icon-pencil',
-        onClickButton: function()
-        {
-            var sel_ = grid.getGridParam('selrow');
-            if(sel_) 
-                var id_ = grid.getCell(sel_, 'id');
-            if(id_) {
-                $("#create_dialog").load('editClaimDialog?id='+id_);
-                $("#create_dialog").dialog({
-                    title: 'Редактировать заявку',
-                    modal:true,
-                    width:600,
-                    height:500,
-                    buttons:{
-                        'OK': function(){
-                            var options = { 
-                                url: 'editClaim/?id='+id_,
-                                type: 'post',
-                                dataType: 'json',
-                                error: function(res, status, exeption) {
-                                    alert("error:"+res.responseText);
-                                },
-                                success:  function(data) {
-                                    var status=data['status'];
-                                    if(status=="ok"){
-                                        grid.setGridParam({datatype:'json'});
-					rd = data['rows'][sel_-1]['cell']; //row data
-					grid.jqGrid('setRowData',sel_,{
-                                            'period':rd[1],
-                                            'name':rd[2],
-                                            'state':rd[3],
-                                            'division':rd[4],
-                                            'department':rd[5],
-                                            'comment':rd[6]});
-                                        $("#create_dialog").dialog('close');
-                                    } else if(status=="err"){
-                                        alert("error:"+data['message']);
-                                    } else {
-                                        var response= jQuery.parseJSON (data);
-                                        $.each(response, function(key, value) { 
-                                            $("#"+key+"_em_").show();
-                                            $("#"+key+"_em_").html(value[0]);
-                                        });
-                                    }
-                                }
-                            }; 
-                            $('#claim-form').ajaxSubmit(options); 
-                        },
-                        'Close': function(){
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-            } else 
-                alert('Выберите заявку!');
-            }
-        });
-        
-        top_bottom_pager_ButtonAdd ({
-        caption: '',
-        title: 'Просмотреть заявку со строками!',
-        buttonicon: 'ui-icon-document',
-        onClickButton: function()
-        {
-            var sel_ = grid.getGridParam('selrow');
-            if(sel_) 
-                var id_ = grid.getCell(sel_, 'id');
-            if(id_) {
-                $("#create_claim_view").load('viewClaimWithLines?id='+id_);
-                $("#create_claim_view").dialog({
-                    title: 'Заявка',
-                    modal:true,
-                    width:1160,
-                    height:500
-                })
-            } else 
-                alert('Выберите заявку!');
-        }
-        });
-        
-        top_bottom_pager_ButtonAdd ({
-        caption: '',
-        title: 'Удалить заявку со строками!',
-        buttonicon: 'ui-icon-trash',
-        onClickButton: function()
-        {
-            var sel_ = grid.getGridParam('selrow');
-            if(sel_) 
-                var id_ = grid.getCell(sel_, 'id');
-            if(id_) {
-                $("#create_dialog").dialog({
-                    title: 'Удалить заявку?',
-                    modal:true,
-                    width:200,
-                    height:100,
-                    buttons:{
-                        'Да': function(){
-                            var options = { 
-                                url: '<?php  echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
-                                type: 'post',
-                                dataType: 'json',
-                                error: function(res, status, exeption) {
-                                    alert("error:"+res.responseText);
-                                },
-                                success:  function(data) {
-                                    grid.jqGrid('delRowData',sel_);
-                                    $("#create_dialog").dialog('close');
-                                }
-                            }; 
-                            $('#claim-form').ajaxSubmit(options); 
-                        },
-                        'Нет': function(){
-                            $(this).dialog('close');
-                        }
-                    }
-                });
-
-                };
-        }
-        });
-
-    top_bottom_pager_ButtonAdd ({
-        caption: '',
         title: 'Редактировать заявку со строками',
         buttonicon: 'ui-icon-pencil',
         onClickButton: function()
@@ -375,6 +144,10 @@ $(function() {
             if(sel_) 
                 var id_ = grid.getCell(sel_, 'id');
             if(id_) {
+
+            //lysenko 1!!!?!?!?!?!
+//                $("#alertmod").detach();
+
                 $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
                 $("#create_dialog_edit_whole_claim").dialog({
                     title: 'Редактировать заявку и строки',
@@ -408,29 +181,11 @@ $(function() {
                                     alert("error:"+res.responseText);
                                 },
                                 'success':  function(data) {
-//                                    var status=data['status'];
-//                                    if(status=="ok"){
-//                                        grid.setGridParam({datatype:'json'});
-//					rd = data['rows'][sel_-1]['cell']; //row data
-//					grid.jqGrid('setRowData',sel_,{
-//                                            'period':rd[1],
-//                                            'name':rd[2],
-//                                            'state':rd[3],
-//                                            'division':rd[4],
-//                                            'department':rd[5],
-//                                            'comment':rd[6]});
-                                        $("#create_dialog_edit_whole_claim").dialog('close');
-//                                    } else if(status=="err"){
-//                                        alert("error:"+data['message']);
-//                                    } else {
-//                                        var response= jQuery.parseJSON (data);
-//                                        $.each(response, function(key, value) { 
-//                                            $("#"+key+"_em_").show();
-//                                            $("#"+key+"_em_").html(value[0]);
-//                                        }
-//                                        );
+
+//                                        $("#create_dialog_edit_whole_claim").dialog('close');
+                                        $(this).dialog('close');
+
                                     }
-//                                }
                             }); 
 
                             //$.ajax(options); 
@@ -445,6 +200,51 @@ $(function() {
                 alert('Выберите заявку!');
             }
         });
+
+        top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Удалить заявку со строками!',
+        buttonicon: 'ui-icon-trash',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) 
+                var id_ = grid.getCell(sel_, 'id');
+            if(id_) {
+                $("#create_del_dialog").dialog({
+                    title: 'Удалить заявку?',
+                    modal:true,
+                    width:200,
+                    height:100,
+                    buttons:{
+                        'Да': function(){
+                        ///!!!lysenko
+                        /*
+                            var options = { 
+                                url: '<?php  echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
+                                type: 'post',
+                                dataType: 'json',
+                                error: function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                                },
+                                success:  function(data) {
+                                    grid.jqGrid('delRowData',sel_);
+                                    $(this).dialog('close');
+                                }
+                            }; 
+                            $('#claim-form').ajaxSubmit(options); 
+                            */
+                        },
+                        'Нет': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+
+                };
+        }
+        });
+
 
 });
 </script>
