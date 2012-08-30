@@ -3,24 +3,25 @@
 class Document extends EMongoDocument // Notice: We extend EMongoDocument class instead of CActiveRecord {
 {
     private $expired_time = 30;
-    private $builded_rules;
+    public $builded_rules;
     public $templ_id;
     public $templ_name;
     public $templ_description;
-    private $form_weights;
-    private $form_rules;
-    private $form;
-    private $form_reference;
+    public $form_weights;
+    public $form_rules;
+    public $form;
+    public $form_reference;
     public $attrs = array();
     public $dop_sogl;
     public $scancopies;
     private $references = array('status', 'pay_system', 'dog_kind', 'tarif_type');
 
+
     function __construct($scenario='insert') {
 
         parent::__construct($scenario);
     }
-
+    
     function afterConstruct() {
 
         if (isset($_GET['templ_id'])) {
@@ -122,6 +123,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
         }
         parent::afterFind();
     }
+    
 
     public function behaviors()
     {
@@ -145,7 +147,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
     public function rules() {
 
         $this->builded_rules = ModelRulesBuilder::build_rules($this->form_rules);
-        array_push($this->builded_rules, array('dop_sogl','required'));
+        array_push($this->builded_rules, array('dop_sogl','safe'));
         return $rules = $this->builded_rules;
     }
 

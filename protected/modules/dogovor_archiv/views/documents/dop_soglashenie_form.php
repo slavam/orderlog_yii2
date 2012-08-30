@@ -15,7 +15,7 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
               
               if (gsr){
                     var row = jQuery("#jqgrid").jqGrid("getRowData",gsr);
-                    $("#Document_parent_id").val(gsr);
+                    $("#Document_parent_doc_id").val(gsr);
                     $("#document_identify").append("№"+row.dog_number+", Контрагент: "+row.provider+", Вид: "+row.dog_kind);
                     $("#dog_select").dialog("close")
                     }
@@ -42,10 +42,16 @@ echo CHtml::link(CHtml::image('/images/add.png').'Добавить главны�
    'onclick'=>'$("#dog_select").dialog("open").load(\'/index.php/dogovor_archiv/documents/view\'); return false;',
 ));
 echo $form->renderBegin();
-echo CHtml::hiddenField('Document[parent_id]');
-echo CHtml::tag('p',array('id'=>'document_identify'),'Главный договор: ');
+//echo CHtml::hiddenField('Document[parent_id]');
+echo $form['parent_doc_id'];
+if ($model->parent_doc_id)
+{
+    $pdid="№".$parent_model->attrs['dog_number'].", Контрагент: ".$parent_model->attrs['provider'].", Вид: ".Reference::model()->getReferenceItemById($parent_model->attrs['dog_kind']);
+}
+echo CHtml::tag('p',array('id'=>'document_identify'),'Главный договор: '.$pdid);
 ?> 
-    <table class="document_wrapper">
+    <div class="block_wrapper">
+    <table width="900">
           <thead>
             <tr>
                 <th>Классификация документа</th>
@@ -127,10 +133,10 @@ echo CHtml::tag('p',array('id'=>'document_identify'),'Главный догов�
        </td>
         
 </table>
+</div>    
     
-    
-    
-    <table class="document_wrapper">
+<div class="block_wrapper">    
+    <table width="900">
         <thead>
             <tr>
                 <th>Сведения контрагента</th>
@@ -172,7 +178,7 @@ echo CHtml::tag('p',array('id'=>'document_identify'),'Главный догов�
             <td><?echo $form['delegation'];?></td>
         </tr>
     </table>
-    
+</div> 
 <?php 
 foreach($form->getButtons() as $element)
     echo $element->render();
