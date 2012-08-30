@@ -39,7 +39,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog');
     <?endif;?>
 <?
 echo CHtml::link(CHtml::image('/images/add.png').'Добавить главный договор', '#', array(
-   'onclick'=>'$("#dog_select").dialog("open").load(\'/index.php/dogovor_archiv/documents/view\'); return false;',
+   'onclick'=>"$(\"#dog_select\").dialog(\"open\").load('".Yii::app()->createUrl('/dogovor_archiv/documents/view')."'); return false;",
 ));
 echo $form->renderBegin();
 //echo CHtml::hiddenField('Document[parent_id]');
