@@ -125,45 +125,213 @@ public function actionUpdate()
 }
     
     
+
+//Оригинальный метод, бекап
+//function actionAdd() 
+//{
+//
+//$model =new Document;
+//
+//$form = new CForm($model->form_builder(),$model);
+//
+//if ($form->submitted('login')) {
+//    $result = false;
+//    if (method_exists($this,$model->templ_name.'_edit'))
+//    {
+//      $result = call_user_func(array($this, $model->templ_name.'_edit'));
+//    }
+//    else
+//        {
+//            $model->attributes = $_POST['Document'];
+//            if ($model->validate()) {
+//                if ($model->save())
+//                    $result = true;
+//            }
+//        }
+//     if ($result == true)
+//      {
+//          $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
+//      }
+//   }
+//   
+//    $this->renderDocumentPage(array('form'=>$form,'model'=>$model));
+//}
+
+
 function actionAdd() 
 {
-
+if (($id=$_REQUEST['id']) || ($id=$_REQUEST['Document']['parent_doc_id']))
+{
+    $model = Document::model()->findByPk(new MongoId($id));
+}
+else
 $model =new Document;
+    
 
-$form = new CForm($model->form_builder(),$model);
-
-if ($form->submitted('login')) {
-    $result = false;
+    
+$result = false;
     if (method_exists($this,$model->templ_name.'_edit'))
     {
-      $result = call_user_func(array($this, $model->templ_name.'_edit'));
-      
+      call_user_func(array($this, $model->templ_name.'_edit'),array('form'=>$form,'model'=>$model));
     }
     else
         {
-            $model->attributes = $_POST['Document'];
-            if ($model->validate()) {
-                if ($model->save())
-                    $result = true;
+        $form = new CForm($model->form_builder(),$model);
+        if ($form->submitted('login')) {
+            $result = $this->default_document_edit($model);
+
+            if ($result == true)
+            {
+                $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
             }
         }
-     if ($result == true)
-      {
-          $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
-      }
-   }
-   
-    $this->renderDocumentPage(array('form'=>$form,'model'=>$model));
+        $this->renderDocumentPage(array('form'=>$form,'model'=>$model));
+    }
+}
+private function default_document_edit($model)
+{
+if ($model)
+{
+    $model->attributes = $_POST['Document'];
+            if ($model->validate()) {
+                if ($model->save(true,array('templ_name','templ_id','templ_description','attrs','dop_sogl')))
+                    $result = true;
+            }
+            else $result=false;
+}
+else $result =false;
+
+    return $result;
+}
+
+private function dogovor_edit($arguments=null)
+{
+    
+if ($_REQUEST['sub_document'] || $_REQUEST['Document']['parent_doc_id'])
+    {
+        if (isset($arguments['model']->dop_sogl))
+        {
+         $sub_document =null;   
+            foreach ($arguments['model']->dop_sogl as $key=>$value)
+            {
+                if ($value->_id !== null && $value->_id == $_REQUEST['sub_document'])
+                {
+                    $sub_document=$value;
+                    $index =$key;
+                }
+            }
+        }
+        
+        if ($sub_document == null && $index == null)
+        {
+            $sub_document = new Document;
+            $index = null;
+        }
+        
+    call_user_func(array($this,$sub_document->templ_name.'_edit'),array('parent_doc_model'=>$arguments['model'],'sub_document_model'=>$sub_document,'index'=>$index));
+    Yii::app()->end();
+    }
+    else
+    {
+    $form = new CForm($arguments['model']->form_builder(),$arguments['model']);
+        if ($form->submitted('login'))
+        {
+            $this->default_document_edit($arguments['model']);
+        }
+    }
+$this->renderDocumentPage(array('form'=>$form,'model'=>$arguments['model']));
+}
+
+private function dop_soglashenie_edit($arguments=null)
+{
+    
+    
+    if ($arguments['parent_doc_model'])
+    {
+        $parent_model = $arguments['parent_doc_model'];
+        $parent_doc_id = $parent_model->_id;
+    }
+    else
+        if (($parent_doc_id = $_POST['Document']['parent_doc_id']) || ($parent_doc_id = $_REQUEST['id']))
+        {
+            $parent_model = $this->loadModel($parent_doc_id);
+        }
+
+        if ($arguments['sub_document_model']){
+            
+            $sub_document_template = Template::model()->findByPk(new MongoId($arguments['sub_document_model']->templ_id));
+           
+//          $arguments['sub_document_model']->_id;
+//            $parent_model->attrs=$arguments['sub_document_model']->attrs;
+//            $parent_model->parent_doc_id=$id;
+//            $parent_model->templ_name=$arguments['sub_document_model']->templ_name;
+//            $parent_model->templ_description=$arguments['sub_document_model']->templ_description;
+//            $parent_model->templ_id=(string)$arguments['sub_document_model']->templ_id;
+            $arguments['sub_document_model']->form = $sub_document_template->fields;
+            $arguments['sub_document_model']->form_rules = $sub_document_template->rules;
+            $arguments['sub_document_model']->form_weights = $sub_document_template->weights;
+            $arguments['sub_document_model']->parent_doc_id =$parent_doc_id;
+        }   
+        else $arguments['sub_document_model'] = new Document;
+ 
+        $form = new CForm($arguments['sub_document_model']->form_builder(),$arguments['sub_document_model']);
+
+    if (isset($parent_model))
+    {
+        if ($form->submitted('login'))
+        {
+           // $index = 0;
+            
+            if (!isset($arguments['index']))
+            {
+                if (is_array($parent_model->dop_sogl) && count($parent_model->dop_sogl)>0)
+                {
+                    $index=count($parent_model->dop_sogl);
+                }
+            }
+            else {
+                $index = $arguments['index'];
+                $arguments['sub_document_model']->scenario = 'update';
+            }
+            
+            if ($arguments['sub_document_model']->scenario =='insert')
+            {
+            $id= new MongoId();
+            $arguments['sub_document_model'] = new Document;
+            $arguments['sub_document_model']->_id=(string)$id;
+            //$parent_model->dop_sogl[$index]=new Document;
+//            $parent_model->dop_sogl[$index]->_id = (string)$id;
+            }
+            
+//            $parent_model->dop_sogl[$index]->attributes = $_POST['Document'];
+            $arguments['sub_document_model']->attributes=$_POST['Document'];
+            $arguments['sub_document_model']->templ_id = '501a648de5d1316813000000';
+            $parent_model->dop_sogl[$index] =$arguments['sub_document_model'];
+            if ($arguments['sub_document_model']->validate())
+            {
+                if ($parent_model->save(true,array('templ_name','templ_id','templ_description','attrs','dop_sogl')))
+                {
+                    Yii::app()->user->setFlash('notice','Документ сохранен');
+                    //return true;
+                }
+                else Yii::app()->user->setFlash('notice','Ошибка сохранения документа');
+            }
+        }
+    }
+else Yii::app()->user->setFlash('notice','Не выбран главный документ');
+        //Yii::app()->user->setFlash('notice','Не выбран главный документ'); 
+$this->renderDocumentPage(array('form'=>$form,'model'=>$arguments['sub_document_model'],'parent_model'=>$parent_model));
+        //return false;
 }
 
 private function renderDocumentPage($attributes=array())
 {
-    if (isset($_GET['templ_id'])) {
+    if (isset($_GET['templ_id']) || $attributes['model']->templ_name) {
         if ($this->getViewFile($attributes['model']->templ_name . '_form')) {
-            $this->render($attributes['model']->templ_name . '_form', array('form' => $attributes['form'], 'model' => $attributes['model']));
+            $this->render($attributes['model']->templ_name . '_form', $attributes);
         }
         else
-            $this->render('document_form', array('form' => $attributes['form'], 'model' => $attributes['model']));
+            $this->render('document_form', $attributes);
         }
    else {
         $templates = Template::model()->findAll();
@@ -171,58 +339,59 @@ private function renderDocumentPage($attributes=array())
     }
 }
 
-private function dop_soglashenie_edit()
-{
-    if ($_POST['Document']['parent_id'])
-    {
-    $parent_model = $this->loadModel($_POST['Document']['parent_id']);
-    if (is_array($parent_model->dop_sogl) && count($parent_model->dop_sogl)>0)
-    {
-        $index=count($parent_model->dop_sogl);
-    }else $index = 0;
-    
-    $id= new MongoId();
-    $parent_model->dop_sogl[$index]=new Document;
-    $parent_model->dop_sogl[$index]->attributes = $_POST['Document'];
-    $parent_model->dop_sogl[$index]->templ_id ='501a648de5d1316813000000';
-    $parent_model->dop_sogl[$index]->_id = (string)$id;
-    
-    if ($parent_model->validate())
-    {
-        if ($parent_model->save())
-        {
-            Yii::app()->user->setFlash('notice','Документ сохранен');
-            return true;
-        }
-        else return false;
-    }
-    }
-    else {
-        Yii::app()->user->setFlash('notice','Не выбран главный документ');
-          return false;
-         }
-}
-
-
 public function actionDelete()
 {
-    if(Yii::app()->request->isPostRequest)
-    {
+//    if(Yii::app()->request->isPostRequest)
+//    {
         $model = $this->loadModel();
         $data = explode('=', $model->status);
-        if ($data[1]=='0'){
-            // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-            $model->delete();
-            if(!Yii::app()->request->isAjaxRequest)
+        
+        
+            
+//            $criteria = new EMongoCriteria;
+//            $criteria->addCond('attrs.status', '==', )
+//            $model->update();
+            if (!$_REQUEST['sub_document'])
             {
-                    $this->redirect(array('index'));
+                if ($data[1]=='0'){
+                $modifier=new EMongoModifier(
+                        array(
+                            'attrs.status'=>array('set' => '5007fec2e07686101c283352=8')
+                        )
+                );
+                $criteria = new EMongoCriteria();
+                $criteria->addCond('_id', '==', $model->_id);
+
+                $model->updateAll($modifier,$criteria);
+                
+                if(!Yii::app()->request->isAjaxRequest)
+                {
+                        $this->redirect(array('index'));
+                }
+                else echo 'Документ удален';
+                    }
+                    else echo 'Нельзя удалять документ';
             }
-            else echo 'Документ удален';
-        }
-        else echo 'Нельзя удалять документ';
-    }
-    else
-            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+            else
+            {
+                foreach ($model->dop_sogl as $key=>$value)
+                {
+                    if ($value->_id == $_REQUEST['sub_document'])
+                    {
+                        $sub_document=$value;
+                        $index =$key;
+                    }
+                }
+                $model->dop_sogl[$index]->status ='5007fec2e07686101c283352=8' ;
+                if ($model->save())
+                {
+                 $this->redirect(Yii::app()->createUrl('/dogovor_archiv/documents'));
+                }
+            }
+            
+//    }
+//    else
+//            throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 }
 
 function actionDeleteAll() {

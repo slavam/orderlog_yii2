@@ -18,6 +18,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <h1>Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
 
 <div class="form">
+
 <?php $form=$this->beginWidget('CActiveForm', array(
 //    'action'=>'editClaim',
     'id'=>'whole-claim-form',
@@ -103,15 +104,16 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
         </td>
         <td><b>Описание</b></td>
         <td>
-            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>85)); ?>
+            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
 		<?php echo $form->error($model,'description'); ?>
         </td>
     </tr>
 </table>
 
 <table id="claim_line_list"></table> 
-<div id="pager_"></div>
+<div id="pager_"></div> 
 <?php $this->endWidget(); ?>
+
 
 <script type="text/javascript">
 $(function() {
@@ -171,7 +173,7 @@ $(function() {
             }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false});
+    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
     grid.jqGrid('setFrozenColumns');
 });
 </script>

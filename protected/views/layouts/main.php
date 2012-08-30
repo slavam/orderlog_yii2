@@ -34,7 +34,7 @@
                                 array('label'=>'Расположение', 'url'=>array('/place/tree')),
                                 array('label'=>'Продукты', 'url'=>array('/product/index')),
                                 array('label'=>'Характеристики', 'url'=>array('/feature/index')),
-                                array('label'=>'Шаблоны', 'url'=>array('/assetTemplate/index')),
+                                array('label'=>'Шаблоны', 'url'=>array('/assetTemplate/indexJqgrid')),
                                 array('label'=>'Комплекты', 'url'=>array('/complect/index')),
 				array('label'=>'Товары', 'url'=>array('/asset/index')),
                                 array('label'=>'Группы', 'url'=>array('/assetGroup/index')),
