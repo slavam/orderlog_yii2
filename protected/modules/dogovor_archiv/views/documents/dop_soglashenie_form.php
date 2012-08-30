@@ -184,6 +184,6 @@ foreach($form->getButtons() as $element)
     echo $element->render();
     
 echo $form->renderEnd(); //endform
-echo $scancopies;
+$this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
 ?>
 </div>

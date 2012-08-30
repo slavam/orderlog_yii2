@@ -160,6 +160,12 @@ public function actionUpdate()
 
 function actionAdd() 
 {
+    $cs = Yii::app()->clientScript;   
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/js/jquery.lightbox-0.5.min.js', CClientScript::POS_END);
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/lightboxinit.js' ,CClientScript::POS_END);
+    $cs->registerCssFile(Yii::app()->request->baseUrl.'/js/lightbox/css/jquery.lightbox-0.5.css');
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+    $cs->registerCoreScript('jquery');
 if (($id=$_REQUEST['id']) || ($id=$_REQUEST['Document']['parent_doc_id']))
 {
     $model = Document::model()->findByPk(new MongoId($id));

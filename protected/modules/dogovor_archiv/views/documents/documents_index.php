@@ -1,98 +1,12 @@
-<?php
- 
-//$this->widget('zii.widgets.grid.CGridView', array(
-//	'dataProvider'=>$model->search(),
-//        'rowCssClassExpression'=>'(Document::checkExpiredDate($data)? "expired" : "unexpired"." ".(($row%2)?"even":"odd"))',
-//        'enableSorting'=>true,
-//        'filter'=>$model,
-//	'columns'=>array(
-//		array(
-//			'name'=>'dog_kind',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_kind'),
-//                        'value'=> 'Document::checkDogKind($data)'
-//		),
-//		array(
-//			'name'=>'provider',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('provider'),
-//                        'value'=>'$data->provider'
-//		),
-//		array(
-//			'name'=>'okpo',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('okpo')
-//		),
-//                array(
-//			'name'=>'dog_number',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_number'),
-//		),
-//                array(
-//			'name'=>'dog_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_date'),
-//		),
-//              
-//                array(
-//			'name'=>'start_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('start_date'),
-//		),
-//                array(
-//			'name'=>'stop_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('stop_date'),
-//		),
-//                array(
-//			'name'=>'branch',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('branch'),
-//		),
-//                array(
-//			'name'=>'author_login',
-//			//'type'=>'raw',
-//                        //'value'=>'CHtml::textField(\'Document[author_login]\',$data->author_login)',
-//                        'filter'=>false,
-//                        'header'=>$model->getAttributeLabel('author_login'),
-//		),
-//                array(
-//			'name'=>'status',
-//			'type'=>'text',
-//                        'filter'=>$model->getStatuses(),
-//                        'header'=>$model->getAttributeLabel('status'),
-//                        'value'=> 'Document::checkStatus($data)'
-//		),
-//                array(
-//			'name'=>'pay_system',
-//			'type'=>'text',
-//                        'filter'=>false,
-//                        'header'=>$model->getAttributeLabel('pay_system'),
-//                        'value'=> 'Document::checkPaySystems($data)'
-//		),
-//		array(
-//			'class'=>'CButtonColumn',
-//                        'buttons'=>array(
-//                            'delete'=>array(
-//                                'visible'=>'in_array($data->status,array(0,1))',
-//                            )
-//                        )
-//		),
-//	),
-//));
-
-?>
-
 <script type="text/javascript">
     $.jgrid.no_legacy_api = true;
     $.jgrid.useJSON = true;
 </script>
-<h1>Журнал регистрации договоров</h1>
-<table id="jqgrid">
 
-</table>
-<div id="pager"></div>
+<h1>Журнал регистрации договоров</h1>
+<table id="jqgrid"></table><div id="pager"></div>
 <p class="result"></p>
+
 <script type="text/javascript">
     $(function() {
         var main_rowid='';
