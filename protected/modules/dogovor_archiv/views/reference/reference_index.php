@@ -4,7 +4,7 @@
 <div id="pager"></div>
 <script type="text/javascript">
 jQuery("#reference").jqGrid({
-    url: '/index.php/dogovor_archiv/reference/grid',
+    url: '<?echo Yii::app()->createUrl('dogovor_archiv/reference/grid')?>',
     datatype: "json",
     mtype: "POST",
     colNames:["Справочник",'Описание'], 
@@ -16,7 +16,7 @@ jQuery("#reference").jqGrid({
     width:400,
     pager : "#pager", 
     caption: "",
-    editurl:'/index.php/dogovor_archiv/reference/AddReferenсe',
+    editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/addreference')?>',
     subGrid: true,
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
@@ -25,10 +25,11 @@ jQuery("#reference").jqGrid({
 	    subgrid_table_id = subgrid_id+'_t';
 	    $('#'+subgrid_id).html('<table id="'+subgrid_table_id+'"></table><div id="'+subgrid_table_id+'_pager"></div>');
 	    $('#'+subgrid_table_id).jqGrid({
-	        url: '/index.php/dogovor_archiv/reference/grid/?action=sub',
+	        url: '<?echo Yii::app()->createUrl('dogovor_archiv/reference/grid',array('action'=>'sub'))?>',
+                
 	        datatype: 'json',
 	        mtype: 'POST',
-	        postData: {'get':'subgrid','id':row_id},
+	        postData: {'get':'subgrid','id':row_id,'pid':row_id},
 	        colNames: ['Термин'],
 	        colModel: [{name:'name', index:'name', width:80, editable:true, editrules:{required:true}}],
 	        height: 'auto',
@@ -41,7 +42,7 @@ jQuery("#reference").jqGrid({
 	        rowNum:10,
                 viewrecords: true,
 	        rowList:[10,20,50,100],
-                editurl:"/index.php/dogovor_archiv/reference/addreferenceitem/?pid="+row_id
+                editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/addreference')?>'
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: true, del: true, edit: true, search: true},
         {
             closeAfterEdit: true
