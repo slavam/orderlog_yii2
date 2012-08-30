@@ -95,6 +95,7 @@
 <p class="result"></p>
 <script type="text/javascript">
     $(function() {
+        var main_rowid='';
         jQuery("#jqgrid").jqGrid( {
             url : '<?echo Yii::app()->createUrl('dogovor_archiv/documents/Jqgrid')?>',
             datatype : 'json',
@@ -121,7 +122,7 @@
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
 	    var subgrid_table_id;
-            
+            main_rowid =row_id;
 	    subgrid_table_id = subgrid_id+'_t';
 	    $('#'+subgrid_id).html('<table id="'+subgrid_table_id+'"></table><div id="'+subgrid_table_id+'_pager"></div>');
 	    $('#'+subgrid_table_id).jqGrid({
@@ -159,10 +160,35 @@
         {
             closeOnEscape:true,
             multipleSearch:true,
-            closeAfterSearch:true,
-            
+            closeAfterSearch:true
         }
     );
+    $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
+            caption: 'Редактировать',
+            title: 'Редактировать запись',
+            buttonicon: 'ui-icon-wrench',
+            onClickButton: function()
+            {
+                var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
+                if(sub_rowid){
+                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/add');?>?id='+main_rowid+'&sub_document='+sub_rowid);
+                } else { alert("Выберите запись") }
+            },
+            position:'last'
+        });
+        $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
+            caption: 'Удалить',
+            title: 'Удалить запись',
+            buttonicon: 'ui-icon-trash',
+            onClickButton: function()
+            {
+                var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
+                if(sub_rowid){
+                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/delete');?>?id='+main_rowid+'&sub_document='+sub_rowid);
+                } else { alert("Выберите запись") }
+            },
+            position:'last'
+        });
     },
     gridComplete:function(){
              var rows = $('#jqgrid').jqGrid('getDataIDs');
