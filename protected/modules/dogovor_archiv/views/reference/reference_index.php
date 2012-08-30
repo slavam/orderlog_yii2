@@ -16,7 +16,7 @@ jQuery("#reference").jqGrid({
     width:400,
     pager : "#pager", 
     caption: "",
-    editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/addreference')?>',
+    editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/AddReferenсe')?>',
     subGrid: true,
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
@@ -42,7 +42,7 @@ jQuery("#reference").jqGrid({
 	        rowNum:10,
                 viewrecords: true,
 	        rowList:[10,20,50,100],
-                editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/addreference')?>'
+                editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/AddReferenсe')?>'
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: true, del: true, edit: true, search: true},
         {
             closeAfterEdit: true
