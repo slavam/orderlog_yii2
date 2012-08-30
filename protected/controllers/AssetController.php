@@ -368,7 +368,7 @@ class AssetController extends Controller {
 					} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
 	                $responce['rows'][$i]['cell'] = array(
 	                			$row->id, 
-	                			'?', /*Тип записи*/
+//	                			'?', /*Тип записи*/
 	                			$row->waretype->short_name, 
 	                			$row->assetgroup->block->name, 
 	                			$row->assetgroup->name, 
@@ -397,5 +397,16 @@ class AssetController extends Controller {
         return 	$ret_str;	
 	
   }
- 
+     public function actionGetTemplateByAsset($template_id)
+    {
+        $template = AssetTemplate::model()->findByPk($template_id);
+        if (isset($template)) {
+        $template->asset_group_id = $template->assetgroup->block->name.' => '.$template->assetgroup->name;
+        $template->ware_type_id = $template->waretype->short_name;
+        $tempname = $template->waretype->short_name;
+        }
+        echo CJSON::encode($template);
+        Yii::app()->end();
+    }
+
 }                                                                           	
