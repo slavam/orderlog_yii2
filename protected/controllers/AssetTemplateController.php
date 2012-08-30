@@ -237,8 +237,98 @@ class AssetTemplateController extends Controller
             ));
         }
 
+
+        
         public function actionGetDataForGrid()
 	{
+            $responce = array();
+
+            $dataProvider_block = new CActiveDataProvider('Block' , array(
+                    'criteria'=>array(
+                    'with'=>array('directions'),
+                        'order'=>'directions.name, t.name',
+                        ),
+                  )
+                  );
+
+			$pagination_block = $dataProvider_block->getPagination();
+			if(isset($_GET['page']))
+                            $pagination_block->setCurrentPage(0);
+			if(isset($_GET['rows']))
+                            $pagination_block->setPageSize($_GET['rows']);
+
+			$blocks_ = $dataProvider_block->getData();
+
+			$responce['rows']=array();
+
+			$r_i = 0;
+				
+            foreach ($blocks_ as $i=>$row) {
+                $responce['rows'][$r_i]['id'] = $r_i+1;
+                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'','','','','0','null',false,false,true);
+                $r_i++;
+
+	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
+	                    'criteria'=>array(
+	                    	'condition'=>'block_id='.$row->id,
+	                        'order'=>'name',
+	                        ),
+	                  )
+	                  );
+	
+				$pagination_group = $dataProvider_group->getPagination();
+				if(isset($_GET['page']))
+	                            $pagination_group->setCurrentPage(0);
+				if(isset($_GET['rows']))
+	                            $pagination_group->setPageSize($_GET['rows']);
+
+				$groups_ = $dataProvider_group->getData();
+				$parent_ = $r_i;
+
+				foreach ($groups_ as $i=>$row) {
+	                $responce['rows'][$r_i]['id'] = $r_i+1;
+	                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name,'','','','','1',"$parent_",false,false,true);
+	                $r_i++;
+
+
+		            $dataProvider_template = new CActiveDataProvider('AssetTemplate' , array(
+		                    'criteria'=>array(
+		                    	'condition'=>'asset_group_id='.$row->id,
+		                        'order'=>'name',
+		                        ),
+		                  )
+		                  );
+
+		            $templates_ = $dataProvider_template->getData();
+					$parent_t = $r_i;
+
+			        foreach ($templates_ as $i=>$row) {
+		                $responce['rows'][$r_i]['id'] = $r_i+1;                       //art,art_id,info,comment
+
+						if($row->budget_item_id) {
+						
+							$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
+							//$article_name = $articles_->NAME;
+							$article_code = $articles_->CODE;
+						    $article_name = $articles_->get2LevelNameBudgetItem($row->budget_item_id);
+
+						} else { $article_name = 'Í/Ä'; $article_code = 'Í/Ä'; }
+
+		                $responce['rows'][$r_i]['cell'] = array($row->id,  $row->name,$article_name,$article_code,$row->info,$row->comment ,'2',"$parent_t",true,true,true);
+		                $r_i++;
+			        }
+
+				}
+
+
+            }
+
+            echo CJSON::encode($responce);
+            
+        }
+/*            
+            
+            
             $dataProvider=new CActiveDataProvider('AssetTemplate', array(
                 'criteria'=>array(
                     'order'=>'name',
@@ -256,6 +346,7 @@ class AssetTemplateController extends Controller
             }
             echo CJSON::encode($responce);
         }
+        */
 
         public function actionGetDataForDetails()
         {
@@ -281,6 +372,7 @@ class AssetTemplateController extends Controller
                     );
             }
             echo CJSON::encode($responce);
+
         }
 
 }

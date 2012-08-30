@@ -30,7 +30,8 @@ class ClaimController extends Controller
 				'actions'=>array('index','view','show','list','changeClaimState',
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
-                                    'viewClaimWithLines'),
+                                    'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision',
+                                    'editWholeClaim'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -327,7 +328,8 @@ class ClaimController extends Controller
                     $row->asset->unit->sign,
                     $row->for_whom>0? $row->findWorker($row->for_whom): '',
                     $row->getBusinessName($row->business_id),
-                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
+                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id)): '',
+//                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
                     $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
                     $row->findFeaturesAsString($row->id),
                     $row->findProductsAsString($row->id),
@@ -440,8 +442,8 @@ class ClaimController extends Controller
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
-        public function actionViewClaimWithLines($id)
-        {
+    public function actionViewClaimWithLines($id)
+    {
     	if(Yii::app()->request->isAjaxRequest)
         {
             $model = $this->loadModel($id);
@@ -454,6 +456,85 @@ class ClaimController extends Controller
             $this->renderPartial('showJqgrid',array('model'=>$model),false,true);
             Yii::app()->end();
         } 
-            
-        }
+    }
+    public function actionEditClaimWithLinesJq($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('editClaimWithLinesJq',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+
+    public function actionGetDepartmensByDivision($division_id)
+    {
+        $departments = Department::model()->findDepartmentsByDivision($division_id);
+        echo CJSON::encode($departments);
+        Yii::app()->end();
+    }
+    public function actionEditWholeClaim($id){
+        $model = $this->loadModel($id);
+        if (isset($_POST['Claim'])) {
+            $new_claim_fields = $_POST['Claim'];
+            foreach ($new_claim_fields as $field => $value) {
+                $model[key($new_claim_fields[$field])] = current($value);
+            }
+            if ($model->save()) { 
+                $new_claim_lines = $_POST['ClaimLines'];
+
+                foreach ($new_claim_lines as $line => $value) {
+                    $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
+                    $model_line->count = $new_claim_lines[$line]['count'];
+        //            $model_line->attributes = $new_claim_lines[$line];
+//                    foreach ($new_claim_lines[$line] as $key => $value) {
+//                        
+//                        $model[$key] = $value;
+//                    }
+                    if (!$model_line->save())
+                    {        
+                        echo "Error"; // to do correct message
+                        return;
+                    }
+                }
+//            if($model->validate()){
+                
+                    if (Yii::app()->request->isAjaxRequest) {
+//                        $this->actionGetDataForGrid(); //encode json only one asset by id
+  //          $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            echo CJSON::encode(array(
+  //          'status' => 'ok',
+    //            'message' => 'no Asset form passed!',
+     //   ));            
+             
+                    } else echo 'get out!';
+                }//model->save
+//            }//validate
+//            else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+        } else
+        if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+                
+//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+//            $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            Yii::app()->end();
+//        } 
+        
+    }
 }
