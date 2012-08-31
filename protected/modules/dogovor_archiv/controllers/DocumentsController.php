@@ -280,6 +280,7 @@ private function dop_soglashenie_edit($arguments=null)
             $arguments['sub_document_model']->form_rules = $sub_document_template->rules;
             $arguments['sub_document_model']->form_weights = $sub_document_template->weights;
             $arguments['sub_document_model']->parent_doc_id =$parent_doc_id;
+            $arguments['sub_document_model']->scenario = 'update';
         }   
         else $arguments['sub_document_model'] = new Document;
  
