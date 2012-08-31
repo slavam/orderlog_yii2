@@ -142,5 +142,6 @@ foreach($form->getButtons() as $element)
 echo $form->renderEnd();
 
 $this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
+
 ?>
 </div>

@@ -1,3 +1,4 @@
+<?if($model->scenario=='update'):?>
 <div id="scancopies" class="block_wrapper">
     <p class="block-head"><?php echo $title ?></p>
     <div class="block-content">
@@ -72,3 +73,4 @@ echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Ð
         ?>
     </div>
 </div>
+<?endif;?>

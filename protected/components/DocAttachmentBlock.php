@@ -48,7 +48,7 @@ class DocAttachmentBlock extends CWidget{
                     'pagination' => array('pageSize' => 50),
                         )
                 );
-        $this->render('doc_attachment_block_view',array('attachments'=>$attachments,'title'=>$this->title,'parent_document'=>$this->model->_id));
+        $this->render('doc_attachment_block_view',array('attachments'=>$attachments,'title'=>$this->title,'model'=>  $this->model,'parent_document'=>$this->model->_id));
         }
 }
 
