@@ -40,11 +40,11 @@ class Scancopies extends EMongoGridFS{
     {
     switch ($attachmentType) {
     case 'image/jpeg':
-            $result= CHtml::image('/images/attachment_type_picture.png','Изображение');
+            $result= CHtml::image(Yii::app()->request->baseUrl.'/images/attachment_type_picture.png','Изображение');
         break;
 
     default:
-        $result= CHtml::image('/images/attachment_type_file.png','Файл');
+        $result=CHtml::image(Yii::app()->request->baseUrl.'/images/attachment_type_file.png','Файл');
         break;
     }
     return $result;
@@ -58,6 +58,7 @@ class Scancopies extends EMongoGridFS{
     {
         return $this->metadata['description'];
     }
+    
 //    public function setFiledDescription($value)
 //    {
 //        $this->metadata['filedescription'] = $value;

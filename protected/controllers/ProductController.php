@@ -127,13 +127,30 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
+            
             $dataProvider = new CActiveDataProvider('Product', array(
                 'pagination' => false,
                 'criteria' => array(
                     'order' => 'direction_id, name',
                 ),
             ));
+            
+            if (Yii::app()->request->isAjaxRequest)
+            {
+             $responce =array();
+                foreach ($dataProvider->getData() as $i=>$row) {
+	                $responce['rows'][$i]['id'] = $row['id'];
+	                $responce['rows'][$i]['cell'] = array(
+	                			$row->id, 
+	                			$row->name,
+	                			$row->direction->name
+                            );
+            }
 
+            echo CJSON::encode($responce);
+            Yii::app()->end();
+                    }
+            
             $this->render('index',array(
                 'dataProvider'=>$dataProvider,
             ));

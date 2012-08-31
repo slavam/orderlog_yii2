@@ -120,7 +120,12 @@ echo $form->renderBegin();
             </td>
         </tr>
         <tr>
-            <td><?echo $form['subject'];?></td>
+            <table>
+                <tr>
+                    <td><?echo $form['subject'];?></td>
+                    <td><?echo $form['storage'];?></td>
+                </tr>
+            </table>
         </tr>
         
         <tr>
@@ -137,5 +142,6 @@ foreach($form->getButtons() as $element)
 echo $form->renderEnd();
 
 $this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
+
 ?>
 </div>
