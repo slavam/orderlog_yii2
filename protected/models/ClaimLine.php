@@ -47,6 +47,14 @@ class ClaimLine extends CActiveRecord
             return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
 	}
 
+      	public function findWorkerDepartment2levels($worker_id)
+	{
+            $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
+            
+            return CHtml::encode(Claim::model()->findDepartmentHiLow($worker->CODE_DIVISION)); 
+	}
+
+
 	/**
 	 * @return array validation rules for model attributes.
 	 */

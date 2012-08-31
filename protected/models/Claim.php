@@ -121,12 +121,40 @@ class Claim extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-        
+
+        public function findDepartmentHiLow($code_div)
+	{
+            if ($code_div<1) return '';
+            $sql = "with Hierachy (ID_DIVISION, PARENT_ID, DIVISION, Level) 
+            as 
+            (
+            	select
+					ID_DIVISION, PARENT_ID, DIVISION, 0 as Level
+					from div2doc c 
+					where c.CODE_DIVISION='".$code_div."' 
+					union all 
+					select c.ID_DIVISION, c.PARENT_ID, c.DIVISION, ch.Level + 1
+	            from div2doc c 
+	            inner join Hierachy ch 
+	            on ch.PARENT_ID = c.ID_DIVISION
+            ) 
+            select ID_DIVISION, PARENT_ID, DIVISION
+            from Hierachy 
+            where Level >= 0 order by Level desc";
+
+            $departments = Department::model()->findAllBySql($sql);
+            $s = '';
+            foreach ($departments as $d) {
+                $s .= $d->DIVISION.'; ';
+            }
+            return $s;
+	}
+
+    
         public function findDepartment($departmen_id)
 	{
             if ($departmen_id<1) return '';
-            $sql = '
-                with Hierachy(ID_DIVISION, PARENT_ID, DIVISION, Level)
+            $sql = 'with Hierachy(ID_DIVISION, PARENT_ID, DIVISION, Level)
                 as
                 (
                 select ID_DIVISION, PARENT_ID, DIVISION, 0 as Level
