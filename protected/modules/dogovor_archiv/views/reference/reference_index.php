@@ -29,7 +29,7 @@ jQuery("#reference").jqGrid({
                 
 	        datatype: 'json',
 	        mtype: 'POST',
-	        postData: {'get':'subgrid','id':row_id,'pid':row_id},
+	        postData: {'get':'subgrid','id':row_id},
 	        colNames: ['Термин'],
 	        colModel: [{name:'name', index:'name', width:80, editable:true, editrules:{required:true}}],
 	        height: 'auto',
@@ -42,7 +42,7 @@ jQuery("#reference").jqGrid({
 	        rowNum:10,
                 viewrecords: true,
 	        rowList:[10,20,50,100],
-                editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/AddReferenсe')?>'
+                editurl:'<?echo Yii::app()->createUrl('dogovor_archiv/reference/addreferenceitem')?>'+'?pid='+row_id
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: true, del: true, edit: true, search: true},
         {
             closeAfterEdit: true

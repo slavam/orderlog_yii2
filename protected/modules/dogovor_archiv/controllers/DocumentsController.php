@@ -359,7 +359,7 @@ public function actionDelete()
 //            $model->update();
             if (!$_REQUEST['sub_document'])
             {
-                if ($data[1]=='0'){
+                if ($data[1]=='0' || $data[1]=='1'){
                 $modifier=new EMongoModifier(
                         array(
                             'attrs.status'=>array('set' => '5007fec2e07686101c283352=8')

@@ -33,6 +33,10 @@
             sortorder : 'asc',
             caption : 'Документы',
             subGrid: true,
+//    ondblClickRow:
+//        function(rowid){
+//            $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+//    },
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
 	    var subgrid_table_id;
@@ -57,19 +61,21 @@
                 viewrecords: false,
 	        pager: $('#'+subgrid_table_id+'_pager'),
 	        rowNum:10,
-                caption : 'Доп. соглашения'
-//                editurl:"/dogovor_archiv/reference/addreferenceitem?pid="+row_id
+                caption : 'Доп. соглашения',
+//                ondblClickRow:
+//                    function(rowid,e,iCol,iRow){
+//                        //$(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+//                        $(this);
+//                        alert(e);
+//                }
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: false, del: false, edit: false, search: false},
         {
             closeAfterEdit: true
-           // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
            closeAfterAdd:true
-          // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
-          // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
             closeOnEscape:true,
@@ -132,7 +138,7 @@
             editurl: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/update')?>'
         }).jqGrid('navGrid', '#pager',{add: false, del: false, edit: false, search: true},
         {},{},{},
-        {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['eq','cn'],groupOps: false});//search settings
+        {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['cn','eq'],groupOps: false});//search settings
         
         $('#jqgrid').jqGrid('navSeparatorAdd','#pager');
         $('#jqgrid').jqGrid('navButtonAdd','#pager',{

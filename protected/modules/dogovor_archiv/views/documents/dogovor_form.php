@@ -120,7 +120,12 @@ echo $form->renderBegin();
             </td>
         </tr>
         <tr>
-            <td><?echo $form['subject'];?></td>
+            <table>
+                <tr>
+                    <td><?echo $form['subject'];?></td>
+                    <td><?echo $form['storage'];?></td>
+                </tr>
+            </table>
         </tr>
         
         <tr>

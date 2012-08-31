@@ -42,13 +42,13 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
 //                    'doc_type',
                     'dog_kind',
                     'provider',
+                    'okpo',
                     'dog_number',
                     'dog_date',
                     'start_date',
                     'stop_date',
                     'branch',
                     'author_login',
-                    'okpo',
                     'status',
                     'pay_system',
                     'note',
@@ -265,12 +265,20 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
 //    $grid['cols'][0]="";
 //    $grid['colModel'][0]="";
         $grid['cols'][0]="";
-        $grid['colModel'][0]=$this->setColElementModel('additional',array('width'=>40));
+        $grid['colModel'][0]=$this->setColElementModel('additional',array('width'=>40,'editable'=>false,'search'=>false));
         $grid['cols'][1]="Документ";
         $grid['colModel'][1]=$this->setColElementModel('doc_type');
         foreach ($this->form as $key => $element) {
             $grid['cols'][] = $this->model()->getAttributeLabel($element);
-            $grid['colModel'][] = $this->setColElementModel($element);
+            $parameters=null;
+            if ($element=='dog_kind' || $element == 'status' || $element == 'pay_system')
+            {
+                $reference = Reference::getReferenceByName($element);
+                $reference=  Reference::setReferenceToGridSearch($reference);
+                $parameters['searchoptions']=array('value'=>$reference);
+                $parameters['stype']='select';
+            }
+            $grid['colModel'][] = $this->setColElementModel($element,$parameters);
         }
         return $grid;
     }
@@ -278,7 +286,13 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
     public function setColElementModel($element,$parameters=null) {
         $col['name'] = $element;
         $col['index'] = $element;
-        $col['editable'] = true;
+        $col['editable'] = isset($parameters['editable'])?$parameters['editable']:true;
+        $col['search'] = isset($parameters['search'])?$parameters['search']:true;
+        if ($parameters['searchoptions'])
+        {
+            $col['searchoptions'] = $parameters['searchoptions'];
+        }
+        $col['stype']=$parameters['stype'];
         if (is_array($parameters))
         {
         $col['width']=$parameters['width'];

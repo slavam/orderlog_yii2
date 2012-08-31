@@ -55,9 +55,9 @@ class ReferenceController extends Controller{
     }
     
     function actionAddReferenceItem() {
-        if ($_GET['pid'])
+        if ($_REQUEST['pid'])
         {
-            $model = Reference::model()->findByPk(new MongoId($_GET['pid']));
+            $model = Reference::model()->findByPk(new MongoId($_REQUEST['pid']));
             
             switch ($_REQUEST['oper'])
             {
@@ -120,7 +120,8 @@ class ReferenceController extends Controller{
          $cs->registerScriptFile($assetpath.'/jqModal.js',CClientScript::POS_HEAD);
          $cs->registerCoreScript('jquery');
         $this->render('test');
-    }    
+    }
+    
 }
 
 ?>
