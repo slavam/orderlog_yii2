@@ -14,6 +14,7 @@
         (
              'Ok'=>'js:function()
                  {
+                 $("input:submit").click();
              var options = { 
                 url: \''.Yii::app()->createUrl('/dogovor_archiv/scancopies/EditFile',array('id'=>'')).'\',
                 type: \'post\',
@@ -27,7 +28,7 @@
                 			
                 			if(status=="ok"){
 	                	 		//alert("ok:"+data[\'message\']);
-                                                $(location).attr(\'href\',"");
+//                                                $(location).attr(\'href\',"");
 	                			  $("#file_select").dialog(\'close\');
                 			}
                 			else if(status=="err"){

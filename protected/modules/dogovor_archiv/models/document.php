@@ -354,7 +354,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
         }
 
         $complete_form['buttons'] = array(
-            'login' => array(
+            'submit' => array(
                 'type' => 'submit',
                 'label' => 'Сохранить',
             )

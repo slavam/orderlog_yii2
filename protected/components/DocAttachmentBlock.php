@@ -11,8 +11,8 @@ class DocAttachmentBlock extends CWidget{
     public $title;
     public $parent_id;
     public function run() {
-//    $cs = Yii::app()->clientScript;
-//    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_BEGIN);
+    $cs = Yii::app()->clientScript;
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
    
 //    $cs->registerScript('uploadifyinit',
 //    '$(function() {

@@ -575,7 +575,8 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument {
                 $this->setScenario('update');
                 $this->afterSave();
 
-                return true;
+//                return true; //Возвращаем ID документа вместо true
+                return $this->_id;
             }
 
             throw new EMongoException(Yii::t('yii', 'Can\t save document to disk, or try to save empty document!'));
@@ -638,7 +639,8 @@ abstract class EMongoDocument extends EMongoEmbeddedDocument {
             if ($result !== false) { // strict comparison needed
                 $this->afterSave();
 
-                return true;
+//                return true;
+                return $this->_id;
             }
 
             throw new CException(Yii::t('yii', 'Can\t save document to disk, or try to save empty document!'));
