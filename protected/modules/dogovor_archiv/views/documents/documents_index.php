@@ -1,98 +1,12 @@
-<?php
- 
-//$this->widget('zii.widgets.grid.CGridView', array(
-//	'dataProvider'=>$model->search(),
-//        'rowCssClassExpression'=>'(Document::checkExpiredDate($data)? "expired" : "unexpired"." ".(($row%2)?"even":"odd"))',
-//        'enableSorting'=>true,
-//        'filter'=>$model,
-//	'columns'=>array(
-//		array(
-//			'name'=>'dog_kind',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_kind'),
-//                        'value'=> 'Document::checkDogKind($data)'
-//		),
-//		array(
-//			'name'=>'provider',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('provider'),
-//                        'value'=>'$data->provider'
-//		),
-//		array(
-//			'name'=>'okpo',
-//                        'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('okpo')
-//		),
-//                array(
-//			'name'=>'dog_number',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_number'),
-//		),
-//                array(
-//			'name'=>'dog_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('dog_date'),
-//		),
-//              
-//                array(
-//			'name'=>'start_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('start_date'),
-//		),
-//                array(
-//			'name'=>'stop_date',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('stop_date'),
-//		),
-//                array(
-//			'name'=>'branch',
-//			'type'=>'text',
-//                        'header'=>$model->getAttributeLabel('branch'),
-//		),
-//                array(
-//			'name'=>'author_login',
-//			//'type'=>'raw',
-//                        //'value'=>'CHtml::textField(\'Document[author_login]\',$data->author_login)',
-//                        'filter'=>false,
-//                        'header'=>$model->getAttributeLabel('author_login'),
-//		),
-//                array(
-//			'name'=>'status',
-//			'type'=>'text',
-//                        'filter'=>$model->getStatuses(),
-//                        'header'=>$model->getAttributeLabel('status'),
-//                        'value'=> 'Document::checkStatus($data)'
-//		),
-//                array(
-//			'name'=>'pay_system',
-//			'type'=>'text',
-//                        'filter'=>false,
-//                        'header'=>$model->getAttributeLabel('pay_system'),
-//                        'value'=> 'Document::checkPaySystems($data)'
-//		),
-//		array(
-//			'class'=>'CButtonColumn',
-//                        'buttons'=>array(
-//                            'delete'=>array(
-//                                'visible'=>'in_array($data->status,array(0,1))',
-//                            )
-//                        )
-//		),
-//	),
-//));
-
-?>
-
 <script type="text/javascript">
     $.jgrid.no_legacy_api = true;
     $.jgrid.useJSON = true;
 </script>
-<h1>Журнал регистрации договоров</h1>
-<table id="jqgrid">
 
-</table>
-<div id="pager"></div>
+<h1>Журнал регистрации договоров</h1>
+<table id="jqgrid"></table><div id="pager"></div>
 <p class="result"></p>
+
 <script type="text/javascript">
     $(function() {
         var main_rowid='';
@@ -119,6 +33,10 @@
             sortorder : 'asc',
             caption : 'Документы',
             subGrid: true,
+//    ondblClickRow:
+//        function(rowid){
+//            $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+//    },
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
 	    var subgrid_table_id;
@@ -143,19 +61,21 @@
                 viewrecords: false,
 	        pager: $('#'+subgrid_table_id+'_pager'),
 	        rowNum:10,
-                caption : 'Доп. соглашения'
-//                editurl:"/dogovor_archiv/reference/addreferenceitem?pid="+row_id
+                caption : 'Доп. соглашения',
+//                ondblClickRow:
+//                    function(rowid,e,iCol,iRow){
+//                        //$(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+//                        $(this);
+//                        alert(e);
+//                }
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: false, del: false, edit: false, search: false},
         {
             closeAfterEdit: true
-           // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
            closeAfterAdd:true
-          // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
-          // afterComplete:function(responce,postdata,formid){alert(responce.responseText);}
         },
         {
             closeOnEscape:true,
@@ -218,7 +138,7 @@
             editurl: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/update')?>'
         }).jqGrid('navGrid', '#pager',{add: false, del: false, edit: false, search: true},
         {},{},{},
-        {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['eq','cn'],groupOps: false});//search settings
+        {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['cn','eq'],groupOps: false});//search settings
         
         $('#jqgrid').jqGrid('navSeparatorAdd','#pager');
         $('#jqgrid').jqGrid('navButtonAdd','#pager',{

@@ -64,7 +64,44 @@ class Reference extends EMongoDocument {
         else return array();
     }
     
-function getAllReferences()
+    static function getReferenceByName($name=null)
+    {
+        if ($name)
+        {
+            $reference = self::model()->findByAttributes(array('name'=>$name));
+           if ($reference)
+           {
+            foreach ($reference->items as $key=>$item)
+            {
+                $items[$reference->_id.'='.$key]=$item['name'];
+            }
+            return $items;
+           }
+           else return array();
+        }
+        else return array();
+    }
+    
+    static function setReferenceToGridSearch($reference)
+    {
+        if (!isset($reference))
+        {
+            return false;
+        }
+        else
+        {
+            $result=array();
+            foreach($reference as $key=>$value)
+            {
+                $result[]=$key.':'.$value;
+            }
+            $result=implode(';',$result);
+        }
+        return $result;
+    }
+
+
+    function getAllReferences()
 {
     if (count($reference = self::model()->findAll())>0)
     {

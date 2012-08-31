@@ -94,4 +94,11 @@ class AssetGroup extends CActiveRecord
 		return CHtml::listData($assetGroups,'id','name');
 	}
 
+        public function findAssetGroupsByDirection($dir)
+	{
+	//TODO!!!
+//       		$assetGroups = AssetGroup::model()->findAll(array('order' => 'name', 'condition' => ''));
+//		return CHtml::listData($assetGroups,'id','name');
+	}
+
 }

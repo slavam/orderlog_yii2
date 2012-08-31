@@ -11,8 +11,8 @@ class DocAttachmentBlock extends CWidget{
     public $title;
     public $parent_id;
     public function run() {
-//    $cs = Yii::app()->clientScript;
-//    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/uploadify/jquery.uploadify-3.1.min.js', CClientScript::POS_BEGIN);
+    $cs = Yii::app()->clientScript;
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
    
 //    $cs->registerScript('uploadifyinit',
 //    '$(function() {
@@ -48,7 +48,7 @@ class DocAttachmentBlock extends CWidget{
                     'pagination' => array('pageSize' => 50),
                         )
                 );
-        $this->render('doc_attachment_block_view',array('attachments'=>$attachments,'title'=>$this->title,'parent_document'=>$this->model->_id));
+        $this->render('doc_attachment_block_view',array('attachments'=>$attachments,'title'=>$this->title,'model'=>  $this->model,'parent_document'=>$this->model->_id));
         }
 }
 

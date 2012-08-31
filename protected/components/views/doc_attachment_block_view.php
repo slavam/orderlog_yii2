@@ -1,3 +1,4 @@
+<?if($model->scenario=='update'):?>
 <div id="scancopies" class="block_wrapper">
     <p class="block-head"><?php echo $title ?></p>
     <div class="block-content">
@@ -13,6 +14,7 @@
         (
              'Ok'=>'js:function()
                  {
+                 $("input:submit").click();
              var options = { 
                 url: \''.Yii::app()->createUrl('/dogovor_archiv/scancopies/EditFile',array('id'=>'')).'\',
                 type: \'post\',
@@ -26,7 +28,7 @@
                 			
                 			if(status=="ok"){
 	                	 		//alert("ok:"+data[\'message\']);
-                                                $(location).attr(\'href\',"");
+//                                                $(location).attr(\'href\',"");
 	                			  $("#file_select").dialog(\'close\');
                 			}
                 			else if(status=="err"){
@@ -72,3 +74,4 @@ echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Ð
         ?>
     </div>
 </div>
+<?endif;?>

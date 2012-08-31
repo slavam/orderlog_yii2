@@ -10,6 +10,36 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 ?>
+
+<style type="text/css">
+      th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+</style>
+
+
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
@@ -117,36 +147,69 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <script type="text/javascript">
 $(function() {
-    var grid=$("#claim_line_list");
+    var $grid=$("#claim_line_list"),
+//=============================================================================================================
+                fixPositionsOfFrozenDivs = function () {
+                    var $rows;
+                    if (typeof this.grid.fbDiv !== "undefined") {
+                        $rows = $('>div>table.ui-jqgrid-btable>tbody>tr', this.grid.bDiv);
+                        $('>table.ui-jqgrid-btable>tbody>tr', this.grid.fbDiv).each(function (i) {
+                            var rowHight = $($rows[i]).height(), rowHightFrozen = $(this).height();
+                            if ($(this).hasClass("jqgrow")) {
+                                $(this).height(rowHight);
+                                rowHightFrozen = $(this).height();
+                                if (rowHight !== rowHightFrozen) {
+                                    $(this).height(rowHight + (rowHight - rowHightFrozen));
+                                }
+                            }
+                        });
+                        $(this.grid.fbDiv).height(this.grid.bDiv.clientHeight);
+                        $(this.grid.fbDiv).css($(this.grid.bDiv).position());
+                    }
+                    if (typeof this.grid.fhDiv !== "undefined") {
+                        $rows = $('>div>table.ui-jqgrid-htable>thead>tr', this.grid.hDiv);
+                        $('>table.ui-jqgrid-htable>thead>tr', this.grid.fhDiv).each(function (i) {
+                            var rowHight = $($rows[i]).height(), rowHightFrozen = $(this).height();
+                            $(this).height(rowHight);
+                            rowHightFrozen = $(this).height();
+                            if (rowHight !== rowHightFrozen) {
+                                $(this).height(rowHight + (rowHight - rowHightFrozen));
+                            }
+                        });
+                        $(this.grid.fhDiv).height(this.grid.hDiv.clientHeight);
+                        $(this.grid.fhDiv).css($(this.grid.hDiv).position());
+                    }
+                };
+//========================================================================================================================
 //    var pager_selector = "#pager_";
-    grid.jqGrid( {
+    $grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         datatype : 'json',
-        height : 'auto',
+        height : '200',
         width : '1070',
         mtype : 'GET',
         shrinkToFit : false,
         loadonce:true,
-        colNames: ['ID','Тип','Название','Количество','Цена','Сумма',
-            'Примечание','Группа','Ед. измерения','Для кого','Бизнес',
-            'Статья бюджета','Расположение','Характеристики','Продукты',
+        colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
+            'Группа','Для кого','Бизнес',
+            'Статья бюджета','Расположение','Характеристики','Продукты','Примечание',
             'Информация', 'Добавлена'],
         colModel: [
-            {name:'iddb',index:'iddb', width:20, hidden:true, frozen: true},
-            {name: 'type', width: 50, frozen: true},
-            {name:'name',index:'name', width:300, frozen: true},
-            {name: 'count', width: 70, frozen:false, editable:true},
-            {name: 'cost', width: 60, frozen:false },
+            {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
+            {name: 'type', width: 25, frozen: false},
+            {name: 'name',index:'name', width:300, frozen: false},
+            {name: 'unit', width: 40, frozen:false },
+            {name: 'count', width: 40, frozen:false, editable:true},
+            {name: 'cost', width: 40, frozen:false },
             {name: 'amount', width: 60, frozen:false },
-            {name: 'description', width: 200, frozen:false },
             {name: 'assetgroup', width: 200, frozen:false },
-            {name: 'unit', width: 60, frozen:false },
             {name: 'for_whom', width: 300, frozen:false },
             {name: 'business', width: 100, frozen:false },
             {name: 'budget_item', width: 300, frozen:false },
             {name: 'position', width: 300, frozen:false },
             {name: 'features', width: 300, frozen:false },
             {name: 'products', width: 300, frozen:false },
+            {name: 'description', width: 200, frozen:false },
             {name: 'asset_info', width: 300, frozen:false },
             {name: 'created', width: 100, frozen:false }
         ],
@@ -155,26 +218,48 @@ $(function() {
         pgtext: null,  
         viewrecords: false,
         onSelectRow: function(id){ 
-            var hint = grid.getCell(id, 'asset_info');
+            var hint = $grid.getCell(id, 'asset_info');
             $(".hint").html('<div>'+hint+'</div>');
         },
         gridComplete: function () {
-            grid.setGridParam({datatype:'local'});
+            $grid.setGridParam({datatype:'local'});
             $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
         },
-        ondblClickRow: function(id) {
+                //----------------------------------------------------
+                beforeSelectRow: function (rowid) {
+                    if (rowid !== lastSel) {
+                        $(this).jqGrid('restoreRow', lastSel);
+                        fixPositionsOfFrozenDivs.call(this);
+                        lastSel = rowid;
+                    }
+                    return true;
+                },
+                //----------------------------------------------------
+        ondblClickRow: function(rowid, iRow, iCol, e) {
+
+            	$grid.setGridParam({editurl:'#'});
+				$grid.setGridParam({datatype:'json'});
+
+                    $(this).jqGrid('editRow', rowid, true, function () {
+                        $("input, select", e.target).focus();
+                    }, null, '', null, null, null, function () {fixPositionsOfFrozenDivs.call(this)} );
+                    fixPositionsOfFrozenDivs.call(this);
+                    return;
+
 //            alert(id+' '+lastSel);
-            if (id && id != lastSel) { 
-                grid.restoreRow(lastSel);
-            	grid.setGridParam({editurl:'#'});
-		grid.setGridParam({datatype:'json'});
-                grid.editRow(id, true);
-                lastSel = id;
-            }
+//            if (id && id != lastSel) { 
+//                $grid.restoreRow(lastSel);
+//            	$grid.setGridParam({editurl:'#'});
+//				$grid.setGridParam({datatype:'json'});
+//                $grid.editRow(id, true);
+//                lastSel = id;
+//				fixPositionsOfFrozenDivs.call(this);
+//            }
         },
-       	loadError: function(xhr, status, error) {alert(status +error)}
+       	loadError: function(xhr, status, error) {alert(status +error)},
     });//.navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
-    grid.jqGrid('setFrozenColumns');
+           
+
 });
 </script>
 

@@ -38,7 +38,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog');
   </div>  
     <?endif;?>
 <?
-echo CHtml::link(CHtml::image('/images/add.png').'Добавить главный договор', '#', array(
+echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Добавить главный договор', '#', array(
    'onclick'=>"$(\"#dog_select\").dialog(\"open\").load('".Yii::app()->createUrl('/dogovor_archiv/documents/view')."'); return false;",
 ));
 echo $form->renderBegin();
@@ -168,7 +168,12 @@ echo CHtml::tag('p',array('id'=>'document_identify'),'Главный догов�
             </td>
         </tr>
         <tr>
-            <td><?echo $form['subject'];?></td>
+            <table>
+                <tr>
+                    <td><?echo $form['subject'];?></td>
+                    <td><?echo $form['storage'];?></td>
+                </tr>
+            </table>
         </tr>
         
         <tr>
@@ -184,6 +189,6 @@ foreach($form->getButtons() as $element)
     echo $element->render();
     
 echo $form->renderEnd(); //endform
-echo $scancopies;
+$this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
 ?>
 </div>

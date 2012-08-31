@@ -1,0 +1,58 @@
+
+
+Hello,
+
+many parts of my old code which you posted will be probably not important for you. 
+You should just define the fixPositionsOfFrozenDivs function with the code var 
+fixPositionsOfFrozenDivs = function () { ...}; somewhere before the usage and include 
+call of fixPositionsOfFrozenDivs.call(this); inside of loadComplete function. 
+It's also important to call p._complete after the call of setFrozenColumns.
+
+The most easy way is the copy my demo and modify it by removing some parts to have the simpllest, but working demo. Then you can use the same ideas in your code.
+
+Best regards
+Oleg 
+
+
+<style type="text/css">
+      th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+</style>
+
+
+Hello,
+
+I want to add one more probelm in your JSON data additionally to the problem described by Tony. 
+The JSON data which you posted one sees that you set the property frozen:true only for hidden 
+column. So no frozen columns will be created and so $grid[0].p._complete will be null. 
+If you want to make your code working without errors in the situation you should use
+
+if ($.isFunction($grid[0].p._complete)) { $grid[0].p._complete.call($grid[0]); }
+
+In any way if you want to test setFrozenColumns method you should define at least one non-hidden column having frozen:true.
+
+Best regards
+Oleg 

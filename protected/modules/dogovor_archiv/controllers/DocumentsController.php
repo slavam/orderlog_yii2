@@ -107,13 +107,15 @@ public function actionUpdate()
     $cs->registerCoreScript('jquery');
     
     
-    if ($form->submitted('login')) {
+    if ($form->submitted()) {
         $model->attributes = $_POST['Document'];
 //        $model->doc_type=$model->templ_description;
 
         if ($model->validate()) {
-            $model->save(false);
-            $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/view'));
+            if ($result=$model->save(false))
+            {
+             $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>$result)));
+            }
         }
     }
     
@@ -160,16 +162,20 @@ public function actionUpdate()
 
 function actionAdd() 
 {
-if (($id=$_REQUEST['id']) || ($id=$_REQUEST['Document']['parent_doc_id']))
-{
-    $model = Document::model()->findByPk(new MongoId($id));
-}
-else
-$model =new Document;
+    $cs = Yii::app()->clientScript;   
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/js/jquery.lightbox-0.5.min.js', CClientScript::POS_END);
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/lightboxinit.js' ,CClientScript::POS_END);
+    $cs->registerCssFile(Yii::app()->request->baseUrl.'/js/lightbox/css/jquery.lightbox-0.5.css');
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+    $cs->registerCoreScript('jquery');
+    if (($id=$_REQUEST['id']) || ($id=$_REQUEST['Document']['parent_doc_id']))
+    {
+        $model = Document::model()->findByPk(new MongoId($id));
+    }
+    else
+    $model =new Document;
     
-
-    
-$result = false;
+    $result = false;
     if (method_exists($this,$model->templ_name.'_edit'))
     {
       call_user_func(array($this, $model->templ_name.'_edit'),array('form'=>$form,'model'=>$model));
@@ -177,7 +183,7 @@ $result = false;
     else
         {
         $form = new CForm($model->form_builder(),$model);
-        if ($form->submitted('login')) {
+        if ($form->submitted()) {
             $result = $this->default_document_edit($model);
 
             if ($result == true)
@@ -194,8 +200,10 @@ if ($model)
 {
     $model->attributes = $_POST['Document'];
             if ($model->validate()) {
-                if ($model->save(true,array('templ_name','templ_id','templ_description','attrs','dop_sogl')))
-                    $result = true;
+                if ($result=$model->save(true,array('templ_name','templ_id','templ_description','attrs','dop_sogl')))
+                {
+                    $this->redirect(Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>$result)));
+                }
             }
             else $result=false;
 }
@@ -233,8 +241,9 @@ if ($_REQUEST['sub_document'] || $_REQUEST['Document']['parent_doc_id'])
     }
     else
     {
-    $form = new CForm($arguments['model']->form_builder(),$arguments['model']);
-        if ($form->submitted('login'))
+        $form = new CForm($arguments['model']->form_builder(),$arguments['model']);
+        
+        if ($form->submitted())
         {
             $this->default_document_edit($arguments['model']);
         }
@@ -271,6 +280,7 @@ private function dop_soglashenie_edit($arguments=null)
             $arguments['sub_document_model']->form_rules = $sub_document_template->rules;
             $arguments['sub_document_model']->form_weights = $sub_document_template->weights;
             $arguments['sub_document_model']->parent_doc_id =$parent_doc_id;
+            $arguments['sub_document_model']->scenario = 'update';
         }   
         else $arguments['sub_document_model'] = new Document;
  
@@ -278,7 +288,7 @@ private function dop_soglashenie_edit($arguments=null)
 
     if (isset($parent_model))
     {
-        if ($form->submitted('login'))
+        if ($form->submitted())
         {
            // $index = 0;
             
@@ -353,7 +363,7 @@ public function actionDelete()
 //            $model->update();
             if (!$_REQUEST['sub_document'])
             {
-                if ($data[1]=='0'){
+                if ($data[1]=='0' || $data[1]=='1'){
                 $modifier=new EMongoModifier(
                         array(
                             'attrs.status'=>array('set' => '5007fec2e07686101c283352=8')
