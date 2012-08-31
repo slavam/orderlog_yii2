@@ -97,7 +97,16 @@ else $image = new Scancopies;
         $parent_id=$_REQUEST['parent_id'];
         $this->render('scancopies_files_list',array('parent_id'=>$parent_id));
     }
-
+    
+    public function actionDeleteFile()
+    {
+        $image_id=$_REQUEST['image_id'];
+        
+        if (Scancopies::model()->deleteByPk(new MongoId($image_id)))
+        {
+            $this->redirect(Yii::app()->createUrl('/dogovor_archiv/documents'));
+        }
+    }
 
     /**
      * Изменение размера картинки

@@ -58,6 +58,7 @@ class Scancopies extends EMongoGridFS{
     {
         return $this->metadata['description'];
     }
+    
 //    public function setFiledDescription($value)
 //    {
 //        $this->metadata['filedescription'] = $value;
