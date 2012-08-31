@@ -399,12 +399,24 @@ class AssetController extends Controller {
   }
      public function actionGetTemplateByAsset($template_id)
     {
-        $template = AssetTemplate::model()->findByPk($template_id);
-        if (isset($template)) {
-        $template->asset_group_id = $template->assetgroup->block->name.' => '.$template->assetgroup->name;
-        $template->ware_type_id = $template->waretype->short_name;
-        $tempname = $template->waretype->short_name;
+        $template = new AssetTemplate;
+        
+        if ($template_id) {
+            $template = AssetTemplate::model()->findByPk($template_id);
+            $template->asset_group_id = $template->assetgroup->block->name.' => '.$template->assetgroup->name;
+            $template->ware_type_id = $template->waretype->short_name;
+        
+            if ($template->budget_item_id) {
+                $article=BudgetItem::model()->findByPk($template->budget_item_id);
+                $article_code = $article->CODE;
+                $template->budget_item_id = $article->get2LevelNameBudgetItem($template->budget_item_id)." => ".$article_code;
+            } else {
+                $template->budget_item_id = "Н/Д";            
+            }
+            $template->direction_id = $template->direction->short_name;
+            $template->ware_type_id = $template->waretype->short_name;
         }
+        
         echo CJSON::encode($template);
         Yii::app()->end();
     }

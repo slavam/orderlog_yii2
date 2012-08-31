@@ -136,7 +136,7 @@ grid.setGridParam({datatype:'json'});
              			title: 'Редактировать товар',
                         modal:true,
                         width:1160,
-                        height:500,
+                        height:540,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());
@@ -160,7 +160,8 @@ var options = {
 									rd = data['rows'][0]['cell']; //row data
 									//!!! OMG, why it uses only associated array!?
 									//TODO: try to make for cycle...
-									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
+//									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
+									grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9]});
 	                			  $("#create_dialog").dialog('close');
 
 //								    grid.trigger("reloadGrid");
@@ -250,6 +251,6 @@ $.ajax({
 
 </script>
 
-<?php echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
+<?php //echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
 <br>
 <?php echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>
