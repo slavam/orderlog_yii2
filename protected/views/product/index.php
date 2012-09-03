@@ -46,19 +46,20 @@ $this->breadcrumbs=array(
         var grid=$("#product-grid-table");
         var rowid;
         var lastSel;
+        var iddb;
         jQuery("#product-grid-table").jqGrid( {
-            url : '<?echo Yii::app()->createUrl('product/index')?>',
+            url : '<?echo Yii::app()->createUrl('product/GetDataForGrid')?>',
             datatype : 'json',
-            mtype : 'GET',
+            mtype : 'POST',
             width:'100%',
             height:'auto',
             hoverrows:false,
             sortable:true,
             autowidth:true,
             ignoreCase:true,
-            colNames : ['id','Продукт','Направление'],
+            colNames : ['iddb','Продукт','Направление'],
             colModel : [
-                {name:'id',index:'id', width:20, hidden:true},
+                {name:'iddb',index:'id', width:20, hidden:true},
                 {name:'name', index:'name', width:70,editable:true},
                 {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Direction::model()->findDirectionsJqgrid()?>}}
                 ],
@@ -76,7 +77,10 @@ $this->breadcrumbs=array(
                     grid.restoreRow(lastSel); 
                     lastSel=id; 
                 }
-                grid.editRow(id, true); 
+                 sel_=grid.getGridParam('selrow');
+                iddb=grid.getCell(sel_, 'iddb');
+                
+                grid.editRow(id, true,null,null,'<?echo Yii::app()->createUrl('/product/update')?>'+'?iddb='+iddb); 
             }
     }).navGrid('#product-grid-pager',{search:false, view:false, del:true, add:false, edit:false, cloneToTop:true, refresh:false},
         {
@@ -86,12 +90,16 @@ $this->breadcrumbs=array(
            closeAfterAdd:true
         },
         {
-            editData:{id:grid.jqGrid('getGridParam','selrow')}
+            onclickSubmit:function(){
+                sel_=grid.getGridParam('selrow');
+                iddb=grid.getCell(sel_, 'iddb');
+                return {"iddb":iddb};
+            }
         },
         {
             closeOnEscape:true,
             multipleSearch:true,
-            closeAfterSearch:true
+            closeAfterSearch:true            
         }
         );
     $('#product-grid-table').jqGrid('navButtonAdd','#product-grid-pager',{
@@ -100,29 +108,31 @@ $this->breadcrumbs=array(
             buttonicon: 'ui-icon-plusthick',
             onClickButton: function()
             {
-                var last_row_id = grid.getGridParam("reccount");
-
-                var _node = {"rows":[{}],position:"last"};
-                var row = {"id":last_row_id+1,"name":"","direction_id":""};
-                
-//                parameters =
-//                {
-//                    rowID : "345345",
-//                    initdata : {"id":223231,"name":"","direction_id":""},
-//                    position :"last",
-//                    useDefValues : false,
-//                    useFormatter : false,
-//                    addRowParams : {extraparam:{}}
-//                }
-//                grid.jqGrid ('addRowData',last_row_id+1, _node.rows[0].parent, _node.rows[0]);
+               
+               var last_row_id = grid.getGridParam("reccount");
+               var row = {"iddb":last_row_id+1,"name":"","direction_id":""};
+               if (lastSel) grid.restoreRow(lastSel);
+               
                grid.addRowData(last_row_id+1,row,"last");
-               grid.editRow(last_row_id+1,true,null,null,'<?echo Yii::app()->createUrl('/product/create')?>'); 
+               grid.editRow(last_row_id+1,true,null,null,'<?echo Yii::app()->createUrl('/product/create')?>',{},after_save,null,afterrestore); 
+               lastSel=last_row_id+1;
             }
             //position:'last'
         });
+        function afterrestore(rowid)
+{
+   $('#product-grid-table').delRowData(rowid);
+}
+function after_save(rowID, response ) {
+			  var ret_iddb = $.parseJSON(response.responseText);
+//			  alert(ret_iddb);
+			  $('#product-grid-table').jqGrid('setCell',rowID,'iddb',ret_iddb.iddb);
+                          iddb=ret_iddb;
+		  }
      
   })
-  
+
+
 </script>
 <?
 //$this->widget('application.components.jqgrid',array('dataProvider'=>$dataProvider,'gridId'=>'product_grid','options'=>array(

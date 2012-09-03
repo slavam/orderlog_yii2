@@ -27,7 +27,7 @@ class ProductController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','GetDataForGrid'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -72,40 +72,43 @@ class ProductController extends Controller
                 if(isset($_POST['id']))
                 {
                     $model->name=$_POST['name'];
-                    $model->direction_id=$_POST['direction_id'];
-                    if($model->save())
-				$this->redirect(array('index'));
-//		}
-                }
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+                    $model->direction_id = $_POST['direction_id'];
+                    if ($model->save()) {
+                        if (Yii::app()->request->isAjaxRequest) {
+                            echo CJSON::encode(array(
+                                'status' => 'ok',
+                                'iddb' => $model->id,
+                            ));
+                            Yii::app()->end();
+                        } else
+                            $this->redirect(array('index'));
+                    }
+            }
+        $this->render('create', array(
+            'model' => $model,
+        ));
+        }
 
-	/**
-	 * Updates a particular model.
-	 * If update is successful, the browser will be redirected to the 'view' page.
-	 * @param integer $id the ID of the model to be updated
-	 */
-	public function actionUpdate()
-	{
-            $id=$_REQUEST['id'];
-            $model=$this->loadModel($id);
+    /**
+     * Updates a particular model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id the ID of the model to be updated
+     */
+    public function actionUpdate() {
+        $id = $_REQUEST['iddb'];
+        $model = $this->loadModel($id);
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-                
-                switch ($_POST['oper'])
-                {
-                    case 'edit':
-                            $model->name =$_POST['name'];
-                            $model->direction_id =$_POST['direction_id'];
-                            if($model->save())
-                            {
-                                if (Yii::app()->request->isAjaxRequest)
-                                {
-                                    echo "Запись отредактирована";
-                                }
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
+
+        switch ($_POST['oper']) {
+            case 'edit':
+                $model->name = $_POST['name'];
+                $model->direction_id = $_POST['direction_id'];
+                if ($model->save()) {
+                    if (Yii::app()->request->isAjaxRequest) {
+                        echo "Запись отредактирована";
+                    }
                                 else
                                 $this->redirect(array('index'));
                             }
@@ -144,7 +147,14 @@ class ProductController extends Controller
 	 */
 	public function actionIndex()
 	{
-            
+
+            $this->render('index',array(
+                'dataProvider'=>$dataProvider,
+            ));
+	}
+        
+        public function actionGetDataForGrid()
+        {
             $dataProvider = new CActiveDataProvider('Product', array(
                 'pagination' => false,
                 'criteria' => array(
@@ -162,16 +172,12 @@ class ProductController extends Controller
 	                			$row->name,
 	                			$row->direction->name
                             );
-            }
+                }
 
             echo CJSON::encode($responce);
             Yii::app()->end();
-                    }
-            
-            $this->render('index',array(
-                'dataProvider'=>$dataProvider,
-            ));
-	}
+            }
+        }
 
 	/**
 	 * Manages all models.
