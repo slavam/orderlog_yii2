@@ -86,6 +86,7 @@ class ClaimLineProduct extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
         public function findProductsByDirection($direction_id)
         {
             $criteria=new CDbCriteria;

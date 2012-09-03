@@ -66,13 +66,17 @@ class ProductController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Product']))
-		{
-			$model->attributes=$_POST['Product'];
-			if($model->save())
+//		if(isset($_POST['Product']))
+//		{
+			//$model->attributes=$_POST['Product'];
+                if(isset($_POST['id']))
+                {
+                    $model->name=$_POST['name'];
+                    $model->direction_id=$_POST['direction_id'];
+                    if($model->save())
 				$this->redirect(array('index'));
-		}
-
+//		}
+                }
 		$this->render('create',array(
 			'model'=>$model,
 		));
@@ -83,20 +87,33 @@ class ProductController extends Controller
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
+	public function actionUpdate()
 	{
-		$model=$this->loadModel($id);
+            $id=$_REQUEST['id'];
+            $model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Product']))
-		{
-			$model->attributes=$_POST['Product'];
-			if($model->save())
-				$this->redirect(array('index'));
-		}
-
+                
+                switch ($_POST['oper'])
+                {
+                    case 'edit':
+                            $model->name =$_POST['name'];
+                            $model->direction_id =$_POST['direction_id'];
+                            if($model->save())
+                            {
+                                if (Yii::app()->request->isAjaxRequest)
+                                {
+                                    echo "Запись отредактирована";
+                                }
+                                else
+                                $this->redirect(array('index'));
+                            }
+                        break;
+                    case 'del':
+                           $model->delete();
+                        break;
+                }
 		$this->render('update',array(
 			'model'=>$model,
 		));
