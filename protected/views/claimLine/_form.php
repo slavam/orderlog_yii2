@@ -10,7 +10,7 @@
 	<div class="row">
 		<b>Товар</b>
                 <br>
-		<?php echo $form->dropDownList($model,'asset_id',Asset::findAssets());?> 
+		<?php echo $form->dropDownList($model,'asset_id',Asset::model()->findAssets());?> 
 		<?php echo $form->error($model,'asset_id'); ?>
 	</div>
 
@@ -38,34 +38,34 @@
 	<div class="row">
 		<b>Для кого</b>
                 <br>
-		<?php echo $form->dropDownList($model,'for_whom',Worker::findWorkers());?> 
+		<?php echo $form->dropDownList($model,'for_whom',Worker::model()->findWorkers());?> 
 		<?php echo $form->error($model,'for_whom'); ?>
 	</div>
 
         <div class="row">
             <b>Центр финансовой ответственности</b>
             <br>
-            <?php echo $form->dropDownList($model,'payer_id', Division::All());?> 
+            <?php echo $form->dropDownList($model,'payer_id', Division::model()->All());?> 
             <?php echo $form->error($model,'payer_id'); ?>
 	</div>
 	<div class="row">
 		<b>Бизнес</b>
                 <br>
-		<?php echo $form->dropDownList($model,'business_id',Business::findBusinesses());?> 
+		<?php echo $form->dropDownList($model,'business_id',Business::model()->findBusinesses());?> 
 		<?php echo $form->error($model,'business_id'); ?>
 	</div>
     
         <div class="row">
 		<b>Статус</b>
                 <br>
-		<?php echo $form->dropDownList($model,'status_id', Status::findStatuses());?> 
+		<?php echo $form->dropDownList($model,'status_id', Status::model()->findStatuses());?> 
 		<?php echo $form->error($model,'status_id'); ?>
 	</div>
 
 	<div class="row">
 		<b>Расположение</b>
                 <br>
-		<?php echo $form->dropDownList($model,'position_id',  Place::findAllPlaces());?> 
+		<?php echo $form->dropDownList($model,'position_id',  Place::model()->findAllPlaces());?> 
 		<?php echo $form->error($model,'position_id'); ?>
 	</div>
         <?php if (!$model->isNewRecord):?>

@@ -27,7 +27,7 @@ class FeatureController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','GetDataForGrid'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -50,9 +50,36 @@ class FeatureController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$this->render('view',array(
+            	
+
+            $this->render('view',array(
 			'model'=>$this->loadModel($id),
 		));
+	}
+        public function actionGetDataForGrid()
+	{
+            $dataProvider = new CActiveDataProvider('Feature', array(
+                'pagination' => false,
+                'criteria' => array(
+                    'order' => 'direction_id, name',
+                ),
+            ));
+            
+            if (Yii::app()->request->isAjaxRequest)
+            {
+             $responce =array();
+                foreach ($dataProvider->getData() as $i=>$row) {
+	                $responce['rows'][$i]['id'] = $row['id'];
+	                $responce['rows'][$i]['cell'] = array(
+	                			$row->id, 
+	                			$row->name,
+	                			$row->direction->name
+                            );
+                }
+
+            echo CJSON::encode($responce);
+            Yii::app()->end();
+            }
 	}
 
 	/**
@@ -66,37 +93,75 @@ class FeatureController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['Feature']))
-		{
-			$model->attributes=$_POST['Feature'];
-			if($model->save())
-				$this->redirect(array('index'));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+//		if(isset($_POST['Product']))
+//		{
+			//$model->attributes=$_POST['Product'];
+                if(isset($_POST['id']))
+                {
+                    $model->name=$_POST['name'];
+                    $model->direction_id = $_POST['direction_id'];
+                    if ($model->save()) {
+                        if (Yii::app()->request->isAjaxRequest) {
+                            echo CJSON::encode(array(
+                                'status' => 'ok',
+                                'iddb' => $model->id,
+                            ));
+                            Yii::app()->end();
+                        } else
+                            $this->redirect(array('index'));
+                    }
+            }
+        $this->render('create', array(
+            'model' => $model,
+        ));
+        }
 
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
 	 * @param integer $id the ID of the model to be updated
 	 */
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
+//	public function actionUpdate($id)
+//	{
+//		$model=$this->loadModel($id);
+//
+//		// Uncomment the following line if AJAX validation is needed
+//		// $this->performAjaxValidation($model);
+//
+//		if(isset($_POST['Feature']))
+//		{
+//			$model->attributes=$_POST['Feature'];
+//			if($model->save())
+//				$this->redirect(array('index'));
+//		}
+//
+//		$this->render('update',array(
+//			'model'=>$model,
+//		));
+//	}
+        public function actionUpdate() {
+        $id = $_REQUEST['iddb'];
+        $model = $this->loadModel($id);
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
 
-		if(isset($_POST['Feature']))
-		{
-			$model->attributes=$_POST['Feature'];
-			if($model->save())
-				$this->redirect(array('index'));
-		}
-
+        switch ($_POST['oper']) {
+            case 'edit':
+                $model->name = $_POST['name'];
+                $model->direction_id = $_POST['direction_id'];
+                if ($model->save()) {
+                    if (Yii::app()->request->isAjaxRequest) {
+                        echo "Запись отредактирована";
+                    }
+                    else
+                    $this->redirect(array('index'));
+                }
+                        break;
+                    case 'del':
+                           $model->delete();
+                        break;
+                }
 		$this->render('update',array(
 			'model'=>$model,
 		));

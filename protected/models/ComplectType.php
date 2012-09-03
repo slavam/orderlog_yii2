@@ -86,4 +86,18 @@ class ComplectType extends CActiveRecord
             $types = ComplectType::model()->findAll(array('order' => 'name'));
             return CHtml::listData($types,'id','name');
         }
+        
+        
+        public function findComplectTypesJqgrid()
+        {
+            $types = ComplectType::model()->findAll(array('order' => 'name'));
+            $result=array();
+            
+            foreach ($types as $key=>$value)
+            {
+                $result[]= $value->id.':'.$value->name;
+            }   
+            $result = implode(';',$result);
+            return CJSON::encode($result);
+        }
 }
