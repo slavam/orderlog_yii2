@@ -15,6 +15,35 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
  * and open the template in the editor.
  */
 ?>
+
+<style type="text/css">
+    th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+    </style>
+
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
@@ -153,7 +182,7 @@ $(function() {
                     title: 'Редактировать заявку и строки',
                     modal:true,
                     width:1100,
-                    height:500,
+                    height:600,
                     buttons:{
                         'OK': function(){
                             var rows= jQuery("#claim_line_list").jqGrid('getRowData');
@@ -182,8 +211,8 @@ $(function() {
                                 },
                                 'success':  function(data) {
 
-//                                        $("#create_dialog_edit_whole_claim").dialog('close');
-                                        $(this).dialog('close');
+                                        $("#create_dialog_edit_whole_claim").dialog('close');
+//                                        $(this).dialog('close');
 
                                     }
                             }); 

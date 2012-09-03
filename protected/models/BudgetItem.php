@@ -133,4 +133,20 @@ class BudgetItem extends CActiveRecord
             $bi = BudgetItem::model()->findBySql($sql);
             return $bi->NAME;
         }
+        
+        public function get3LevelAllNameBudgetItem(){
+            
+            $allBudgetItems = BudgetItem::model()->findBudgetItems();
+            
+            $data = array();
+                
+            foreach($allBudgetItems as $key => $value){              
+                $article =BudgetItem::model()->findByPk($key);
+                $art2name=$this->get2LevelNameBudgetItem($key);
+                if ($art2name) {
+                    $data[$key] = $art2name." => ".$article->CODE;
+                }
+            }			
+                return $data;
+        }
 }

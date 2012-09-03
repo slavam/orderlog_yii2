@@ -27,12 +27,12 @@ class AssetTemplateController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','getTemplate','createAssetByTemplate',
-                                    'indexJqgrid','getDataForGrid','getDataForDetails'),
+				'actions'=>array('index','view','show','getTemplate','createTemplateDlg','updateTemplateDlg',
+                                    'indexJqgrid','getDataForGrid','getDataForDetails','create','update'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+				'actions'=>array('show'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -68,6 +68,7 @@ class AssetTemplateController extends Controller
 	 */
 	public function actionCreate()
 	{
+	/*
 		$model=new AssetTemplate;
 
 		// Uncomment the following line if AJAX validation is needed
@@ -83,6 +84,65 @@ class AssetTemplateController extends Controller
 		$this->render('create',array(
 			'model'=>$model,
 		));
+		*/
+
+    $model = new AssetTemplate;
+
+    if (isset($_POST['AssetTemplate'])) {
+        $model->attributes = $_POST['AssetTemplate'];
+        if($model->validate()){
+            if ($model->save()) { 
+            //$_POST['id_return'] = $model->id;
+                if (Yii::app()->request->isAjaxRequest) {
+
+                //return json with the next fields to avoid jqgrid reload each time
+                /*
+				            'name'
+				            'article'
+				            'article_code'
+				            'info'
+				            'comment'
+
+                */
+						if($model->budget_item_id) {
+						
+							$articles_=BudgetItem::model()->findByPk($model->budget_item_id);
+							$article_code = $articles_->CODE;
+						    $article_name = $articles_->get2LevelNameBudgetItem($model->budget_item_id);
+                                                    if(!$article_name) {
+                                                        $article_name = $articles_->NAME;
+                                                    }
+
+						} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
+
+        echo CJSON::encode(array(
+            'status' => 'ok',
+            'id' => $model->id,
+            'asset_group_id' => $model->asset_group_id,
+            'name' => $model->name,
+            'article' => $article_name,
+            'article_code' => $article_code,
+            'info' => $model->info,
+            'comment' => $model->comment
+        ));
+
+                    Yii::app()->end();
+                } else echo 'get out!';
+            }//model->save
+        }//validate
+        else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+    }
+    else
+    if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+
 	}
 
 	/**
@@ -92,6 +152,7 @@ class AssetTemplateController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
+	/*
 		$model=$this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
@@ -107,6 +168,64 @@ class AssetTemplateController extends Controller
 		$this->render('update',array(
 			'model'=>$model,
 		));
+		*/
+    $model = $this->loadModel($id);
+
+    if (isset($_POST['AssetTemplate'])) {
+        $model->attributes = $_POST['AssetTemplate'];
+        if($model->validate()){
+            if ($model->save()) { 
+            //$_POST['id_return'] = $model->id;
+                if (Yii::app()->request->isAjaxRequest) {
+
+                //return json with the next fields to avoid jqgrid reload each time
+                /*
+				            'name'
+				            'article'
+				            'article_code'
+				            'info'
+				            'comment'
+
+                */
+						if($model->budget_item_id) {
+						
+							$articles_=BudgetItem::model()->findByPk($model->budget_item_id);
+							$article_code = $articles_->CODE;
+						    $article_name = $articles_->get2LevelNameBudgetItem($model->budget_item_id);
+                                                    if(!$article_name) {
+                                                        $article_name = $articles_->NAME;
+                                                    }
+
+						} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
+
+        echo CJSON::encode(array(
+            'status' => 'ok',
+            'id' => $model->id,
+            'asset_group_id' => $model->asset_group_id,
+            'name' => $model->name,
+            'article' => $article_name,
+            'article_code' => $article_code,
+            'info' => $model->info,
+            'comment' => $model->comment
+        ));
+
+                    Yii::app()->end();
+                } else echo 'get out!';
+            }//model->save
+        }//validate
+        else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+    }
+    else
+    if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+
 	}
 
 	/**
@@ -238,7 +357,45 @@ class AssetTemplateController extends Controller
         }
 
 
-        
+    public function actionCreateTemplateDlg()
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            //$this->layout='//layouts/ajax';
+
+            $model = new AssetTemplate;
+            //$model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+			Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+			Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('_form',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+
+    public function actionUpdateTemplateDlg($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            //$this->layout='//layouts/ajax';
+
+            //$model = new AssetTemplate;
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+			Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+			Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('_form',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+
+    
         public function actionGetDataForGrid()
 	{
             $responce = array();
@@ -259,6 +416,7 @@ class AssetTemplateController extends Controller
 
 			$blocks_ = $dataProvider_block->getData();
 
+			$responce['status']='ok';
 			$responce['rows']=array();
 
 			$r_i = 0;
@@ -312,7 +470,7 @@ class AssetTemplateController extends Controller
 							$article_code = $articles_->CODE;
 						    $article_name = $articles_->get2LevelNameBudgetItem($row->budget_item_id);
 
-						} else { $article_name = '�/�'; $article_code = '�/�'; }
+						} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
 
 		                $responce['rows'][$r_i]['cell'] = array($row->id,  $row->name,$article_name,$article_code,$row->info,$row->comment ,'2',"$parent_t",true,true,true);
 		                $r_i++;

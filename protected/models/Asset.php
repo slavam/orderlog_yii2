@@ -61,7 +61,7 @@ class Asset extends CActiveRecord
 //			array('selection', 'required'),
 			array('cost', 'numerical'),
 			array('name, part_number, info, comment,place_id, manufacturer_id, product_id, feature_id, place_id, manufacturer_id, product_id, feature_id, quantity_type_id, quantity', 'safe'),
-			array('info','required'),
+			array('name, part_number, asset_template_id','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, part_number, ware_type_id, budget_item_id, cost, direction_id, asset_group_id, info, unit_id, comment, price_type_id, asset_template_id, place_id, manufacturer_id, product_id, feature_id, quantity_type_id, quantity', 'safe', 'on'=>'search'),
@@ -94,8 +94,8 @@ class Asset extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'name' => 'Name',
-			'part_number' => 'Part Number',
+			'name' => 'Наименование',
+			'part_number' => 'Код',
 			'ware_type_id' => 'Ware Type',
 			'budget_item_id' => 'Budget Item',
 			'cost' => 'Cost',
