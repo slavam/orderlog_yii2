@@ -145,6 +145,9 @@ var options = {
                                   var rids=grid.jqGrid('getDataIDs');
                                   var start_from=0;
                                   var indx=0;
+                                  //dbg
+var grid_data=grid.jqGrid('getRowData');
+
                                   while((indx=$.inArray(data['asset_group_id'],db_ids,start_from))!=-1){
 //                                  	indx++;
 //									var grid_data=grid.jqGrid('getRowData',indx);
@@ -155,15 +158,16 @@ var options = {
 										//todo: insert into sorted list of templates under that group!
 
 										//inserting row
-										var last_row_id = grid.getGridParam("reccount");
+//										var last_row_id = grid.getGridParam("reccount");
+										new_row_id = $.jgrid.randId();
 										//grid.addRowData(last_row_id+1, {'id':last_row_id+1,'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'true'},"after",indx)
-										grid.jqGrid ('addChildNode',last_row_id+1, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
+										grid.jqGrid ('addChildNode',new_row_id, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
 //										var record = grid.getInd(grid_data['parent'],true);
 										var record = grid.getInd(prnts[indx],true);
 										record._id_ = record.id;//?!?!?!?!?!?!?!?
 										grid.jqGrid('expandRow',record);
 										grid.jqGrid('expandNode',record);
-						                grid.setSelection(last_row_id+1, true);
+						                grid.setSelection(new_row_id, true);
 										break;
 									}
                                   	start_from=indx;
@@ -271,14 +275,15 @@ $.ajax({
 //									var grid_data=grid.jqGrid('getRowData',indx);
 									if(lvls[indx]=="1")//(grid_data['level']=="1") 
 									{
-										var last_row_id = grid.getGridParam("reccount");
-										grid.jqGrid ('addChildNode',last_row_id+1, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
+//										var last_row_id = grid.getGridParam("reccount");
+										new_row_id = $.jgrid.randId();
+										grid.jqGrid ('addChildNode',new_row_id, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
 		  				                grid.delTreeNode(sel_);
 										var record = grid.getInd(prnts[indx],true);
 										record._id_ = record.id;//?!?!?!?!?!?!?!?
 										grid.jqGrid('expandRow',record);
 										grid.jqGrid('expandNode',record);
-						                grid.setSelection(last_row_id+1, true);
+						                grid.setSelection(new_row_id, true);
 										break;
 									}
                                   	start_from=indx;
