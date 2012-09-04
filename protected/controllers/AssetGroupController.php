@@ -306,6 +306,7 @@ class AssetGroupController extends Controller
             $responce = array();
 
             $dataProvider_block = new CActiveDataProvider('Block' , array(
+                'pagination'=>false, 
                     'criteria'=>array(
                     'with'=>array('directions'),
                         'order'=>'directions.name, t.name',
@@ -313,11 +314,13 @@ class AssetGroupController extends Controller
                   )
                   );
 
+                  /*
 			$pagination_block = $dataProvider_block->getPagination();
 			if(isset($_GET['page']))
                             $pagination_block->setCurrentPage(0);
 			if(isset($_GET['rows']))
                             $pagination_block->setPageSize($_GET['rows']);
+                    */
 
 			$blocks_ = $dataProvider_block->getData();
 
@@ -332,18 +335,22 @@ class AssetGroupController extends Controller
                 $r_i++;
 
 	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(
+	            	                'pagination'=>false, 
+
 	                    'criteria'=>array(
 	                    	'condition'=>'block_id='.$row->id,
 	                        'order'=>'name',
 	                        ),
 	                  )
 	                  );
-	
+
+	              /*	
 				$pagination_group = $dataProvider_group->getPagination();
 				if(isset($_GET['page']))
 	                            $pagination_group->setCurrentPage(0);
 				if(isset($_GET['rows']))
 	                            $pagination_group->setPageSize($_GET['rows']);
+	             */
 
 				$groups_ = $dataProvider_group->getData();
 				$parent_ = $r_i;

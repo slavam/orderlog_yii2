@@ -140,11 +140,16 @@ var options = {
 									//TODO: try to make for cycle...
 //									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
                                   var db_ids=grid.jqGrid('getCol','id');
+                                  var lvls=grid.jqGrid('getCol','level');
+                                  var prnts=grid.jqGrid('getCol','parent');
+                                  var rids=grid.jqGrid('getDataIDs');
                                   var start_from=0;
+                                  var indx=0;
                                   while((indx=$.inArray(data['asset_group_id'],db_ids,start_from))!=-1){
-                                  	indx++;
-									var grid_data=grid.jqGrid('getRowData',indx);
-									if(grid_data['level']=="1") 
+//                                  	indx++;
+//									var grid_data=grid.jqGrid('getRowData',indx);
+
+									if(lvls[indx]=="1")//(grid_data['level']=="1") //
 									{
 										//found sub-group by id
 										//todo: insert into sorted list of templates under that group!
@@ -152,15 +157,17 @@ var options = {
 										//inserting row
 										var last_row_id = grid.getGridParam("reccount");
 										//grid.addRowData(last_row_id+1, {'id':last_row_id+1,'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'true'},"after",indx)
-										grid.jqGrid ('addChildNode',last_row_id+1, indx, {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
-										var record = grid.getInd(grid_data['parent'],true);
+										grid.jqGrid ('addChildNode',last_row_id+1, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
+//										var record = grid.getInd(grid_data['parent'],true);
+										var record = grid.getInd(prnts[indx],true);
 										record._id_ = record.id;//?!?!?!?!?!?!?!?
 										grid.jqGrid('expandRow',record);
 										grid.jqGrid('expandNode',record);
 						                grid.setSelection(last_row_id+1, true);
 										break;
 									}
-                                  	start_from+=indx;
+                                  	start_from=indx;
+                                  	start_from++;
                                   }
 
 	                			  $("#create_dialog").dialog('close');
@@ -252,24 +259,30 @@ $.ajax({
 //								grid.jqGrid('setRowData',sel_,{'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
 
                                   var db_ids=grid.jqGrid('getCol','id');
+                                  var prnts=grid.jqGrid('getCol','parent');
+                                  var lvls=grid.jqGrid('getCol','level');
+                                  var rids=grid.jqGrid('getDataIDs');
                                   var start_from=0;
+                                  var indx=0;
                                   while((indx=$.inArray(data['asset_group_id'],db_ids,start_from))!=-1){
-                                  	indx++;
-									var grid_data=grid.jqGrid('getRowData',indx);
-									if(grid_data['level']=="1") 
+
+//                                  	alert(indx);
+//                                  	indx++;
+//									var grid_data=grid.jqGrid('getRowData',indx);
+									if(lvls[indx]=="1")//(grid_data['level']=="1") 
 									{
-						                grid.delTreeNode(sel_);
 										var last_row_id = grid.getGridParam("reccount");
-										//grid.addRowData(last_row_id+1, {'id':last_row_id+1,'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'true'},"after",indx)
-										grid.jqGrid ('addChildNode',last_row_id+1, indx, {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':indx,'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
-										var record = grid.getInd(grid_data['parent'],true);
+										grid.jqGrid ('addChildNode',last_row_id+1, rids[indx], {'id':data['id'],'name':data['name'],'article':data['article'],'article_code':data['article_code'],'info':data['info'],'comment':data['comment'],'parent':rids[indx],'loaded':'true','isLeaf':'true','level':'2','expanded':'false'});
+		  				                grid.delTreeNode(sel_);
+										var record = grid.getInd(prnts[indx],true);
 										record._id_ = record.id;//?!?!?!?!?!?!?!?
 										grid.jqGrid('expandRow',record);
 										grid.jqGrid('expandNode',record);
 						                grid.setSelection(last_row_id+1, true);
 										break;
 									}
-                                  	start_from+=indx;
+                                  	start_from=indx;
+                                  	start_from++;
                                   }
 
 	                			  $("#create_dialog").dialog('close');
