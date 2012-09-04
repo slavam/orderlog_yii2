@@ -359,16 +359,20 @@ class AssetController extends Controller {
 			$responce['rows']=array();
 
             foreach ($assets_ as $i=>$row) {
-	                $responce['rows'][$i]['id'] = $row['id'];
+                        $cell_red = FALSE;
+                        $responce['rows'][$i]['id'] = $row['id'];
 //	                $tmp = $row->assetGroup->block->name;
 					if($row->budget_item_id) {
 						$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
 						$article_name = $articles_->NAME;
 						$article_code = $articles_->CODE;
+                                                $template_budget_code = $row->assettemplate->budgetItem->CODE;
+                                                $cell_red = ($template_budget_code !== $article_code);
+//	                $tmp = $row->budgetItem->CODE;
 					} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
 	                $responce['rows'][$i]['cell'] = array(
 	                			$row->id, 
-	                			'?', /*Тип записи*/
+//	                			'?', /*Тип записи*/
 	                			$row->waretype->short_name, 
 	                			$row->assetgroup->block->name, 
 	                			$row->assetgroup->name, 
@@ -377,8 +381,9 @@ class AssetController extends Controller {
 	                			$row->cost, 
 	                			$row->comment,
 	                			$article_name,
-	                			$article_code
-	                			);
+	                			$article_code,
+	                			$cell_red
+                                                );
 				}
 
             echo CJSON::encode($responce);
@@ -397,5 +402,28 @@ class AssetController extends Controller {
         return 	$ret_str;	
 	
   }
- 
+     public function actionGetTemplateByAsset($template_id)
+    {
+        $template = new AssetTemplate;
+        
+        if ($template_id) {
+            $template = AssetTemplate::model()->findByPk($template_id);
+            $template->asset_group_id = $template->assetgroup->block->name.' => '.$template->assetgroup->name;
+            $template->ware_type_id = $template->waretype->short_name;
+        
+            if ($template->budget_item_id) {
+                $article=BudgetItem::model()->findByPk($template->budget_item_id);
+                $article_code = $article->CODE;
+                $template->budget_item_id = $article->get2LevelNameBudgetItem($template->budget_item_id)." => ".$article_code;
+            } else {
+                $template->budget_item_id = "Н/Д";            
+            }
+            $template->direction_id = $template->direction->short_name;
+            $template->ware_type_id = $template->waretype->short_name;
+        }
+        
+        echo CJSON::encode($template);
+        Yii::app()->end();
+    }
+
 }                                                                           	

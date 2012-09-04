@@ -65,42 +65,91 @@ class ComplectController extends Controller
 
         public function actionCreate()
 	{
-		$model=new Complect;
+//		$model=new Complect;
+//
+//		// Uncomment the following line if AJAX validation is needed
+//		// $this->performAjaxValidation($model);
+//
+//		if(isset($_POST['Complect']))
+//		{
+//			$model->attributes=$_POST['Complect'];
+//			if($model->save())
+//				$this->redirect(array('index'));
+//		}
+//
+//		$this->render('create',array(
+//			'model'=>$model,
+//		));
+            $model=new Complect;
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Complect']))
-		{
-			$model->attributes=$_POST['Complect'];
-			if($model->save())
-				$this->redirect(array('index'));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
+            if(isset($_POST['id']))
+                {
+                    $model->name=$_POST['name'];
+                    $model->complect_type_id = $_POST['complect_type_id'];
+                    $model->comment = $_POST['comment'];
+                    if ($model->save()) {
+                        if (Yii::app()->request->isAjaxRequest) {
+                            echo CJSON::encode(array(
+                                'status' => 'ok',
+                                'iddb' => $model->id,
+                            ));
+                            Yii::app()->end();
+                        } else
+                            $this->redirect(array('index'));
+                    }
+            }
+        $this->render('create', array(
+            'model' => $model,
+        ));
 	}
 
-	public function actionUpdate($id)
-	{
-		$model=$this->loadModel($id);
+//	public function actionUpdate($id)
+//	{
+//		$model=$this->loadModel($id);
+//
+//		// Uncomment the following line if AJAX validation is needed
+//		// $this->performAjaxValidation($model);
+//
+//		if(isset($_POST['Complect']))
+//		{
+//			$model->attributes=$_POST['Complect'];
+//			if($model->save())
+//				$this->redirect(array('index'));
+//		}
+//
+//		$this->render('update',array(
+//			'model'=>$model,
+//		));
+//	}
 
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+        public function actionUpdate() {
+        $id = $_REQUEST['iddb'];
+        $model = $this->loadModel($id);
 
-		if(isset($_POST['Complect']))
-		{
-			$model->attributes=$_POST['Complect'];
-			if($model->save())
-				$this->redirect(array('index'));
-		}
+        // Uncomment the following line if AJAX validation is needed
+        // $this->performAjaxValidation($model);
 
+        switch ($_POST['oper']) {
+            case 'edit':
+               $model->name=$_POST['name'];
+                $model->complect_type_id = $_POST['complect_type_id'];
+                $model->comment = $_POST['comment'];
+                if ($model->save()) {
+                    if (Yii::app()->request->isAjaxRequest) {
+                        echo "Запись отредактирована";
+                    }
+                    else
+                    $this->redirect(array('index'));
+                }
+                        break;
+                    case 'del':
+                           $model->delete();
+                        break;
+                }
 		$this->render('update',array(
 			'model'=>$model,
 		));
 	}
-
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
@@ -205,7 +254,7 @@ class ComplectController extends Controller
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
                 $responce['rows'][$i]['id'] = $i+1;
-                $responce['rows'][$i]['cell'] = array($row->id, $row->complectType->name, $row->name);
+                $responce['rows'][$i]['cell'] = array($row->id, $row->complectType->name, $row->name,$row->comment);
             }
             echo CJSON::encode($responce);
         }

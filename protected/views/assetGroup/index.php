@@ -84,7 +84,7 @@ $(function() {
                 grid.editRow(id, true);
                 lastSel = id;
             }
-        },
+        }
 
     }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true, refresh:false});
 //        grid.jqGrid('navSeparatorAdd','#pager');
@@ -94,17 +94,15 @@ $(function() {
             buttonicon: 'ui-icon-plusthick',
             onClickButton: function()
             {
-            					var last_row_id = grid.getGridParam("reccount");
-
+     					var last_row_id = grid.getGridParam("reccount");
 	                            var _node = {"rows":[{"id":last_row_id+1,"iddb":123456,"name":"","comment":"","stamp":"","dir":"","parent":null,"isLeaf":true,"expanded":true,"loaded":true}]};
-				                grid.jqGrid ('addChildNode',last_row_id+1, _node.rows[0].parent, _node.rows[0]);
-//				                grid.setSelection(last_row_id+1, true);
-								new_node = true; // flag delete tree node in after_resotre
-
-								if (lastSel) grid.restoreRow(lastSel);
-								grid.setColProp('dir',{editable:true});
-								grid.jqGrid('setGridParam', {editurl:'addRow'});
-				                grid.editRow(last_row_id+1, true, null, null, null, {}, after_save, null, after_restore);
+        		                grid.jqGrid ('addChildNode',last_row_id+1, _node.rows[0].parent, _node.rows[0]);
+//			                grid.setSelection(last_row_id+1, true);
+                                        new_node = true; // flag delete tree node in after_resotre
+                                        if (lastSel) grid.restoreRow(lastSel);
+                                        grid.setColProp('dir',{editable:true});
+                                        grid.jqGrid('setGridParam', {editurl:'addRow'});
+                                        grid.editRow(last_row_id+1, true, null, null, null, {}, after_save, null, after_restore);
 //				                lastSel = last_row_id+1 ;
             },
             //position:'last'
