@@ -139,7 +139,8 @@
 		<td><?php echo $form->textField($model,'quantity',array('size'=>10)); ?>
 		<?php echo $form->error($model,'cost'); ?></td>
 		<td><b>Тип Кол-ва</b></td>
-		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All(), array('empty' => '<Выбор типа>'));?> 
+		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All());?> 
+		<td><?php // echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All(), array('empty' => '<Выбор типа>'));?> 
 		<?php echo $form->error($model,'quantity_type_id'); ?></td>
 
 	</tr>
