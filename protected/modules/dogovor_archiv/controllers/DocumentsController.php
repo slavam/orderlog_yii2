@@ -78,7 +78,10 @@ function actionJqgrid()
         $row->attrs['dog_kind'] = Reference::model()->getReferenceItemById($row->attrs['dog_kind']);
         $row->attrs['pay_system'] = Reference::model()->getReferenceItemById($row->attrs['pay_system']);
         $row->attrs['doc_type'] = $row->templ_description;
-        $row->attrs['additional']= CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id)));
+        $criteria = new EMongoCriteria();
+        $criteria->addCond('parent_document', '==', (string)$row->_id);
+        $sc_count = count(Scancopies::model()->findAll($criteria));
+        $row->attrs['additional']= ($sc_count>0)? CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id))):'';
         $responce->rows[$i]['id'] = (string)$row['_id'];
         
         foreach ($form['colModel'] as $index=>$colkey)
@@ -92,6 +95,32 @@ function actionJqgrid()
         
     }
     echo CJSON::encode($responce);
+}
+
+public function actionGetAllSubDocuments()
+{
+    if ($_REQUEST['rows'])
+    {
+        foreach ($_REQUEST['rows'] as $key => $value) {
+            $IDs[$key] = new MongoId($value);
+        }
+    $criteria = new EMongoCriteria(array(
+        'criteria' => array(
+            'conditions'=>array('_id'=>array('in' => $IDs)),
+            )
+        )
+    );
+        if (count($docs=Document::model()->findAll($criteria))>0)
+        {
+            foreach($docs as $key=>$value)
+            {
+                if (count($value->dop_sogl)>0)
+                    $subdocs[]=(string)$value->_id;
+            }
+            echo CJSON::encode($subdocs);
+        }
+    }
+    else throw new CException('Не переданы параметры');
 }
 
 public function actionUpdate()

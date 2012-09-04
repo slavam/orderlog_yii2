@@ -10,6 +10,7 @@
 <script type="text/javascript">
     $(function() {
         var main_rowid='';
+        var grid = jQuery("#jqgrid");
         jQuery("#jqgrid").jqGrid( {
             url : '<?echo Yii::app()->createUrl('dogovor_archiv/documents/Jqgrid')?>',
             datatype : 'json',
@@ -61,55 +62,54 @@
                 viewrecords: false,
 	        pager: $('#'+subgrid_table_id+'_pager'),
 	        rowNum:10,
-                caption : 'Доп. соглашения',
+                caption : 'Доп. соглашения'
 //                ondblClickRow:
 //                    function(rowid,e,iCol,iRow){
-//                        //$(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+//                        //$(location).attr('href','<?//echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
 //                        $(this);
 //                        alert(e);
 //                }
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: false, del: false, edit: false, search: false},
-        {
-            closeAfterEdit: true
-        },
-        {
-           closeAfterAdd:true
-        },
-        {
-        },
-        {
-            closeOnEscape:true,
-            multipleSearch:true,
-            closeAfterSearch:true
-        }
-    );
-    $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
-            caption: 'Редактировать',
-            title: 'Редактировать запись',
-            buttonicon: 'ui-icon-wrench',
-            onClickButton: function()
-            {
-                var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
-                if(sub_rowid){
-                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/add');?>?id='+main_rowid+'&sub_document='+sub_rowid);
-                } else { alert("Выберите запись") }
-            },
-            position:'last'
-        });
-        $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
-            caption: 'Удалить',
-            title: 'Удалить запись',
-            buttonicon: 'ui-icon-trash',
-            onClickButton: function()
-            {
-                var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
-                if(sub_rowid){
-                    $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/delete');?>?id='+main_rowid+'&sub_document='+sub_rowid);
-                } else { alert("Выберите запись") }
-            },
-            position:'last'
-        });
-    },
+                {
+                    closeAfterEdit: true
+                },
+                {
+                closeAfterAdd:true
+                },
+                {},
+                {
+                    closeOnEscape:true,
+                    multipleSearch:true,
+                    closeAfterSearch:true
+                }
+            );//end of navgrid options
+            $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
+                    caption: 'Редактировать',
+                    title: 'Редактировать запись',
+                    buttonicon: 'ui-icon-wrench',
+                    onClickButton: function()
+                    {
+                        var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
+                        if(sub_rowid){
+                            $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/add');?>?id='+main_rowid+'&sub_document='+sub_rowid);
+                        } else { alert("Выберите запись") }
+                    },
+                    position:'last'
+            });
+            $('#'+subgrid_table_id).jqGrid('navButtonAdd','#'+subgrid_table_id+'_pager',{
+                caption: 'Удалить',
+                title: 'Удалить запись',
+                buttonicon: 'ui-icon-trash',
+                onClickButton: function()
+                {
+                    var sub_rowid = jQuery('#'+subgrid_table_id).jqGrid('getGridParam','selrow'); 
+                    if(sub_rowid){
+                        $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/delete');?>?id='+main_rowid+'&sub_document='+sub_rowid);
+                    } else { alert("Выберите запись") }
+                },
+                position:'last'
+            });
+    }, //end of subgrid function
     gridComplete:function(){
              var rows = $('#jqgrid').jqGrid('getDataIDs');
              var cl;
@@ -125,20 +125,28 @@
 
                   if( parseInt(Math.abs(t2-t1)/(24*3600*1000)) > 30 ) cl="";
                   else cl="red";
-                  /*
-                  $.post('/documents/checkexpireddate',{stop_date:row['stop_date']}, function(data) {
-                    if (data=="0") cl="green";
-                    else cl="red";
-                    
-                 });
-                 */    
-                    $('#jqgrid').jqGrid('setRowData',rows[i],false, {color:cl});
+                  $('#jqgrid').jqGrid('setRowData',rows[i],false, {color:cl});
                 }
             },
-            editurl: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/update')?>'
-        }).jqGrid('navGrid', '#pager',{add: false, del: false, edit: false, search: true},
-        {},{},{},
-        {closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['cn','eq'],groupOps: false});//search settings
+    loadComplete:function(){
+        var rows = grid.jqGrid('getDataIDs');
+        $.ajax({
+        url: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/getAllSubDocuments')?>',
+        data:{'rows':rows}
+            })
+            .done(function(data) { 
+                data=jQuery.parseJSON(data);
+                $.each(rows, function(i,value){
+                    if ($.inArray(value, data) ==-1)
+                        {
+                             $("#"+value+" td.sgcollapsed",grid[0]).unbind('click').html('');
+                        }
+                }) 
+            });
+    },
+        editurl: '<?echo Yii::app()->createUrl('dogovor_archiv/documents/update')?>'
+        }).jqGrid('navGrid', '#pager',{add: false, del: false, edit: false, search: true},{},{},{},{/*search settings*/closeOnEscape:true, multipleSearch:true, closeAfterSearch:true,sopt:['cn','eq'],groupOps: false});//end of main grid navgrid options
+        
         
         $('#jqgrid').jqGrid('navSeparatorAdd','#pager');
         $('#jqgrid').jqGrid('navButtonAdd','#pager',{
