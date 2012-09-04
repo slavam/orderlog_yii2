@@ -95,4 +95,18 @@ class Direction extends CActiveRecord
        		$directions = Direction::model()->findAll(array('order' => 'id'));
 		return CHtml::listData($directions,'id','name');
 	}
+        
+        //Формируем список направлений в формате Ключ:Значение для подстановки в редактор строки грида
+        public function findDirectionsJqgrid()
+        {
+            $directions = Direction::model()->findAll(array('order' => 'id'));
+            $result=array();
+            
+            foreach ($directions as $key=>$value)
+            {
+                $result[]= $value->id.':'.$value->name;
+            }   
+            $result = implode(';',$result);
+            return CJSON::encode($result);
+        }
 }

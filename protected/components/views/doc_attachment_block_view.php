@@ -49,7 +49,7 @@
             }; 
                 //alert(\'ok\');
                 $(\'#fileedit_form\').ajaxSubmit(options); 
-
+                $.fn.yiiListView.update(\'yw0\');
                        
                     }',
              'Cancel'=>'js:function(){$("#file_select").dialog("close")}',

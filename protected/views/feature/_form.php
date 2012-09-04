@@ -10,7 +10,7 @@
 	<div class="row">
 		<b>Направление</b>
                 <br>
-		<?php echo $form->dropDownList($model,'direction_id', Direction::findDirections());?> 
+		<?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections());?> 
 		<?php echo $form->error($model,'direction_id'); ?>
 	</div>
 	<div class="row">

@@ -16,7 +16,7 @@
 	<div class="row">
 		<b>Шаблон</b>
                 <br>
-		<?php echo $form->dropDownList($model,'asset_template_id',AssetTemplate::findAssetTemplates());?> 
+		<?php echo $form->dropDownList($model,'asset_template_id',AssetTemplate::model()->findAssetTemplates());?> 
 		<?php echo $form->error($model,'asset_template_id'); ?>
 	</div>
     <?php endif;?>

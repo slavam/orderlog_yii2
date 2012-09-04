@@ -9,7 +9,7 @@
 	<div class="row">
 		<b>Тип</b>
                 <br>
-		<?php echo $form->dropDownList($model,'complect_type_id',  ComplectType::findComplectTypes());?> 
+		<?php echo $form->dropDownList($model,'complect_type_id',  ComplectType::model()->findComplectTypes());?> 
 		<?php echo $form->error($model,'complect_type_id'); ?>
 	</div>
 
