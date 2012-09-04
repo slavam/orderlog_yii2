@@ -1,4 +1,4 @@
-<?if($model->scenario=='update'):?>
+<?if($model->scenario=='update' || $model == null):?>
 <div id="scancopies" class="block_wrapper">
     <p class="block-head"><?php echo $title ?></p>
     <div class="block-content">
@@ -67,7 +67,7 @@ $url = Yii::app()->createUrl('dogovor_archiv/scancopies/EditFileMetadata/',array
 echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Добавить файл', '#', array(
    'onclick'=>'$("#file_select").dialog("open").load(\''.$url.'\'); return false;',
 ));
-            ?>
+?>
         </div>
         <?
         $this->widget('zii.widgets.CListView',array('dataProvider'=>$attachments,'itemView'=>'_listitem','emptyText'=>'Ни одного прикрепленного файла не найдено'));
