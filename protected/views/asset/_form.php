@@ -85,7 +85,7 @@
 	</tr>
 	<tr>
                 <td><b>Группа</b></td>
-		<td align="left"><?php echo CHtml::textField('asset_group_id',$model->assettemplate->asset_group_id > 0 ? $model->assettemplate->assetgroup->block->name.' => '.$model->assettemplate->assetgroup->name:"" , array('size'=>100,'disabled'=>true)); ?></td>
+		<td align="left"><?php echo CHtml::textField('asset_group_id',$model->assettemplate->asset_group_id > 0 ? $model->assettemplate->assetgroup->block->name.' => '.$model->assettemplate->assetgroup->name:"" , array('size'=>120,'disabled'=>true)); ?></td>
                 <td><b>Направление</b></td>
 		<td align="left"><?php echo CHtml::textField('direction_id', $model->assettemplate->direction_id > 0 ? $model->assettemplate->direction->short_name:"" , array('size'=>8,'disabled'=>true)); ?></td>
 	</tr>
@@ -95,13 +95,13 @@
 		<td align="left"><?php 
                        $article=BudgetItem::model()->findByPk($model->assettemplate->budget_item_id);
                        $article_code = $article->CODE;
-                    echo CHtml::textField('budget_item_id', $model->assettemplate->budget_item_id > 0 ? $article->get2LevelNameBudgetItem($model->assettemplate->budget_item_id)." => ".$article_code:"", array('size'=>100,'disabled'=>true)); ?></td>
+                    echo CHtml::textField('budget_item_id', $model->assettemplate->budget_item_id > 0 ? $article->get2LevelNameBudgetItem($model->assettemplate->budget_item_id)." => ".$article_code:"", array('size'=>120,'disabled'=>true)); ?></td>
 		<td><b>Тип</b></td>
 		<td align="left"><?php echo CHtml::textField('ware_type_id',$model->assettemplate->waretype->short_name, array('size'=>8,'disabled'=>true)); ?></td>
 	</tr>
 	<tr>
 		<td><b>Дополнительная информация</b></td>
-		<td colspan="3"><?php echo CHtml::textField('info', $model->assettemplate->info, array('size'=>168,'disabled'=>true)); ?></td>
+		<td colspan="3"><?php echo CHtml::textField('info', $model->assettemplate->info, array('size'=>174,'disabled'=>true)); ?></td>
 	</tr>
 </table>
 		</td>
@@ -139,7 +139,8 @@
 		<td><?php echo $form->textField($model,'quantity',array('size'=>10)); ?>
 		<?php echo $form->error($model,'cost'); ?></td>
 		<td><b>Тип Кол-ва</b></td>
-		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All(), array('empty' => '<Выбор типа>'));?> 
+		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All());?> 
+		<td><?php // echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All(), array('empty' => '<Выбор типа>'));?> 
 		<?php echo $form->error($model,'quantity_type_id'); ?></td>
 
 	</tr>

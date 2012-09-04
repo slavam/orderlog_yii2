@@ -359,12 +359,16 @@ class AssetController extends Controller {
 			$responce['rows']=array();
 
             foreach ($assets_ as $i=>$row) {
-	                $responce['rows'][$i]['id'] = $row['id'];
+                        $cell_red = FALSE;
+                        $responce['rows'][$i]['id'] = $row['id'];
 //	                $tmp = $row->assetGroup->block->name;
 					if($row->budget_item_id) {
 						$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
 						$article_name = $articles_->NAME;
 						$article_code = $articles_->CODE;
+                                                $template_budget_code = $row->assettemplate->budgetItem->CODE;
+                                                $cell_red = ($template_budget_code !== $article_code);
+//	                $tmp = $row->budgetItem->CODE;
 					} else { $article_name = 'Н/Д'; $article_code = 'Н/Д'; }
 	                $responce['rows'][$i]['cell'] = array(
 	                			$row->id, 
@@ -377,8 +381,9 @@ class AssetController extends Controller {
 	                			$row->cost, 
 	                			$row->comment,
 	                			$article_name,
-	                			$article_code
-	                			);
+	                			$article_code,
+	                			$cell_red
+                                                );
 				}
 
             echo CJSON::encode($responce);
