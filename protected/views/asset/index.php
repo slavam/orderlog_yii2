@@ -45,7 +45,7 @@ $(function() {
         height : '600',
         mtype : 'GET',
 //        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
-        colNames : [ 'ID','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
+        colNames : [ 'ID','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи', 'Совпадение шаблонов'],
         colModel : [
         { name : 'id', index : 'id', width : 20, hidden:true },
 //        { name : 'rtype', index : 'supergroup', width : 20, sortable:true, hidden:true },  		/*Тип записи 		(Иконка) – Объект заявки\ Набор объектов заявки\ Комплект объектов заявки.*/
@@ -58,6 +58,7 @@ $(function() {
         { name : 'comment', index : 'comment', width : 100, sortable:true, editable:true },		/*Примечание			(Редактируемое поле) - Редактируемое поле, для пометок и примечаний.*/
         { name : 'article', index : 'article', width : 150, sortable:true }, 		/*Статья затрат		(Список) - Статья затрат для отнесения в бюджет.*/
         { name : 'article_code', index : 'article_code', width : 50, sortable:true }, 		/*Kод статьи			(Данные) - Уникальный код статьи бюджета.*/
+        { name : 'cell_red', index : '$cell_red', width : 5, sortable:true, hidden:true  }, 		/*Красить или нет			(Данные) - Уникальный код статьи бюджета.*/
         ],
         pager : '#pager',
         rowNum : 1000000,
@@ -89,10 +90,18 @@ $(function() {
 
     
     loadonce: true, // to enable sorting on client side
+    
+afterInsertRow: function(row_id, row_data){
+    if (row_data.cell_red) {
+        $('#list').jqGrid('setCell',row_id,'article_code','',{'color':'red'});
+    }
+},
+
 //	sortable: true, //to enable sorting
 //
+
 gridComplete: function () {
-grid.setGridParam({datatype:'local'});
+    grid.setGridParam({datatype:'local'});
 },
 //
 onPaging : function(which_button) {
@@ -161,7 +170,7 @@ var options = {
 									//!!! OMG, why it uses only associated array!?
 									//TODO: try to make for cycle...
 //									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
-									grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9]});
+									grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
 	                			  $("#create_dialog").dialog('close');
 
 //								    grid.trigger("reloadGrid");
