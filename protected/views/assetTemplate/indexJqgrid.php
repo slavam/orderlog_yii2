@@ -99,7 +99,23 @@ onPaging : function(which_button) {
 grid.setGridParam({datatype:'json'});
 },
 
-    }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true, refresh:false});
+    }).navGrid('#pager',{search:false, view:false, del:true, add:false, edit:false, cloneToTop:true, refresh:false},
+        {
+        },
+        {
+        },
+        {
+            onclickSubmit:function(){
+                //sel_=grid.getGridParam('selrow');
+                //iddb=grid.getCell(sel_, 'iddb');
+                //return {"iddb":iddb};
+                alert("fuck");
+            }
+        },
+        {
+        }
+    
+    );
 
 	top_bottom_pager_ButtonAdd = function(options) {
         grid.jqGrid('navButtonAdd',pager_selector,options);

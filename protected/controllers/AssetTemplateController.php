@@ -171,6 +171,8 @@ class AssetTemplateController extends Controller
 		*/
     $model = $this->loadModel($id);
 
+        switch ($_POST['oper']) {
+            case 'edit':
     if (isset($_POST['AssetTemplate'])) {
         $model->attributes = $_POST['AssetTemplate'];
         if($model->validate()){
@@ -180,11 +182,7 @@ class AssetTemplateController extends Controller
 
                 //return json with the next fields to avoid jqgrid reload each time
                 /*
-				            'name'
-				            'article'
-				            'article_code'
-				            'info'
-				            'comment'
+				            'name' 'article' 'article_code' 'info' 'comment'
 
                 */
 						if($model->budget_item_id) {
@@ -225,8 +223,18 @@ class AssetTemplateController extends Controller
     } else {
         echo 'get out!';
     }
+    break; //edit
 
-	}
+                    case 'del':
+                    	//TODO: check before deletion!!! [o.lysenko 4.sep.2012 16:46]
+                           //$model->delete();
+                           echo 'deleted id='.$id;
+                        break;
+
+
+    }//switch oper
+
+	}//function
 
 	/**
 	 * Deletes a particular model.

@@ -48,7 +48,6 @@ class AssetTemplate extends CActiveRecord
 			array('ware_type_id, budget_item_id, direction_id, asset_group_id, unit_id, price_type_id', 'numerical', 'integerOnly'=>true),
 			array('cost', 'numerical'),
 			array('name', 'required'),
-
 			array('name, info, comment, part_number', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
