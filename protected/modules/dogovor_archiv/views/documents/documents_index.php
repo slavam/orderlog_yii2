@@ -16,7 +16,7 @@
             datatype : 'json',
             mtype : 'GET',
             width:'100%',
-            height:'auto',
+            height:'100%',
             hoverrows:false,
             sortable:true,
             autowidth:true,
@@ -34,10 +34,13 @@
             sortorder : 'asc',
             caption : 'Документы',
             subGrid: true,
-//    ondblClickRow:
-//        function(rowid){
-//            $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
-//    },
+        ondblClickRow: function (rowid, iRow, iCol) {
+            if (subgrid_id)
+                {
+                    alert(rowid+' '+iRow+'  '+iCol);
+                }
+        },
+
     subGridRowExpanded: 
         function(subgrid_id, row_id) {
 	    var subgrid_table_id;
@@ -62,13 +65,13 @@
                 viewrecords: false,
 	        pager: $('#'+subgrid_table_id+'_pager'),
 	        rowNum:10,
-                caption : 'Доп. соглашения'
-//                ondblClickRow:
-//                    function(rowid,e,iCol,iRow){
-//                        //$(location).attr('href','<?//echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
-//                        $(this);
-//                        alert(e);
-//                }
+                caption : 'Доп. соглашения',
+                ondblClickRow:
+                    function(rowid,e,iCol,iRow){
+                        //$(location).attr('href','<?//echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
+                        alert('33');
+                       
+                }
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: false, del: false, edit: false, search: false},
                 {
                     closeAfterEdit: true

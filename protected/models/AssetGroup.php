@@ -54,6 +54,7 @@ class AssetGroup extends CActiveRecord
                     'assets' => array(self::HAS_MANY, 'Asset', 'asset_group_id'),
 //                    'asset' => array(self::HAS_ONE, 'Asset', 'asset_group_id'),
                     'block' => array(self::BELONGS_TO, 'Block', 'block_id'),
+                    
 		);
 	}
 
@@ -97,8 +98,16 @@ class AssetGroup extends CActiveRecord
         public function findAssetGroupsByDirection($dir)
 	{
 	//TODO!!!
-//       		$assetGroups = AssetGroup::model()->findAll(array('order' => 'name', 'condition' => ''));
-//		return CHtml::listData($assetGroups,'id','name');
+       		$assetGroups = AssetGroup::model()->findAllBySql("SELECT 
+                    asset_groups.id, asset_groups.name
+                    FROM 
+                    asset_groups
+                    JOIN blocks on asset_groups.block_id = blocks.id
+
+                    WHERE blocks.direction_id=:dir", array('dir'=>$dir)
+                        );
+                
+		return $assetGroups;
 	}
 
 }

@@ -78,10 +78,8 @@ function actionJqgrid()
         $row->attrs['dog_kind'] = Reference::model()->getReferenceItemById($row->attrs['dog_kind']);
         $row->attrs['pay_system'] = Reference::model()->getReferenceItemById($row->attrs['pay_system']);
         $row->attrs['doc_type'] = $row->templ_description;
-        $criteria = new EMongoCriteria();
-        $criteria->addCond('parent_document', '==', (string)$row->_id);
-        $sc_count = count(Scancopies::model()->findAll($criteria));
-        $row->attrs['additional']= ($sc_count>0)? CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id))):'';
+        
+        $row->attrs['additional']= $this->setAdditionalDataForGrid($row);
         $responce->rows[$i]['id'] = (string)$row['_id'];
         
         foreach ($form['colModel'] as $index=>$colkey)
@@ -95,6 +93,18 @@ function actionJqgrid()
         
     }
     echo CJSON::encode($responce);
+}
+
+/**
+ * Возвращает строку для столбца дополнительных данных
+ */
+private function setAdditionalDataForGrid($row)
+{
+    $criteria = new EMongoCriteria();
+    $criteria->addCond('parent_document', '==', (string)$row->_id);
+    $sc_count = count(Scancopies::model()->findAll($criteria));
+    $result=($sc_count>0)? CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/attachment.png','Прикрепленные файлы',array('width'=>'18')),  Yii::app()->createUrl('/dogovor_archiv/scancopies/FilesList',array('parent_id'=>$row->_id))):'&nbsp;';;
+    return $result;
 }
 
 public function actionGetAllSubDocuments()
