@@ -324,15 +324,17 @@ class ClaimController extends Controller
                     $row->count,
                     $row->cost,
                     $row->amount,
-                    $row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,
-//                    $row->for_whom>0? $row->findWorker($row->for_whom): '',
-                    $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',
+                    $row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
+                    'цель?',//zel'
+                    $row->for_whom>0? $row->findWorker($row->for_whom): '',                  //for_whom
+                    $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
+                    $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//for_whom_div
                     $row->getBusinessName($row->business_id),
-                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id)): '',
+                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
-                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
                     $row->findFeaturesAsString($row->id),
                     $row->findProductsAsString($row->id),
+                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
                     $row->description,
                     $row->asset->info,
                     $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')

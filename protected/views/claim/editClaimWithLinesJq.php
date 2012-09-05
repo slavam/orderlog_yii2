@@ -37,6 +37,14 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
         .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
             overflow: hidden;
         }
+
+     #whole-claim-form table {
+     	margin-bottom: 0; /*0.2em;*/
+     	font-size: 11px !important;
+     }
+     #whole-claim-form table th, #whole-claim-form table td {
+     	padding: 0px 10px 0px 5px;
+     }
 </style>
 
 
@@ -101,41 +109,57 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     
 <table class="table_edit">
     <tr>
-        <td><b>Направление</b></td>
-        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
-            <?php echo $form->error($model,'direction_id'); ?></td>
-        <td><b>Период</b></td>
-        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
-            <?php echo $form->error($model,'period_id'); ?></td>
-    </tr>
-    
-    <tr>
-        <td><b>Отделение</b></td>
-        <td>
-            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
-            <?php echo $form->error($model,'division_id'); ?>
-        </td>        
-        <td><b>Подразделение</b></td>
-        <td>
-            <?php if ($model->division_id>0) {
-                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
-            } else {
-                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
-            }
-            ?> 
-            <?php echo $form->error($model,'department_id'); ?>
+    	<td>
+    		<table >
+    		<tr>
+		        <td><b>Направление</b></td>
+		        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
+		            <?php echo $form->error($model,'direction_id'); ?></td>
+            </tr>
+            <tr>
+		        <td><b>Подразделение</b></td>
+		        <td>
+		            <?php if ($model->division_id>0) {
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
+		            } else {
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
+		            }
+		            ?> 
+		            <?php echo $form->error($model,'department_id'); ?>
+		        </td>
+            </tr>
+            <tr>
+		        <td><b>Отделение</b></td>
+		        <td>
+		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
+		            <?php echo $form->error($model,'division_id'); ?>
+		        </td>        
+            </tr>
+		    <tr>
+		        <td><b>Комментарий</b></td>
+		        <td>
+		            <?php echo $form->textField($model,'comment',array('size'=>60)); ?>
+				<?php echo $form->error($model,'comment'); ?>
+		        </td>
+		    </tr>
+            </table>
         </td>
-    </tr>
-    <tr>
-        <td><b>Комментарий</b></td>
         <td>
-            <?php echo $form->textField($model,'comment',array('size'=>60)); ?>
-		<?php echo $form->error($model,'comment'); ?>
-        </td>
-        <td><b>Описание</b></td>
-        <td>
-            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
-		<?php echo $form->error($model,'description'); ?>
+        	<table>
+        	<tr>
+		        <td><b>Период</b></td>
+		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
+		            <?php echo $form->error($model,'period_id'); ?></td>
+		    	</td>
+        	</tr>
+        	<tr>
+		        <td><b>Описание</b></td>
+		        <td>
+		            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
+				<?php echo $form->error($model,'description'); ?>
+		        </td>
+        	</tr>
+        	</table>
         </td>
     </tr>
 </table>
@@ -185,14 +209,14 @@ $(function() {
     $grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         datatype : 'json',
-        height : '200',
+        height : '320',
         width : '1070',
         mtype : 'GET',
         shrinkToFit : false,
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
-            'Группа','Для кого','Бизнес',
-            'Статья бюджета','Расположение','Характеристики','Продукты','Примечание',
+            'Группа','Цель','Для кого','Для кого','ЦФО','Бизнес',
+            'Статья бюджета','Характеристики','Продукты','Расположение','Примечание',
             'Информация', 'Добавлена'],
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
@@ -203,12 +227,15 @@ $(function() {
             {name: 'cost', width: 40, frozen:false },
             {name: 'amount', width: 60, frozen:false },
             {name: 'assetgroup', width: 200, frozen:false },
+            {name: 'goal', width: 60, frozen:false },
             {name: 'for_whom', width: 300, frozen:false },
+            {name: 'for_whom_div', width: 300, frozen:false },
+            {name: 'payer', width: 100, frozen:false },
             {name: 'business', width: 100, frozen:false },
             {name: 'budget_item', width: 300, frozen:false },
-            {name: 'position', width: 300, frozen:false },
             {name: 'features', width: 300, frozen:false },
             {name: 'products', width: 300, frozen:false },
+            {name: 'position', width: 300, frozen:false },
             {name: 'description', width: 200, frozen:false },
             {name: 'asset_info', width: 300, frozen:false },
             {name: 'created', width: 100, frozen:false }
@@ -219,7 +246,11 @@ $(function() {
         viewrecords: false,
         onSelectRow: function(id){ 
             var hint = $grid.getCell(id, 'asset_info');
-            $(".hint").html('<div>'+hint+'</div>');
+            var name = $grid.getCell(id, 'name');
+            var count = $grid.getCell(id, 'count');
+            var unit = $grid.getCell(id, 'unit');
+            var amount = $grid.getCell(id, 'amount');
+            $(".hint").html('<div><b>'+name+'&nbsp;'+count+unit+'&nbsp;'+amount+'</b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
         },
         gridComplete: function () {
             $grid.setGridParam({datatype:'local'});

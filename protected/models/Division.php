@@ -127,4 +127,12 @@ class DIVISION extends CActiveRecord
 		$models = Division::model()->findAll(array('order' => 'CODE'));
 		return CHtml::listData($models,'ID','NAME');
 	}
+
+	public static function findDivisionById($id)
+	{
+		$models = Division::model()->findByPk($id); //array('order' => 'CODE'));
+		//return CHtml::listData($models,'ID','NAME');
+                return $models->NAME;
+	}
+
 }

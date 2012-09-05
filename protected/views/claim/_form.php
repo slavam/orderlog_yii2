@@ -12,7 +12,7 @@
 	<div class="row">
             <b>Отделение</b>
             <br>
-            <?php echo $form->dropDownList($model,'division_id', Division::All());?> 
+            <?php echo $form->dropDownList($model,'division_id', Division::model()->All());?> 
             <?php echo $form->error($model,'division_id'); ?>
 	</div>
 
@@ -20,9 +20,9 @@
             <b>Подразделение</b>
             <br>
             <?php if ($model->division_id>0) {
-                echo $form->dropDownList($model,'department_id', Department::findDepartmentsByDivision($model->division_id));
+                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
             } else {
-                echo $form->dropDownList($model,'department_id', Department::findDepartments());
+                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
             }
             ?> 
             <?php echo $form->error($model,'department_id'); ?>
@@ -31,14 +31,14 @@
         <div class="row">
             <b>Направление</b>
             <br>
-            <?php echo $form->dropDownList($model,'direction_id', Direction::findDirections());?> 
+            <?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections());?> 
             <?php echo $form->error($model,'direction_id'); ?>
 	</div>
 
 	<div class="row">
 		<b>Период</b>
                 <br>
-		<?php echo $form->dropDownList($model,'period_id', Period::findPeriods());?> 
+		<?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
 		<?php echo $form->error($model,'period_id'); ?>
 	</div>
 
