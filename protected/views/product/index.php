@@ -6,9 +6,6 @@ $cs = Yii::app()->clientScript;
             $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
             $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
             $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
-$this->breadcrumbs=array(
-	'Продукты',
-);
 
 //$this->menu=array(
 //	array('label'=>'Create Product', 'url'=>array('create')),
