@@ -105,12 +105,19 @@ grid.setGridParam({datatype:'json'});
         {
         },
         {
-            onclickSubmit:function(){
-                //sel_=grid.getGridParam('selrow');
-                //iddb=grid.getCell(sel_, 'iddb');
-                //return {"iddb":iddb};
-                alert("fuck");
-            }
+			beforeSubmit: function(form) {
+			
+                var sel_=grid.getGridParam('selrow');
+                var lvl_=grid.getCell(sel_, 'level');
+                var id_ =grid.getCell(sel_, 'id'); 
+                if(lvl_!=2)
+                {
+                	return [false,"Выбрите шаблон!"];
+                }
+                	grid.jqGrid('setGridParam', {editurl:'update?id='+id_});
+                	return [true,"!"];
+
+               }
         },
         {
         }

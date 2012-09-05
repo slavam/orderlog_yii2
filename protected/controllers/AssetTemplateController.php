@@ -227,8 +227,13 @@ class AssetTemplateController extends Controller
 
                     case 'del':
                     	//TODO: check before deletion!!! [o.lysenko 4.sep.2012 16:46]
-                           //$model->delete();
-                           echo 'deleted id='.$id;
+                           $model->delete();
+                           //echo 'deleted id='.$id;
+                            echo CJSON::encode(array(
+                                'status' => 'ok'
+                                ));
+                            Yii::app()->end(); 
+                        
                         break;
 
 
