@@ -16,9 +16,10 @@ function getassetgroupbydirection(){
             .done(function(data) { 
 //                data=jQuery.parseJSON(data);
                 $("#AssetTemplate_asset_group_id").html(data);
-                if ("'.$model->asset_group_id.'")
+
+                    var assetgroup ="'.$model->asset_group_id.'";
+                if (assetgroup!="")
                 {             
-                    var assetgroup ='.$model->asset_group_id.';
                        // alert(assetgroup);
                     $("#AssetTemplate_asset_group_id").val(assetgroup);
                 }
