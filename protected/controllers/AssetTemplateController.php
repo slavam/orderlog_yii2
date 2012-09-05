@@ -171,7 +171,7 @@ class AssetTemplateController extends Controller
 		*/
     $model = $this->loadModel($id);
 
-        switch ($_POST['oper']) {
+        switch ($_REQUEST['oper']) {
             case 'edit':
     if (isset($_POST['AssetTemplate'])) {
         $model->attributes = $_POST['AssetTemplate'];

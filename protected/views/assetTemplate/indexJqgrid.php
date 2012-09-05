@@ -146,7 +146,7 @@ grid.setGridParam({datatype:'json'});
                             'OK': function(){
 
 var options = { 
-                success: function(data){alert(data);},
+//                success: function(data){alert(data);},
                 url: 'create',
                 type: 'post',
                 dataType: 'json',
@@ -269,9 +269,10 @@ $.ajax({
 
 
 				var options = { 
-                url: 'update/?id='+id_,
+                url: 'update/?oper=edit&id='+id_,
                 type: 'post',
                 dataType: 'json',
+
                 error: function(res, status, exeption) {
                                       alert("error:"+res.responseText);
                                     },
