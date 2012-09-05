@@ -104,7 +104,7 @@ class AssetGroup extends CActiveRecord
                     asset_groups
                     JOIN blocks on asset_groups.block_id = blocks.id
 
-                    WHERE blocks.direction_id=:dir", array('dir'=>$dir)
+                    WHERE blocks.direction_id=:dir ORDER BY asset_groups.name", array('dir'=>$dir)
                         );
                 
 		return $assetGroups;

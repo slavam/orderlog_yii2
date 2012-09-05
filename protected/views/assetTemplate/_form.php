@@ -1,6 +1,27 @@
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
+<?php 
+ Yii::app()->clientScript->registerScript(
+      "test",
+      '
+          $(function(){
+          getassetgroupbydirection();
+});
+function getassetgroupbydirection(){
+         $.ajax({
+        url: "'.Yii::app()->createUrl('/assetgroup/GetAssetGroupsByDirection').'",
+        data:{"dir":$("#AssetTemplate_direction_id").val()}
+            })
+            .done(function(data) { 
+//                data=jQuery.parseJSON(data);
+                $("#AssetTemplate_asset_group_id").html(data);
+            });
+        }',
+      CClientScript::POS_HEAD
+  );
+ 
+
+$form=$this->beginWidget('CActiveForm', array(
 	'action'=>'create',
 	'id'=>'asset-template-form',
 //	'enableAjaxValidation'=>true,
@@ -39,13 +60,13 @@
 	<td>
 		<b>Направление</b>
                 <br>
-                <?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections());?> 
+                <?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections(),array('empty'=>'<Выберите направление>','onchange'=>'{getassetgroupbydirection();}','onload'=>'{getassetgroupbydirection();}'));?> 
 		<?php echo $form->error($model,'direction_id'); ?>
 	</td>
 		<td>
 			<b>Группа</b>
 	                <br>
-	                <?php echo $form->dropDownList($model,'asset_group_id', AssetGroup::model()->findAssetGroups());?> 
+	                <?php echo $form->dropDownList($model,'asset_group_id', array(),array('empty'=>'<Выберите группу>'));?> 
 			<?php echo $form->error($model,'asset_group_id'); ?>
 		</td>
 	</tr>

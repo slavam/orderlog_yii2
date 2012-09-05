@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow','GetAssetGroupsByDirection'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -288,8 +288,28 @@ class AssetGroupController extends Controller
 			$ret = CHtml::dropDownList('',null,CHtml::listData($model,'id', 'short_name'),array('empty' => '<Направление>'));
 
 			return print $ret;
-		}
-
+        }
+            
+        public function actionGetAssetGroupsByDirection(){
+            $list=array();
+            if (($dir=$_REQUEST['dir']))
+            {
+                $model = AssetGroup::model()->findAssetGroupsByDirection($dir);
+                
+                if (!empty($model))
+                {
+                    foreach($model as $value)
+                    {
+                        $list[$value->id] = $value->name;
+                    }
+                }
+                
+            }
+            $html=array('encode'=>true,'empty'=>'<Выберите группу>');
+                $options = CHtml::listOptions(null, $list, $html);
+                echo $options;
+        }
+        
         public function actionGetBlocks()
         {
 
