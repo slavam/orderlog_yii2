@@ -328,14 +328,15 @@ class ClaimController extends Controller
                     'цель?',//zel'
                     $row->for_whom>0? $row->findWorker($row->for_whom): '',                  //for_whom
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
-                    $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//for_whom_div
-                    $row->getBusinessName($row->business_id),
-                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
                     $row->findFeaturesAsString($row->id),
                     $row->findProductsAsString($row->id),
-                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',
+//                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
+                    $row->position_id>0 ? $row->findAddress($row->position_id): '',
                     $row->description,
+                    $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//ZFO
+                    $row->getBusinessName($row->business_id),
+                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
                     $row->asset->info,
                     $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );

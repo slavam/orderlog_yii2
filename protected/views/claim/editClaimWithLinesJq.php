@@ -117,6 +117,13 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 		            <?php echo $form->error($model,'direction_id'); ?></td>
             </tr>
             <tr>
+		        <td><b>Отделение</b></td>
+		        <td>
+		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
+		            <?php echo $form->error($model,'division_id'); ?>
+		        </td>        
+            </tr>
+            <tr>
 		        <td><b>Подразделение</b></td>
 		        <td>
 		            <?php if ($model->division_id>0) {
@@ -127,13 +134,6 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 		            ?> 
 		            <?php echo $form->error($model,'department_id'); ?>
 		        </td>
-            </tr>
-            <tr>
-		        <td><b>Отделение</b></td>
-		        <td>
-		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
-		            <?php echo $form->error($model,'division_id'); ?>
-		        </td>        
             </tr>
 		    <tr>
 		        <td><b>Комментарий</b></td>
@@ -215,8 +215,8 @@ $(function() {
         shrinkToFit : false,
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
-            'Группа','Цель','Для кого','Для кого','ЦФО','Бизнес',
-            'Статья бюджета','Характеристики','Продукты','Расположение','Примечание',
+            'Группа','Цель','Для кого','Для кого','Характеристики','Продукты','Расположение','Примечание','ЦФО','Бизнес',
+            'Статья бюджета',
             'Информация', 'Добавлена'],
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
@@ -226,18 +226,18 @@ $(function() {
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false },
             {name: 'amount', width: 60, frozen:false },
-            {name: 'assetgroup', width: 200, frozen:false },
+            {name: 'assetgroup', width: 120, frozen:false },
             {name: 'goal', width: 60, frozen:false },
-            {name: 'for_whom', width: 300, frozen:false },
+            {name: 'for_whom', width: 150, frozen:false },
             {name: 'for_whom_div', width: 300, frozen:false },
-            {name: 'payer', width: 100, frozen:false },
+            {name: 'features', width: 100, frozen:false },
+            {name: 'products', width: 100, frozen:false },
+            {name: 'position', width: 200, frozen:false },
+            {name: 'description', width: 150, frozen:false },
+            {name: 'payer', width: 70, frozen:false },
             {name: 'business', width: 100, frozen:false },
-            {name: 'budget_item', width: 300, frozen:false },
-            {name: 'features', width: 300, frozen:false },
-            {name: 'products', width: 300, frozen:false },
-            {name: 'position', width: 300, frozen:false },
-            {name: 'description', width: 200, frozen:false },
-            {name: 'asset_info', width: 300, frozen:false },
+            {name: 'budget_item', width: 200, frozen:false },
+            {name: 'asset_info', width: 300, frozen:false, hidden:true },
             {name: 'created', width: 100, frozen:false }
         ],
         pager: null, //pager_id,
@@ -250,7 +250,7 @@ $(function() {
             var count = $grid.getCell(id, 'count');
             var unit = $grid.getCell(id, 'unit');
             var amount = $grid.getCell(id, 'amount');
-            $(".hint").html('<div><b>'+name+'&nbsp;'+count+unit+'&nbsp;'+amount+'</b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
         },
         gridComplete: function () {
             $grid.setGridParam({datatype:'local'});
