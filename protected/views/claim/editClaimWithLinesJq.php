@@ -246,9 +246,9 @@ $(function() {
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
-            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubroupStrings(), array('key'=>'id','value'=>'name'))?> } },
-            {name: 'goal', width: 60, frozen:false },
-            {name: 'for_whom', width: 150, frozen:false },
+            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
+            {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
+            {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?> } },
             {name: 'for_whom_div', width: 300, frozen:false },
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },

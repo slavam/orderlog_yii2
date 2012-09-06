@@ -112,12 +112,12 @@ class AssetGroup extends CActiveRecord
 	}
 
 	//o.lysenko 6.sep.2012 15:06
-	public function getGroupSubroupStrings()
+	public function getGroupSubgroupStrings()
 	{
 		
 		$crit  = new CDbCriteria();
 		$crit->with=array('block');
-                $crit->order='t.id';
+                $crit->order='block.name, t.id';
 		$model = AssetGroup::model()->findAll($crit);
                 foreach ($model as $key => $value) {
                     $model[$key]->name=$model[$key]->block->name.' => '.$model[$key]->name;
