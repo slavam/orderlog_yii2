@@ -80,6 +80,10 @@ body
 	text-decoration:none;
 }
 
+.clear{
+    clear:both;
+}
+
 div.flash-error, div.flash-notice, div.flash-success
 {
 	padding:.8em;
