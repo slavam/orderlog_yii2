@@ -164,13 +164,17 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     </tr>
 </table>
 
-<table id="claim_line_list"></table> 
-<div id="pager_"></div> 
 <?php $this->endWidget(); ?>
 
+<table id="claim_line_list"></table> 
+<div id="pager_"></div> 
+<div id="edit_dlg"></div>
 
 <script type="text/javascript">
 $(function() {
+
+	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
+
     var $grid=$("#claim_line_list"),
 //=============================================================================================================
                 fixPositionsOfFrozenDivs = function () {
@@ -204,8 +208,24 @@ $(function() {
                         $(this.grid.fhDiv).css($(this.grid.hDiv).position());
                     }
                 };
-//========================================================================================================================
-//    var pager_selector = "#pager_";
+//=============================================================================================================
+	function fill_pane(id)
+	{
+            var hint = $grid.getCell(id, 'asset_info');
+            var name = $grid.getCell(id, 'name');
+            var count = $grid.getCell(id, 'count');
+            var unit = $grid.getCell(id, 'unit');
+            var amount = $grid.getCell(id, 'amount');
+            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+	};
+	function calc_amount(id)
+	{
+            var count = $grid.getCell(id, 'count');
+            var cost = $grid.getCell(id, 'cost');
+            var amount = count*cost;
+            $grid.setCell(id, 'amount', amount);
+	};
+    var pager_selector = "#pager_";
     $grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         datatype : 'json',
@@ -221,11 +241,11 @@ $(function() {
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false},
-            {name: 'name',index:'name', width:300, frozen: false},
+            {name: 'name',index:'name', width:300, frozen: false, editable:true},
             {name: 'unit', width: 40, frozen:false },
             {name: 'count', width: 40, frozen:false, editable:true},
-            {name: 'cost', width: 40, frozen:false },
-            {name: 'amount', width: 60, frozen:false },
+            {name: 'cost', width: 40, frozen:false, editable:true},
+            {name: 'amount', width: 60, frozen:false }, //calculated!
             {name: 'assetgroup', width: 120, frozen:false },
             {name: 'goal', width: 60, frozen:false },
             {name: 'for_whom', width: 150, frozen:false },
@@ -245,12 +265,7 @@ $(function() {
         pgtext: null,  
         viewrecords: false,
         onSelectRow: function(id){ 
-            var hint = $grid.getCell(id, 'asset_info');
-            var name = $grid.getCell(id, 'name');
-            var count = $grid.getCell(id, 'count');
-            var unit = $grid.getCell(id, 'unit');
-            var amount = $grid.getCell(id, 'amount');
-            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+        	fill_pane(id);
         },
         gridComplete: function () {
             $grid.setGridParam({datatype:'local'});
@@ -268,14 +283,29 @@ $(function() {
                 //----------------------------------------------------
         ondblClickRow: function(rowid, iRow, iCol, e) {
 
+        
             	$grid.setGridParam({editurl:'#'});
 				$grid.setGridParam({datatype:'json'});
 
                     $(this).jqGrid('editRow', rowid, true, function () {
                         $("input, select", e.target).focus();
-                    }, null, '', null, null, null, function () {fixPositionsOfFrozenDivs.call(this)} );
-                    fixPositionsOfFrozenDivs.call(this);
+                    	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){/*aftersave*/
+                    		fill_pane(rowid);
+                    		calc_amount(rowid);
+                    	}, 
+                    	null, 
+	                    function () {/*afterrestore*/
+	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    } 
+                    );
+
+                    /*fixPositionsOfFrozenDivs.call(this);*/
                     return;
+       
 
 //            alert(id+' '+lastSel);
 //            if (id && id != lastSel) { 
@@ -288,7 +318,7 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)},
-    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
+    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:true, refresh:false,search:false});
            
 
 });
