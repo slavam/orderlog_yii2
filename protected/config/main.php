@@ -7,7 +7,7 @@
 
 return array(
     'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
-    'name' => 'WEB-ЗАКАЗ',
+    'name' => 'ERP-система(Логистика, финансовый и бухгалтерский учет)',
     'sourceLanguage' => 'ru',
     // preloading 'log' component
     'preload' => array('log'),
@@ -28,7 +28,7 @@ return array(
         //'ipFilters'=>array('127.0.0.1','::1'),
         ),
 	'dogovor_archiv'=>array(
-	'modulename'=>'Electro Arhiv',
+	'modulename'=>'Документы',
 	//'layoutPath'=>"protected/modules/dogovor_archiv/views/layouts",
 	//'layout'=>'/layouts/dogovor_archiv_main'
 	)
