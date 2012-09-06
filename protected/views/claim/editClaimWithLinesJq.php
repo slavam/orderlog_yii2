@@ -173,7 +173,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 <script type="text/javascript">
 $(function() {
 
-	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
+//	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
 
     var $grid=$("#claim_line_list"),
 //=============================================================================================================
@@ -240,13 +240,13 @@ $(function() {
             'Информация', 'Добавлена'],
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
-            {name: 'type', width: 25, frozen: false},
+            {name: 'type', width: 25, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'name',index:'name', width:300, frozen: false, editable:true},
-            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', editrules:{required:true, number:true}, editoptions: {dataUrl:'getDirectionsForSelect'} },
+            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
-            {name: 'assetgroup', width: 120, frozen:false },
+            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             {name: 'goal', width: 60, frozen:false },
             {name: 'for_whom', width: 150, frozen:false },
             {name: 'for_whom_div', width: 300, frozen:false },
@@ -265,7 +265,6 @@ $(function() {
         pgtext: null,  
         viewrecords: false,
         onSelectRow: function(id){ 
-        	fill_pane(id);
         },
         gridComplete: function () {
             $grid.setGridParam({datatype:'local'});
@@ -276,13 +275,13 @@ $(function() {
                     if (rowid !== lastSel) {
                         $(this).jqGrid('restoreRow', lastSel);
                         fixPositionsOfFrozenDivs.call(this);
+                       	if(rowid!=lastSel) fill_pane(rowid);
                         lastSel = rowid;
                     }
                     return true;
                 },
                 //----------------------------------------------------
         ondblClickRow: function(rowid, iRow, iCol, e) {
-
         
             	$grid.setGridParam({editurl:'#'});
 				$grid.setGridParam({datatype:'json'});

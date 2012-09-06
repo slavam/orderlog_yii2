@@ -17,7 +17,7 @@ class Helpers extends CApplicationComponent{
         $result=array();
         if ($model)
         {
-            
+           
             $model=$model->findAll(array('order' => $order));
             foreach ($model as $key=>$value)
             {
