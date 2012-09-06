@@ -12,16 +12,6 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custo
 
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
 
-$this->breadcrumbs=array(
-	'Группы товаров',
-);
-
-/*
-$this->menu=array(
-	array('label'=>'Create AssetGroup', 'url'=>array('create')),
-	array('label'=>'Manage AssetGroup', 'url'=>array('admin')),
-);
-*/
 ?>
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
@@ -45,7 +35,7 @@ $(function() {
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
-        width : '900',
+        width : '1160',
         height : 'auto',
         mtype : 'GET',
         colNames : [ 'IDDB', 'Группа','Комментарий', 'Код', 'Направление' /*, ''*/  ],
@@ -54,7 +44,9 @@ $(function() {
          { name : 'name', index : 'name', width : 150, editable: true, sortable:false, editrules:{required:true} },
          { name : 'comment', index : 'comment', width : 200, editable: true, sortable:false },
          { name : 'stamp', index : 'stamp', width : 20, editable: true, sortable:false, editrules:{required:true} },                         /* */
-         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, edittype:'select', editrules:{required:true, number:true}, editoptions: {dataUrl:'getDirectionsForSelect'}},
+//         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, edittype:'select', editrules:{required:true, number:true}, editoptions: {dataUrl:'getDirectionsForSelect'}},
+         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, edittype: 'select', editoptions: {value: <?php echo Helpers::BuildEditOptions(Direction::model(),array('key'=>'id','value'=>'short_name'))?> }},
+
 /*		 { name : 'btns', index : 'btns', width : 25, sortable:false,formatter:'actions', formatoptions:{keys:true,delbutton:false}},*/
         ],
         caption : 'Группы товаров',

@@ -166,4 +166,15 @@ class Worker extends CActiveRecord
                 }			
                 return $data;
 	}
+
+        	public static function findWorkersWithStaff()
+	{
+		$workers = Worker::model()->findAll(array('order' => 'LASTNAME, FIRSTNAME, SONAME'));
+//                $data = array(''=>'Задайте сотрудника');
+                foreach($workers as $key => $value){
+                        $workers[$key]->LASTNAME = $workers[$key]->LASTNAME." ".$workers[$key]->FIRSTNAME." ".$workers[$key]->SONAME.", ".$workers[$key]->STAFF;
+                }			
+                return $workers;
+	}
+
 }
