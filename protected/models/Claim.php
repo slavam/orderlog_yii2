@@ -122,6 +122,7 @@ class Claim extends CActiveRecord
 		));
 	}
 
+
         public function findDepartmentHiLow($code_div)
 	{
             if ($code_div<1) return '';

@@ -226,6 +226,7 @@ $(function() {
             $grid.setCell(id, 'amount', amount);
 	};
     var pager_selector = "#pager_";
+    var worker_id;
     $grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         datatype : 'json',
@@ -248,7 +249,25 @@ $(function() {
             {name: 'amount', width: 60, frozen:false }, //calculated!
             {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
-            {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?> } },
+            {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
+
+            				dataInit: function (elem) {
+                                var v = $(elem).val();
+                                worker_id = v;
+                                //alert(v);
+                            },
+			dataEvents: 
+			[
+                   {
+                       type: 'change',
+                       fn: function(e) {
+                       		//var v = parseInt($(e.target).val(), 10);
+                       		worker_id = $(e.target).val();
+                       }
+                   }
+            ]            
+            }//editoptions
+            },
             {name: 'for_whom_div', width: 300, frozen:false },
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
@@ -295,6 +314,22 @@ $(function() {
                     	function(){/*aftersave*/
                     		fill_pane(rowid);
                     		calc_amount(rowid);
+                    		//o.lysenko 6.sep.2012 19:16
+                    		//ajax load department of worker
+                    		
+//                    		alert(worker_id);
+                    		
+         $.ajax({
+        url: "findWorkerDepForList?id="+worker_id
+//        data:{"dir":$("#AssetTemplate_direction_id").val()}
+            })
+            .done(function(data) { 
+//                data=jQuery.parseJSON(data);
+//                $("#AssetTemplate_asset_group_id").html(data);
+//				alert(data);
+				$grid.setCell(rowid,'for_whom_div',data);
+            });
+
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
