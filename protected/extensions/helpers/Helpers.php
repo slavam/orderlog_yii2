@@ -12,9 +12,13 @@ class Helpers extends CApplicationComponent{
      * @param attributes array
      * attributes to build 
      */
-    public static function BuildEditOptions($model=null,$attributes=array('key'=>'id','value'=>null),$order='id')
+    public static function BuildEditOptions($model=null,$attributes=array('key'=>'id','value'=>null),$order='id',$empty=false)
     {
-        $result=array();
+        if ($empty !=false AND is_string($empty))
+        {
+            $result[0]='"":'.$empty;
+        }
+        else $result=array();
         if ($model)
         {
            
@@ -29,9 +33,14 @@ class Helpers extends CApplicationComponent{
         }
         else return false;
     }
-    public static function BuildEditOptionsWithModel($model,$attributes=array('key'=>'id','value'=>null),$order='id')
+    public static function BuildEditOptionsWithModel($model,$attributes=array('key'=>'id','value'=>null),$order='id',$empty=false)
     {
-        $result=array();
+        if ($empty !=false AND is_string($empty))
+        {
+            $result[0]='"":'.$empty;
+        }
+        else $result=array();
+        
         if ($model)
         {
             foreach ($model as $key=>$value)
