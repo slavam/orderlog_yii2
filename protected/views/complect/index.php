@@ -59,7 +59,7 @@ $this->breadcrumbs=array(
             colNames : ['iddb','Тип','Название','Комментарий'],
             colModel : [
                 {name:'iddb',index:'id', width:20, hidden:true},
-                {name:'complect_type_id', index:'complect_type_id', width:20,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptionsForGrid(ComplectType::model(), array('key'=>'id','value'=>'name'))?>}},
+                {name:'complect_type_id', index:'complect_type_id', width:20,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptions(ComplectType::model(), array('key'=>'id','value'=>'name'))?>}},
                 {name:'name', index:'name', width:100,editable:true},
                 {name:'comment',index:'comment', width:100,editable:true}
                 ],

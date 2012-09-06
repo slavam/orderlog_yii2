@@ -58,7 +58,7 @@ $cs = Yii::app()->clientScript;
             colModel : [
                 {name:'iddb',index:'id', width:20, hidden:true},
                 {name:'name', index:'name', width:70,editable:true},
-                {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptionsForGrid(Direction::model(), array('key'=>'id','value'=>'name'))?>}}
+                {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Direction::model(), array('key'=>'id','value'=>'name'))?>}}
                 ],
             pager : '#product-grid-pager',
             rowNum : 0,

@@ -12,16 +12,34 @@ class Helpers extends CApplicationComponent{
      * @param attributes array
      * attributes to build 
      */
-    public static function BuildEditOptionsForGrid($model=null,$attributes=array('key'=>'id','value'=>null),$order='id')
+    public static function BuildEditOptions($model=null,$attributes=array('key'=>'id','value'=>null),$order='id')
     {
         $result=array();
-        if (($model=$model->findAll(array('order' => $order))))
+        if ($model)
+        {
+            
+            $model=$model->findAll(array('order' => $order));
+            foreach ($model as $key=>$value)
+            {
+                $result[]= $value->$attributes['key'].':'.$value->$attributes['value'];
+            }   
+            $result = implode(';',$result);
+
+            return CJSON::encode($result);
+        }
+        else return false;
+    }
+    public static function BuildEditOptionsWithModel($model,$attributes=array('key'=>'id','value'=>null),$order='id')
+    {
+        $result=array();
+        if ($model)
         {
             foreach ($model as $key=>$value)
             {
                 $result[]= $value->$attributes['key'].':'.$value->$attributes['value'];
             }   
             $result = implode(';',$result);
+
             return CJSON::encode($result);
         }
         else return false;
