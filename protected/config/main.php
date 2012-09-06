@@ -17,6 +17,7 @@ return array(
         'application.components.*',
 	'ext.YiiMongoDbSuite.*',
         'ext.ModelRulesBuilder.*',
+        'ext.Helpers.*',
         'zii.widgets.jui.*',
     ),
     'modules' => array(

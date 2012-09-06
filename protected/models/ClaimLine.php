@@ -84,12 +84,14 @@ class ClaimLine extends CActiveRecord
                     'accountLines' => array(self::HAS_MANY, 'AccountLines', 'clime_line_id'),
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id'),
                     'claim' => array(self::BELONGS_TO, 'Claim', 'claim_id'),
+                    'claim_sum' => array(self::HAS_ONE, 'Claim', 'claim_id'),
                     'business' => array(self::BELONGS_TO, 'Business', 'business_id'),
                     'position' => array(self::BELONGS_TO, 'Place', 'position_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
                     'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
                     'payer' => array(self::BELONGS_TO, 'Division', 'payer_id'),
+//                    'claim_sum'=>array(self::HAS_MANY,'Claim','claime_id',)
 		);
 	}
 
@@ -206,6 +208,9 @@ class ClaimLine extends CActiveRecord
             $business = Business::model()->findBySql($sql);
             return $business->NAME;
         }
+        
+        
+        
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
 //            return nil;
