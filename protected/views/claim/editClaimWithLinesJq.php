@@ -37,6 +37,14 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
         .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
             overflow: hidden;
         }
+
+     #whole-claim-form table {
+     	margin-bottom: 0; /*0.2em;*/
+     	font-size: 11px !important;
+     }
+     #whole-claim-form table th, #whole-claim-form table td {
+     	padding: 0px 10px 0px 5px;
+     }
 </style>
 
 
@@ -101,52 +109,72 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     
 <table class="table_edit">
     <tr>
-        <td><b>Направление</b></td>
-        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
-            <?php echo $form->error($model,'direction_id'); ?></td>
-        <td><b>Период</b></td>
-        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
-            <?php echo $form->error($model,'period_id'); ?></td>
-    </tr>
-    
-    <tr>
-        <td><b>Отделение</b></td>
-        <td>
-            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
-            <?php echo $form->error($model,'division_id'); ?>
-        </td>        
-        <td><b>Подразделение</b></td>
-        <td>
-            <?php if ($model->division_id>0) {
-                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
-            } else {
-                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
-            }
-            ?> 
-            <?php echo $form->error($model,'department_id'); ?>
+    	<td>
+    		<table >
+    		<tr>
+		        <td><b>Направление</b></td>
+		        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
+		            <?php echo $form->error($model,'direction_id'); ?></td>
+            </tr>
+            <tr>
+		        <td><b>Отделение</b></td>
+		        <td>
+		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
+		            <?php echo $form->error($model,'division_id'); ?>
+		        </td>        
+            </tr>
+            <tr>
+		        <td><b>Подразделение</b></td>
+		        <td>
+		            <?php if ($model->division_id>0) {
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
+		            } else {
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
+		            }
+		            ?> 
+		            <?php echo $form->error($model,'department_id'); ?>
+		        </td>
+            </tr>
+		    <tr>
+		        <td><b>Комментарий</b></td>
+		        <td>
+		            <?php echo $form->textField($model,'comment',array('size'=>60)); ?>
+				<?php echo $form->error($model,'comment'); ?>
+		        </td>
+		    </tr>
+            </table>
         </td>
-    </tr>
-    <tr>
-        <td><b>Комментарий</b></td>
         <td>
-            <?php echo $form->textField($model,'comment',array('size'=>60)); ?>
-		<?php echo $form->error($model,'comment'); ?>
-        </td>
-        <td><b>Описание</b></td>
-        <td>
-            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
-		<?php echo $form->error($model,'description'); ?>
+        	<table>
+        	<tr>
+		        <td><b>Период</b></td>
+		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
+		            <?php echo $form->error($model,'period_id'); ?></td>
+		    	</td>
+        	</tr>
+        	<tr>
+		        <td><b>Описание</b></td>
+		        <td>
+		            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
+				<?php echo $form->error($model,'description'); ?>
+		        </td>
+        	</tr>
+        	</table>
         </td>
     </tr>
 </table>
 
-<table id="claim_line_list"></table> 
-<div id="pager_"></div> 
 <?php $this->endWidget(); ?>
 
+<table id="claim_line_list"></table> 
+<div id="pager_"></div> 
+<div id="edit_dlg"></div>
 
 <script type="text/javascript">
 $(function() {
+
+	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
+
     var $grid=$("#claim_line_list"),
 //=============================================================================================================
                 fixPositionsOfFrozenDivs = function () {
@@ -180,37 +208,56 @@ $(function() {
                         $(this.grid.fhDiv).css($(this.grid.hDiv).position());
                     }
                 };
-//========================================================================================================================
-//    var pager_selector = "#pager_";
+//=============================================================================================================
+	function fill_pane(id)
+	{
+            var hint = $grid.getCell(id, 'asset_info');
+            var name = $grid.getCell(id, 'name');
+            var count = $grid.getCell(id, 'count');
+            var unit = $grid.getCell(id, 'unit');
+            var amount = $grid.getCell(id, 'amount');
+            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+	};
+	function calc_amount(id)
+	{
+            var count = $grid.getCell(id, 'count');
+            var cost = $grid.getCell(id, 'cost');
+            var amount = count*cost;
+            $grid.setCell(id, 'amount', amount);
+	};
+    var pager_selector = "#pager_";
     $grid.jqGrid( {
         url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         datatype : 'json',
-        height : '200',
+        height : '320',
         width : '1070',
         mtype : 'GET',
         shrinkToFit : false,
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
-            'Группа','Для кого','Бизнес',
-            'Статья бюджета','Расположение','Характеристики','Продукты','Примечание',
+            'Группа','Цель','Для кого','Для кого','Характеристики','Продукты','Расположение','Примечание','ЦФО','Бизнес',
+            'Статья бюджета',
             'Информация', 'Добавлена'],
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false},
-            {name: 'name',index:'name', width:300, frozen: false},
+            {name: 'name',index:'name', width:300, frozen: false, editable:true},
             {name: 'unit', width: 40, frozen:false },
             {name: 'count', width: 40, frozen:false, editable:true},
-            {name: 'cost', width: 40, frozen:false },
-            {name: 'amount', width: 60, frozen:false },
-            {name: 'assetgroup', width: 200, frozen:false },
-            {name: 'for_whom', width: 300, frozen:false },
+            {name: 'cost', width: 40, frozen:false, editable:true},
+            {name: 'amount', width: 60, frozen:false }, //calculated!
+            {name: 'assetgroup', width: 120, frozen:false },
+            {name: 'goal', width: 60, frozen:false },
+            {name: 'for_whom', width: 150, frozen:false },
+            {name: 'for_whom_div', width: 300, frozen:false },
+            {name: 'features', width: 100, frozen:false },
+            {name: 'products', width: 100, frozen:false },
+            {name: 'position', width: 200, frozen:false },
+            {name: 'description', width: 150, frozen:false },
+            {name: 'payer', width: 70, frozen:false },
             {name: 'business', width: 100, frozen:false },
-            {name: 'budget_item', width: 300, frozen:false },
-            {name: 'position', width: 300, frozen:false },
-            {name: 'features', width: 300, frozen:false },
-            {name: 'products', width: 300, frozen:false },
-            {name: 'description', width: 200, frozen:false },
-            {name: 'asset_info', width: 300, frozen:false },
+            {name: 'budget_item', width: 200, frozen:false },
+            {name: 'asset_info', width: 300, frozen:false, hidden:true },
             {name: 'created', width: 100, frozen:false }
         ],
         pager: null, //pager_id,
@@ -218,8 +265,7 @@ $(function() {
         pgtext: null,  
         viewrecords: false,
         onSelectRow: function(id){ 
-            var hint = $grid.getCell(id, 'asset_info');
-            $(".hint").html('<div>'+hint+'</div>');
+        	fill_pane(id);
         },
         gridComplete: function () {
             $grid.setGridParam({datatype:'local'});
@@ -237,14 +283,29 @@ $(function() {
                 //----------------------------------------------------
         ondblClickRow: function(rowid, iRow, iCol, e) {
 
+        
             	$grid.setGridParam({editurl:'#'});
 				$grid.setGridParam({datatype:'json'});
 
                     $(this).jqGrid('editRow', rowid, true, function () {
                         $("input, select", e.target).focus();
-                    }, null, '', null, null, null, function () {fixPositionsOfFrozenDivs.call(this)} );
-                    fixPositionsOfFrozenDivs.call(this);
+                    	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){/*aftersave*/
+                    		fill_pane(rowid);
+                    		calc_amount(rowid);
+                    	}, 
+                    	null, 
+	                    function () {/*afterrestore*/
+	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    } 
+                    );
+
+                    /*fixPositionsOfFrozenDivs.call(this);*/
                     return;
+       
 
 //            alert(id+' '+lastSel);
 //            if (id && id != lastSel) { 
@@ -257,7 +318,7 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)},
-    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
+    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:true, refresh:false,search:false});
            
 
 });

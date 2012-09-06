@@ -16,17 +16,17 @@ $this->breadcrumbs=array(
 	<div class="row">
 		<b>Комплект</b>
                 <br>
-		<?php echo CHtml::dropDownList('complect_id',$complect_id, Complect::findComplects()); ?> 
+		<?php echo CHtml::dropDownList('complect_id',$complect_id, Complect::model()->findComplects()); ?> 
 	</div>
 	<div class="row">
 		<b>Бизнес</b>
                 <br>
-		<?php echo CHtml::dropDownList('business_id',$business_id, Business::findBusinesses()); ?>
+		<?php echo CHtml::dropDownList('business_id',$business_id, Business::model()->findBusinesses()); ?>
 	</div>
 	<div class="row">
 		<b>Для кого</b>
                 <br>
-		<?php echo CHtml::dropDownList('for_whom',$for_whom, Worker::findWorkers()); ?>
+		<?php echo CHtml::dropDownList('for_whom',$for_whom, Worker::model()->findWorkers()); ?>
 	</div>
         <div class="row buttons">
 		<?php echo CHtml::submitButton('Выбрать'); ?>
