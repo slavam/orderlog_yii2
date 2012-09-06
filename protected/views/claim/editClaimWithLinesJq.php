@@ -242,7 +242,7 @@ $(function() {
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false},
             {name: 'name',index:'name', width:300, frozen: false, editable:true},
-            {name: 'unit', width: 40, frozen:false },
+            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', editrules:{required:true, number:true}, editoptions: {dataUrl:'getDirectionsForSelect'} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
