@@ -17,7 +17,7 @@
             mtype : 'GET',
             width:'100%',
             height:'100%',
-            hoverrows:false,
+            hoverrows:true,
             sortable:true,
             autowidth:true,
             ignoreCase:true,

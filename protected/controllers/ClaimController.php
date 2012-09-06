@@ -31,7 +31,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision',
-                                    'editWholeClaim'),
+                                    'editWholeClaim','ReportGroup'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -537,5 +537,15 @@ class ClaimController extends Controller
 //            Yii::app()->end();
 //        } 
         
+    }
+    
+    public function actionReportGroup()
+    {
+        $model=Claim::model()->reportGroup();
+        foreach ($model as $key=>$value)
+        {
+            $result[] =$value;
+        }
+        $this->render('reports/reportgroup',array('result'=>$result));
     }
 }

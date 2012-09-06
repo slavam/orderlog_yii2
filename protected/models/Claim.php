@@ -176,4 +176,24 @@ class Claim extends CActiveRecord
             }
             return $s;
 	}
+        
+        public function reportGroup()
+        {
+//            $sql="Select a.name as aname, cl.amount as clamount, cl.count as clcount, ag.name as agname FROM claims c INNER JOIN claim_lines cl ON cl.claim_id = c.id 
+//                INNER JOIN assets a ON cl.asset_id=a.id 
+//                INNER JOIN asset_groups ag ON a.asset_group_id = ag.id 
+//                WHERE c.direction_id=1 AND c.period_id=1841";
+            
+            $criteria = new CDbCriteria;
+            $criteria->addCondition('c.direction_id=1');
+            $criteria->addCondition('c.period_id=1841');
+            $criteria->alias='c';
+            $criteria->group='agname, aname, aid';
+            $criteria->select='a.name as aname, SUM(cl.amount) as clamount, SUM(cl.count) as clcount, ag.name as agname, a.id as aid';
+            $criteria->join="INNER JOIN claim_lines cl ON cl.claim_id = c.id INNER JOIN assets a ON cl.asset_id=a.id INNER JOIN asset_groups ag ON a.asset_group_id = ag.id" ;
+//            $criteria->with=array('claim_sum','asset','asset.assetgroup'=>array('alias'=>'ag'));
+            
+            $reportDataSet = findAll($criteria);
+            return $reportDataSet;
+        }
 }

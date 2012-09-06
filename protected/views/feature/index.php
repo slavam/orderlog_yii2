@@ -61,7 +61,8 @@ $this->breadcrumbs=array(
             colModel : [
                 {name:'iddb',index:'id', width:20, hidden:true},
                 {name:'name', index:'name', width:70,editable:true},
-                {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Direction::model()->findDirectionsJqgrid()?>}}
+//                {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?//echo Direction::model()->findDirectionsJqgrid()?>}}
+{name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptionsForGrid(Direction::model(), array('key'=>'id','value'=>'name'))?>}}
                 ],
             pager : '#feature-grid-table',
             rowNum : 0,

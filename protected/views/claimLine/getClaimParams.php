@@ -22,4 +22,8 @@ $form=$this->beginWidget('CActiveForm', array(
             <?php echo CHtml::submitButton('Показать'); ?>
 	</div>
 <?php $this->endWidget(); ?>
+    
+<?
+echo CHtml::link('Отчет "Группы"','/index.php/claim/ReportGroup');
+?>
 </div><!-- form -->
