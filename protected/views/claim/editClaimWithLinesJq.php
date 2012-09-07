@@ -211,6 +211,7 @@ $(function() {
 //=============================================================================================================
 	function fill_pane(id)
 	{
+			$(".hint").html("");
             var hint = $grid.getCell(id, 'asset_info');
             var name = $grid.getCell(id, 'name');
             var count = $grid.getCell(id, 'count');
@@ -227,20 +228,24 @@ $(function() {
 	};
     var pager_selector = "#pager_";
     var worker_id;
+    var new_line_added=false;
     $grid.jqGrid( {
-//        url : "getDataForSubGrid?claim_id="+<?php echo $model->id?$model->id:"" ?>,
-        url : "<?echo Yii::app()->createUrl('claim/getDataForSubGrid',array('claim_id'=>$model->id))?>",
+//        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
+        url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
         datatype : 'json',
-        height : '320',
+        height : '295',
         width : '1070',
         mtype : 'GET',
         shrinkToFit : false,
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
             'Группа','Цель','Для кого','Для кого','Характеристики','Продукты','Расположение','Примечание','ЦФО','Бизнес',
-            'Статья бюджета',
+            'Статья бюджета','Статус',
             'Информация', 'Добавлена'],
         colModel: [
+
+            //TODO: formatter - numeric fields!
+
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'name',index:'name', width:220, frozen: false, editable:true},
@@ -273,48 +278,53 @@ $(function() {
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
             {name: 'position', width: 150, frozen:false },
-            {name: 'description', width: 110, frozen:false },
-            {name: 'payer', width: 70, frozen:false },
-            {name: 'business', width: 100, frozen:false },
-            {name: 'budget_item', width: 200, frozen:false },
+            {name: 'description', width: 110, frozen:false, editable:true, edittype:'textarea' },
+            {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
+            
+            {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
+            {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'asset_info', width: 300, frozen:false, hidden:true },
-            {name: 'created', width: 100, frozen:false }
+            {name: 'created', width: 100, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
         ],
-        pager: null, //pager_id,
+        pager: pager_selector,
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
         viewrecords: false,
-        onSelectRow: function(id){ 
-        },
-        gridComplete: function () {
+        loadComplete: function () {
             $grid.setGridParam({datatype:'local'});
             $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
         },
                 //----------------------------------------------------
                 beforeSelectRow: function (rowid) {
-                    if (rowid !== lastSel) {
+                    if ((rowid !== lastSel)&&(!new_line_added)) {
                         $(this).jqGrid('restoreRow', lastSel);
                         fixPositionsOfFrozenDivs.call(this);
-                       	if(rowid!=lastSel) fill_pane(rowid);
+                       	fill_pane(rowid);
                         lastSel = rowid;
                     }
                     return true;
                 },
                 //----------------------------------------------------
-        ondblClickRow: function(rowid, iRow, iCol, e) {
+                // 
+        ondblClickRow: function (rowid, iRow, iCol, e) {
         
             	$grid.setGridParam({editurl:'#'});
 				$grid.setGridParam({datatype:'json'});
 
                     $(this).jqGrid('editRow', rowid, true, function () {
-                        $("input, select", e.target).focus();
+//                        $("input, select, e.target").focus(); //
+                        $('#'+rowid+'_type').focus(); //
+
                     	},
                     	null,
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-                    		fill_pane(rowid);
+
+                    		new_line_added=false;
                     		calc_amount(rowid);
+                    		fill_pane(rowid);
                     		//o.lysenko 6.sep.2012 19:16
                     		//ajax load department of worker
                     		
@@ -335,6 +345,11 @@ $(function() {
                     	null, 
 	                    function () {/*afterrestore*/
 	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    	if(new_line_added)
+	                    	{
+	                    		$grid.delRowData(rowid);
+	                    		new_line_added=false;
+	                    	}
 	                    } 
                     );
 
@@ -353,8 +368,150 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)},
-    });//.navGrid('#pager_',{view:false, del:false, add:false, edit:true, refresh:false,search:false});
+    }).navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
            
+   $grid.jqGrid('navButtonAdd',pager_selector,{
+            caption: '',//'Группа',
+            title: 'Добавить строку',
+            buttonicon: 'ui-icon-plusthick',
+            onClickButton: function()
+            {
+            /*
+            	if(new_line_added){ //catch double addition
+            	               new_line_added=true;
+            	               var last_row_id = $grid.getGridParam("reccount");
+            	               $grid.delRowData(last_row_id);
+				}*/
+
+                $grid.jqGrid('restoreRow', lastSel);
+
+				if(new_line_added)
+				{
+                        $grid.delRowData(rowid);
+                        fixPositionsOfFrozenDivs.call(this);
+				}
+	
+				new_line_added=true;	
+
+               var last_row_id = $grid.getGridParam("reccount");
+               var lastSel=rowid=last_row_id+1;
+               var row = {"iddb":rowid,
+						"type":"",
+						"name":"",
+						"unit":"",
+						"count":"",
+						"cost":"",
+						"amount":"",
+						"assetgroup":"",
+						"goal":"",
+						"for_whom":"",
+						"for_whom_div":"",
+						"features":"",
+						"products":"",
+						"position":"",
+						"description":"",
+						"payer":"",
+						"business":"",
+						"budget_item":"",
+						"status":"",
+						"asset_info":"",
+						"created":""
+               		     };
+
+             
+	           	$grid.setGridParam({editurl:'#'});
+				$grid.setGridParam({datatype:'json'});
+
+               $grid.addRowData(rowid,row,"last");
+               $grid.setSelection(rowid, true);
+
+
+                    $(this).jqGrid('editRow', rowid, true, function () {
+//                        $("input, select, e.target").focus(); //
+                        $('#'+rowid+'_type').focus(); //
+                   	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){/*aftersave*/
+                    		new_line_added=false;
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		
+         $.ajax({
+        url: "findWorkerDepForList?id="+worker_id
+            })
+            .done(function(data) { 
+				$grid.setCell(rowid,'for_whom_div',data);
+            });
+
+                    	}, 
+                    	null, 
+	                    function () {/*afterrestore*/
+	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    	if(new_line_added)
+	                    	{
+	                    		$grid.delRowData(rowid);
+	                    		new_line_added=false;
+	                    	}
+	                    } 
+                    );
+
+
+               //xedit(rowid,null,null,null);
+               //$('#'+rowid+' .jqgrow').get(0).dblclick();
+
+//               alert('#'+rowid+'_name');
+//               $('#'+rowid+' .jqgrow').click();
+//               $grid.click();
+
+//			alert('#'+rowid+' .jqgrow');
+
+              // $grid.trigger('jqGridDblClickRow');
+//               var e = $.Event("dblclick");
+//               $grid.trigger(e);
+
+
+               /*
+                    $(this).jqGrid('editRow', rowid, true, function () {
+                        $("input, select").focus();
+                    	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){//aftersave
+                    		fill_pane(rowid);
+                    		calc_amount(rowid);
+                    		
+         $.ajax({
+        url: "findWorkerDepForList?id="+worker_id
+            })
+            .done(function(data) { 
+				$grid.setCell(rowid,'for_whom_div',data);
+            });
+
+                    	}, 
+                    	null, 
+	                    function () {//
+                   			   $grid.delRowData(rowid);
+
+	                    } 
+                    );*/
+
+                    return;
+       
+
+            } 
+         });
+ 
+
+		function after_save(rowID, response ) 
+		{
+//			  var ret_iddb = $.parseJSON(response.responseText);
+//			  alert(ret_iddb);
+//			  $('#feature-grid-table').jqGrid('setCell',rowID,'iddb',ret_iddb.iddb);
+//                          iddb=ret_iddb;
+		}
 
 });
 </script>

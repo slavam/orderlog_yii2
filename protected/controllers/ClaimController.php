@@ -7,7 +7,7 @@ class ClaimController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
-        static public $del_lines_count;
+
 	/**
 	 * @return array action filters
 	 */
@@ -28,7 +28,7 @@ class ClaimController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','list','changeClaimState',
-                                    'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
+                                    'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
                                     'editWholeClaim','ReportGroup'),
@@ -128,17 +128,13 @@ class ClaimController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
-                    if (($model=$this->loadModel($id)->delete()))
-                    {
-                       // echo CJSON::encode('Удалено:<br /> Заявка № '.$model->claim_number."<br />".ClaimController::$del_lines_count.' позиций');
+                    $lines = $this->loadModel($id)->claimLines;
+                    foreach ($lines as $line) {
+                        $line->delete();
                     }
-                    else echo 'Ошибка удаление';
-                    //                    $this->loadModel($id)->claimLines;
-//                    foreach ($lines as $line) {
-//                        $line->delete();
-//                    }
+
 			// we only allow deletion via POST request
-//			$this->loadModel($id)->delete();
+			$this->loadModel($id)->delete();
 
 
                         
@@ -315,7 +311,84 @@ class ClaimController extends Controller
             echo CJSON::encode($responce);
         }
 
+/*
         public function actionGetDataForSubGrid()
+        {
+            $dataProvider=new CActiveDataProvider('ClaimLine', array(
+                'pagination'=>false,
+                'criteria'=>array(
+                    'condition'=>'claim_id='.$_GET['claim_id'],
+                    'order'=>'id',
+                    ),
+            ));
+            $responce['status']='ok';
+            $complects = $dataProvider->getData();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->id,
+                    $row->asset->waretype->short_name, 
+                    $row->asset->name, 
+                    $row->asset->unit->sign,
+                    $row->count,
+                    $row->cost,
+                    $row->amount,
+                    $row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
+                    'цель?',//zel'
+                    $row->for_whom>0? $row->findWorker($row->for_whom): '',                  //for_whom
+                    $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
+//                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
+                    $row->findFeaturesAsString($row->id),
+                    $row->findProductsAsString($row->id),
+//                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
+                    $row->position_id>0 ? $row->findAddress($row->position_id): '',
+                    $row->description,
+                    $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//ZFO
+                    $row->getBusinessName($row->business_id),
+                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
+                    $row->status->short_name,
+                    $row->asset->info,
+                    $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
+                    );
+            }
+            echo CJSON::encode($responce);
+        }
+        */
+
+        public function actionGetDataForSubGrid()
+        {
+            if ($_GET['claim_id'])
+            {
+                $dataProvider=new CActiveDataProvider('ClaimLine', array(
+                    'pagination'=>false,
+                    'criteria'=>array(
+                        'condition'=>'claim_id='.$_GET['claim_id'],
+                        'order'=>'id',
+                        ),
+                ));
+                $responce['status']='ok';
+                $complects = $dataProvider->getData();
+            }
+            else $complects=array();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->id,
+                    $row->asset->waretype->short_name, 
+                    $row->asset->name, 
+                    $row->count,
+                    $row->cost,
+                    $row->amount,
+                    $row->description,
+                    );
+            }
+            echo CJSON::encode($responce);
+        }
+        
+        
+        public function actionGetDataForDialogGrid()
         {
             if ($_GET['claim_id'])
             {
@@ -354,12 +427,14 @@ class ClaimController extends Controller
                     $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//ZFO
                     $row->getBusinessName($row->business_id),
                     $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
+                    $row->status->short_name,
                     $row->asset->info,
                     $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );
             }
             echo CJSON::encode($responce);
         }
+
     public function actionEditClaimDialog($id)
     {
     	if(Yii::app()->request->isAjaxRequest)
@@ -478,6 +553,25 @@ class ClaimController extends Controller
             Yii::app()->end();
         } 
     }
+
+    /*
+    public function actionEditClaimWithLinesJq($id)
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            $model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('editClaimWithLinesJq',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+    */
+
     public function actionEditClaimWithLinesJq($id)
     {
     	if(Yii::app()->request->isAjaxRequest)
@@ -497,6 +591,7 @@ class ClaimController extends Controller
         } 
     }
 
+
     public function actionGetDepartmensByDivision($division_id)
     {
         $departments = Department::model()->findDepartmentsByDivision($division_id);
@@ -504,7 +599,68 @@ class ClaimController extends Controller
         Yii::app()->end();
     }
 
-    
+/*
+    public function actionEditWholeClaim($id){
+        $model = $this->loadModel($id);
+        if (isset($_POST['Claim'])) {
+            $new_claim_fields = $_POST['Claim'];
+            foreach ($new_claim_fields as $field => $value) {
+                $model[key($new_claim_fields[$field])] = current($value);
+            }
+            if ($model->save()) { 
+                $new_claim_lines = $_POST['ClaimLines'];
+
+                foreach ($new_claim_lines as $line => $value) {
+                    $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
+                    $model_line->count = $new_claim_lines[$line]['count'];
+        //            $model_line->attributes = $new_claim_lines[$line];
+//                    foreach ($new_claim_lines[$line] as $key => $value) {
+//                        
+//                        $model[$key] = $value;
+//                    }
+                    if (!$model_line->save())
+                    {        
+                        echo "Error"; // to do correct message
+                        return;
+                    }
+                }
+//            if($model->validate()){
+                
+                    if (Yii::app()->request->isAjaxRequest) {
+//                        $this->actionGetDataForGrid(); //encode json only one asset by id
+  //          $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            echo CJSON::encode(array(
+  //          'status' => 'ok',
+    //            'message' => 'no Asset form passed!',
+     //   ));            
+             
+                    } else echo 'get out!';
+                }//model->save
+//            }//validate
+//            else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+        } else
+        if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    } else {
+        echo 'get out!';
+    }
+                
+//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+//            $responce['status']='ok';
+//            echo CJSON::encode($responce);
+//            Yii::app()->end();
+//        } 
+        
+    }
+
+*/
+
     public function actionEditWholeClaim($id){
         if ($id)
         {
@@ -592,6 +748,7 @@ class ClaimController extends Controller
 //        } 
         
     }
+
     
     public function actionReportGroup()
     {

@@ -108,4 +108,13 @@ class Business extends CActiveRecord
 		return CHtml::listData($businesses,'ID','NAME');
 	}
 
+       	public static function findBusinessesOptionList()
+	{
+            $sql = "select bb.ID as ID, sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+                    join fin.sr_busines sb on sb.ID=bb.SR_BUSINESS_ID order by ID";
+            return $businesses = Business::model()->findAllBySql($sql);
+//		$businesses = Business::model()->findAll(array('order' => 'CODE'));
+//		return CHtml::listData($businesses,'ID','NAME');
+	}
+
 }

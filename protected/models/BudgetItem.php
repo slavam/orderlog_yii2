@@ -149,4 +149,37 @@ class BudgetItem extends CActiveRecord
             }			
                 return $data;
         }
+
+        //temporary - o.lysenko 7.sep.2012 10:27
+        //WORKS!!!
+        public function get3LevelAllNameBudgetItemOptionList(){
+
+            $sql="
+select bd.id as id, p.name ||' => '|| bd.name ||' ('||bd.code||')' as name 
+from FIN.budget_directory bd 
+join FIN.budget_directory p on bd.parent_id=p.id and bd.BUDGET_GROUPS_ID in (9,7)
+order by name
+";
+//                
+            
+            //$sql =" select * from FIN.budget_directory";
+
+            $budgetItems = BudgetItem::model()->findAllBySql($sql);
+
+         
+            
+/*            foreach($budgetItems as $key => $value){              
+
+                $article =BudgetItem::model()->findByPk($key);
+                $art2name=$this->get2LevelNameBudgetItem($key);
+ 
+                if ($art2name) {
+                    $budgetItems[$key]->NAME = $art2name;//." (".$article->CODE.")";
+                }
+            }			
+*/
+                return $budgetItems;
+
+        }
+
 }
