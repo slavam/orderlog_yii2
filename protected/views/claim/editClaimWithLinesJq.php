@@ -211,6 +211,7 @@ $(function() {
 //=============================================================================================================
 	function fill_pane(id)
 	{
+			$(".hint").html("");
             var hint = $grid.getCell(id, 'asset_info');
             var name = $grid.getCell(id, 'name');
             var count = $grid.getCell(id, 'count');
@@ -227,6 +228,7 @@ $(function() {
 	};
     var pager_selector = "#pager_";
     var worker_id;
+    var new_line_added=false;
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -289,38 +291,40 @@ $(function() {
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
         viewrecords: false,
-        onSelectRow: function(id){ 
-        },
-        gridComplete: function () {
+        loadComplete: function () {
             $grid.setGridParam({datatype:'local'});
             $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
         },
                 //----------------------------------------------------
                 beforeSelectRow: function (rowid) {
-                    if (rowid !== lastSel) {
+                    if ((rowid !== lastSel)&&(!new_line_added)) {
                         $(this).jqGrid('restoreRow', lastSel);
                         fixPositionsOfFrozenDivs.call(this);
-                       	if(rowid!=lastSel) fill_pane(rowid);
+                       	fill_pane(rowid);
                         lastSel = rowid;
                     }
                     return true;
                 },
                 //----------------------------------------------------
-        ondblClickRow: function(rowid, iRow, iCol, e) {
+                // 
+        ondblClickRow: function (rowid, iRow, iCol, e) {
         
             	$grid.setGridParam({editurl:'#'});
 				$grid.setGridParam({datatype:'json'});
 
-
                     $(this).jqGrid('editRow', rowid, true, function () {
-                        $("input, select", e.target).focus();
+//                        $("input, select, e.target").focus(); //
+                        $('#'+rowid+'_type').focus(); //
+
                     	},
                     	null,
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-                    		fill_pane(rowid);
+
+                    		new_line_added=false;
                     		calc_amount(rowid);
+                    		fill_pane(rowid);
                     		//o.lysenko 6.sep.2012 19:16
                     		//ajax load department of worker
                     		
@@ -341,6 +345,11 @@ $(function() {
                     	null, 
 	                    function () {/*afterrestore*/
 	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    	if(new_line_added)
+	                    	{
+	                    		$grid.delRowData(rowid);
+	                    		new_line_added=false;
+	                    	}
 	                    } 
                     );
 
@@ -367,20 +376,134 @@ $(function() {
             buttonicon: 'ui-icon-plusthick',
             onClickButton: function()
             {
-               var last_row_id = grid.getGridParam("reccount");
-               var row = {"iddb":last_row_id+1,"name":"","direction_id":""};
-               if (lastSel) grid.restoreRow(lastSel);
-               
-               $grid.addRowData(last_row_id+1,row,"last");
-               $grid.editRow(last_row_id+1,true,null,null,'<?echo Yii::app()->createUrl('/feature/create')?>',{},after_save,null,afterrestore); 
-               //lastSel=last_row_id+1;
-            }
+            /*
+            	if(new_line_added){ //catch double addition
+            	               new_line_added=true;
+            	               var last_row_id = $grid.getGridParam("reccount");
+            	               $grid.delRowData(last_row_id);
+				}*/
+
+                $grid.jqGrid('restoreRow', lastSel);
+
+				if(new_line_added)
+				{
+                        $grid.delRowData(rowid);
+                        fixPositionsOfFrozenDivs.call(this);
+				}
+	
+				new_line_added=true;	
+
+               var last_row_id = $grid.getGridParam("reccount");
+               var lastSel=rowid=last_row_id+1;
+               var row = {"iddb":rowid,
+						"type":"",
+						"name":"",
+						"unit":"",
+						"count":"",
+						"cost":"",
+						"amount":"",
+						"assetgroup":"",
+						"goal":"",
+						"for_whom":"",
+						"for_whom_div":"",
+						"features":"",
+						"products":"",
+						"position":"",
+						"description":"",
+						"payer":"",
+						"business":"",
+						"budget_item":"",
+						"status":"",
+						"asset_info":"",
+						"created":""
+               		     };
+
+             
+	           	$grid.setGridParam({editurl:'#'});
+				$grid.setGridParam({datatype:'json'});
+
+               $grid.addRowData(rowid,row,"last");
+               $grid.setSelection(rowid, true);
+
+
+                    $(this).jqGrid('editRow', rowid, true, function () {
+//                        $("input, select, e.target").focus(); //
+                        $('#'+rowid+'_type').focus(); //
+                   	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){/*aftersave*/
+                    		new_line_added=false;
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		
+         $.ajax({
+        url: "findWorkerDepForList?id="+worker_id
+            })
+            .done(function(data) { 
+				$grid.setCell(rowid,'for_whom_div',data);
+            });
+
+                    	}, 
+                    	null, 
+	                    function () {/*afterrestore*/
+	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+	                    	if(new_line_added)
+	                    	{
+	                    		$grid.delRowData(rowid);
+	                    		new_line_added=false;
+	                    	}
+	                    } 
+                    );
+
+
+               //xedit(rowid,null,null,null);
+               //$('#'+rowid+' .jqgrow').get(0).dblclick();
+
+//               alert('#'+rowid+'_name');
+//               $('#'+rowid+' .jqgrow').click();
+//               $grid.click();
+
+//			alert('#'+rowid+' .jqgrow');
+
+              // $grid.trigger('jqGridDblClickRow');
+//               var e = $.Event("dblclick");
+//               $grid.trigger(e);
+
+
+               /*
+                    $(this).jqGrid('editRow', rowid, true, function () {
+                        $("input, select").focus();
+                    	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){//aftersave
+                    		fill_pane(rowid);
+                    		calc_amount(rowid);
+                    		
+         $.ajax({
+        url: "findWorkerDepForList?id="+worker_id
+            })
+            .done(function(data) { 
+				$grid.setCell(rowid,'for_whom_div',data);
+            });
+
+                    	}, 
+                    	null, 
+	                    function () {//
+                   			   $grid.delRowData(rowid);
+
+	                    } 
+                    );*/
+
+                    return;
+       
+
+            } 
          });
  
-        function afterrestore(rowid)
-		{
-		   $grid.delRowData(rowid);
-		};
 
 		function after_save(rowID, response ) 
 		{
