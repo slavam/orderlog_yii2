@@ -6,8 +6,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js',CClientScript::POS_HEAD);
-$this->breadcrumbs=array(
-	'Характеристики');
+
 ?>
 
 <!--<h1>Характеристики</h1>-->
@@ -71,7 +70,7 @@ $this->breadcrumbs=array(
             viewrecords: false,
             sortname : 'product',
             sortorder : 'asc',
-            caption : 'Продукты',
+            caption : 'Характеристики',
             editurl:'<?echo Yii::app()->createUrl('/feature/update');?>',
             ondblClickRow: function(id){
                 if(id && id!==lastSel){ 
