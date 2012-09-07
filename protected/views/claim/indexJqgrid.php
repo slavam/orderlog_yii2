@@ -162,7 +162,73 @@ $(function() {
     top_bottom_pager_ButtonAdd = function(options) {
         grid.jqGrid('navButtonAdd',pager_selector,options);
     };
+    top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Добавить заявку со строками',
+        buttonicon: 'ui-icon-plus',
+        onClickButton: function()
+        {
+//            var sel_ = grid.getGridParam('selrow');
+//            if(sel_) 
+                var id_ = '';
+//            if(id_) {
 
+            //lysenko 1!!!?!?!?!?!
+//                $("#alertmod").detach();
+
+                $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
+                $("#create_dialog_edit_whole_claim").dialog({
+                    title: 'Редактировать заявку и строки',
+                    modal:true,
+                    width:1100,
+                    height:600,
+                    buttons:{
+                        'OK': function(){
+                            var rows= jQuery("#claim_line_list").jqGrid('getRowData');
+                            var lines=new Array();
+                            for(var i=0;i<rows.length;i++){
+                                var row=rows[i];
+                                lines.push(row);
+                            } 
+                            //JSON.stringify(row)
+                            //  alert(paras[0]['name']);
+                            var values = {};
+                            var x = $.makeArray(lines);
+                            $.each($('#whole-claim-form').serializeArray(), function(i, field) {
+//                                alert(field.name.substr(6,field.name.length-7));
+                                values[field.name.substr(6,field.name.length-7)] = field.value;
+                            });
+
+                            $.ajax( {                                //'f2[]':$("#whole-claim-form").serialize()
+//                                'data': {'ClaimLines[]':JSON.stringify(paras), 'Claim[]':values}, 
+                                'data': {'ClaimLines':x, 'Claim[]':values}, 
+                                'url': "editWholeClaim?id="+id_,
+                                'type': "POST",
+                                'dataType': "json",
+                                'error': function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                                },
+                                'success':  function(data) {
+
+                                        $("#create_dialog_edit_whole_claim").dialog('close');
+//                                        $(this).dialog('close');
+
+                                    }
+                            }); 
+
+                            //$.ajax(options); 
+//                            $('#claim_line_list').ajaxSubmit(options); 
+                        },
+                        'Close': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                //alert("!");
+//            } else 
+//                alert('Выберите заявку!');
+            }
+        });
     top_bottom_pager_ButtonAdd ({
         caption: '',
         title: 'Редактировать заявку со строками',

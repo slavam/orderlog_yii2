@@ -113,13 +113,13 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
     		<table >
     		<tr>
 		        <td><b>Направление</b></td>
-		        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections());?> 
+		        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections(),array('empty'=>'<Выберите направление>'));?> 
 		            <?php echo $form->error($model,'direction_id'); ?></td>
             </tr>
             <tr>
 		        <td><b>Отделение</b></td>
 		        <td>
-		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()'));?> 
+		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()','empty'=>'<Выберите отделение>'));?> 
 		            <?php echo $form->error($model,'division_id'); ?>
 		        </td>        
             </tr>
@@ -127,9 +127,9 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 		        <td><b>Подразделение</b></td>
 		        <td>
 		            <?php if ($model->division_id>0) {
-		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id));
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id),array('empty'=>'<Выберите подразделение>'));
 		            } else {
-		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments());
+		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments(),array('empty'=>'<Выберите подразделение>'));
 		            }
 		            ?> 
 		            <?php echo $form->error($model,'department_id'); ?>
@@ -148,7 +148,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
         	<table>
         	<tr>
 		        <td><b>Период</b></td>
-		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods());?> 
+		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods(),array('empty'=>'<Выберите период>'));?> 
 		            <?php echo $form->error($model,'period_id'); ?></td>
 		    	</td>
         	</tr>
@@ -228,7 +228,8 @@ $(function() {
     var pager_selector = "#pager_";
     var worker_id;
     $grid.jqGrid( {
-        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
+//        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
+        url : "<?echo Yii::app()->createUrl('claim/getDataForSubGrid',array('claim_id'=>$model->id))?>",
         datatype : 'json',
         height : '320',
         width : '1070',
@@ -237,9 +238,12 @@ $(function() {
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
             'Группа','Цель','Для кого','Для кого','Характеристики','Продукты','Расположение','Примечание','ЦФО','Бизнес',
-            'Статья бюджета',
+            'Статья бюджета','Статус',
             'Информация', 'Добавлена'],
         colModel: [
+
+            //TODO: formatter - numeric fields!
+
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'name',index:'name', width:220, frozen: false, editable:true},
@@ -272,10 +276,12 @@ $(function() {
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
             {name: 'position', width: 150, frozen:false },
-            {name: 'description', width: 110, frozen:false },
-            {name: 'payer', width: 70, frozen:false },
-            {name: 'business', width: 100, frozen:false },
-            {name: 'budget_item', width: 200, frozen:false },
+            {name: 'description', width: 110, frozen:false, editable:true },
+            {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
+            
+            {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
+            {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'asset_info', width: 300, frozen:false, hidden:true },
             {name: 'created', width: 100, frozen:false }
         ],
