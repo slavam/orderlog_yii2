@@ -99,6 +99,7 @@ $(function() {
         sortname: "name",
         pager: '#pager',
         subGrid: true,
+        scrollrows : true,
         loadonce: true,
         subGridRowExpanded: function (subgridDivId, rowId) {
 //            grid.setCell (row,col,val,{background:'#ff0000'});
@@ -179,7 +180,7 @@ $(function() {
 
                 $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
                 $("#create_dialog_edit_whole_claim").dialog({
-                    title: 'Редактировать заявку и строки',
+                    title: 'Добавить заявку и строки',
                     modal:true,
                     width:1100,
                     height:600,
@@ -210,7 +211,9 @@ $(function() {
                                     alert("error:"+res.responseText);
                                 },
                                 'success':  function(data) {
-
+                                        grid.addRowData(data.id,data,"last");
+                                        grid.setSelection(data.id);
+                                        grid.focus();
                                         $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
 

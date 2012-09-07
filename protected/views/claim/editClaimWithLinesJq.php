@@ -247,15 +247,15 @@ $(function() {
             //TODO: formatter - numeric fields!
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
-            {name: 'type', width: 25, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
+            {name: 'type', width: 25, frozen: false, editable:true, edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'name',index:'name', width:220, frozen: false, editable:true},
-            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
-            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
+            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
-            {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
+            {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
 
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -279,13 +279,13 @@ $(function() {
             {name: 'products', width: 100, frozen:false },
             {name: 'position', width: 150, frozen:false },
             {name: 'description', width: 110, frozen:false, editable:true, edittype:'textarea' },
-            {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
+            {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
             
-            {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
-            {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
-            {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
+            {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
+            {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'asset_info', width: 300, frozen:false, hidden:true },
-            {name: 'created', width: 100, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
+            {name: 'created', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
         ],
         pager: pager_selector,
         pgbuttons: false,     // disable page control like next, back button
@@ -310,7 +310,7 @@ $(function() {
         ondblClickRow: function (rowid, iRow, iCol, e) {
         
             	$grid.setGridParam({editurl:'#'});
-				$grid.setGridParam({datatype:'json'});
+				//$grid.setGridParam({datatype:'json'});
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
@@ -367,7 +367,7 @@ $(function() {
 //				fixPositionsOfFrozenDivs.call(this);
 //            }
         },
-       	loadError: function(xhr, status, error) {alert(status +error)},
+       	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
            
    $grid.jqGrid('navButtonAdd',pager_selector,{
@@ -395,7 +395,7 @@ $(function() {
 
                var last_row_id = $grid.getGridParam("reccount");
                var lastSel=rowid=last_row_id+1;
-               var row = {"iddb":rowid,
+               var row = {                      "iddb":null,
 						"type":"",
 						"name":"",
 						"unit":"",
@@ -420,7 +420,7 @@ $(function() {
 
              
 	           	$grid.setGridParam({editurl:'#'});
-				$grid.setGridParam({datatype:'json'});
+				//$grid.setGridParam({datatype:'json'});
 
                $grid.addRowData(rowid,row,"last");
                $grid.setSelection(rowid, true);

@@ -202,6 +202,5 @@ class Claim extends CActiveRecord
             parent::afterDelete();
 
             $lines = ClaimLine::model()->deleteAllByAttributes(array('claim_id'=>$this->id));
-            ClaimController::$del_lines_count=$lines;
         }
 }

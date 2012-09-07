@@ -665,7 +665,13 @@ class ClaimController extends Controller
         if ($id)
         {
             $model = $this->loadModel($id);
-        }else $model=new Claim;
+        }
+        else 
+        {
+            $model=new Claim;
+            
+        }
+        
         if (isset($_POST['Claim'])) {
             $new_claim_fields = $_POST['Claim'];
             
@@ -692,21 +698,26 @@ class ClaimController extends Controller
                 if (is_array($new_claim_lines))
                 {
                     foreach ($new_claim_lines as $line => $value) {
-                        $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
-                        $model_line->count = $new_claim_lines[$line]['count'];
-            //            $model_line->attributes = $new_claim_lines[$line];
-    //                    foreach ($new_claim_lines[$line] as $key => $value) {
-    //                        
-    //                        $model[$key] = $value;
-    //                    }
-                        if (!$model_line->save())
-                        {        
-                            echo "Error"; // to do correct message
-                            return;
-                        }
-                    }
-                }
-//            if($model->validate()){
+                        
+                        
+                            if(!($model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb'])))
+                            {
+                                $model_line =new ClaimLine;
+                            }
+                            $model_line->claim_id = $model->id;
+                            $model_line->count = $value['count'];
+                    //            $model_line->attributes = $new_claim_lines[$line];
+            //                    foreach ($new_claim_lines[$line] as $key => $value) {
+            //                        
+            //                        $model[$key] = $value;
+            //                    }
+                                if (!$model_line->save())
+                                {        
+                                    echo "Error"; // to do correct message
+                                    return;
+                                }
+                            }
+                } 
                 echo CJSON::encode(array(
                     'id'=>$model->id,
                     'period'=>$model->period_id,
@@ -716,19 +727,8 @@ class ClaimController extends Controller
                     'department'=>$model->department_id,
                     'comment'=>$model->comment,
                 ));
-                    if (Yii::app()->request->isAjaxRequest) {
-//                        $this->actionGetDataForGrid(); //encode json only one asset by id
-  //          $responce['status']='ok';
-//            echo CJSON::encode($responce);
-//            echo CJSON::encode(array(
-  //          'status' => 'ok',
-    //            'message' => 'no Asset form passed!',
-     //   ));            
-                        
-                    } else echo 'get out!';
-                }//model->save
-//            }//validate
-//            else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+                Yii::app()->end();
+            }
         } else
         if (Yii::app()->request->isAjaxRequest) {
         echo CJSON::encode(array(
@@ -747,7 +747,7 @@ class ClaimController extends Controller
 //            Yii::app()->end();
 //        } 
         
-    }
+}
 
     
     public function actionReportGroup()
