@@ -149,12 +149,13 @@ $(function() {
     	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager',{view:false, del:false, add:false, edit:false, refresh:false},
     {}, // default settings for edit
-   {}, // default settings for add
-   {}, // delete
-   {closeOnEscape: true, multipleSearch: true, 
+    {}, // default settings for add
+    {
+    }, // delete
+    {closeOnEscape: true, multipleSearch: true, 
        sopt:['cn','eq','ne','bw','bn'],
          closeAfterSearch: true }, // search options
-   {}
+    {}
     ); //, cloneToTop:true});
     
     
@@ -162,17 +163,16 @@ $(function() {
     top_bottom_pager_ButtonAdd = function(options) {
         grid.jqGrid('navButtonAdd',pager_selector,options);
     };
-
     top_bottom_pager_ButtonAdd ({
         caption: '',
-        title: 'Редактировать заявку со строками',
-        buttonicon: 'ui-icon-pencil',
+        title: 'Добавить заявку со строками',
+        buttonicon: 'ui-icon-plus',
         onClickButton: function()
         {
-            var sel_ = grid.getGridParam('selrow');
-            if(sel_) 
-                var id_ = grid.getCell(sel_, 'id');
-            if(id_) {
+//            var sel_ = grid.getGridParam('selrow');
+//            if(sel_) 
+                var id_ = '';
+//            if(id_) {
 
             //lysenko 1!!!?!?!?!?!
 //                $("#alertmod").detach();
@@ -226,6 +226,74 @@ $(function() {
                     }
                 });
                 //alert("!");
+//            } else 
+//                alert('Выберите заявку!');
+            }
+        });
+    top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Редактировать заявку со строками',
+        buttonicon: 'ui-icon-pencil',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) 
+                var id_ = grid.getCell(sel_, 'id');
+            if(id_) {
+
+            //lysenko 1!!!?!?!?!?!
+//                $("#alertmod").detach();
+
+                $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
+                $("#create_dialog_edit_whole_claim").dialog({
+                    title: 'Редактировать заявку и строки',
+                    modal:true,
+                    width:1100,
+                    height:600,
+                    buttons:{
+                        'OK': function(){
+                            var rows= jQuery("#claim_line_list").jqGrid('getRowData');
+                            var lines=new Array();
+                            for(var i=0;i<rows.length;i++){
+                                var row=rows[i];
+                                lines.push(row);
+                            } 
+                            //JSON.stringify(row)
+                            //  alert(paras[0]['name']);
+                            var values = {};
+                            var x = $.makeArray(lines);
+                            $.each($('#whole-claim-form').serializeArray(), function(i, field) {
+//                                alert(field.name.substr(6,field.name.length-7));
+                                values[field.name.substr(6,field.name.length-7)] = field.value;
+                            });
+
+                            $.ajax( {                                //'f2[]':$("#whole-claim-form").serialize()
+//                                'data': {'ClaimLines[]':JSON.stringify(paras), 'Claim[]':values}, 
+                                'data': {'ClaimLines':x, 'Claim[]':values}, 
+                                'url': "editWholeClaim?id="+id_,
+                                'type': "POST",
+                                'dataType': "json",
+                                'error': function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                                },
+                                'success':  function(data) {
+//                                    data=JSON.parse(data);
+                                        grid.setRowData(sel_,data);
+                                        $("#create_dialog_edit_whole_claim").dialog('close');
+//                                        $(this).dialog('close');
+
+                                    }
+                            }); 
+
+                            //$.ajax(options); 
+//                            $('#claim_line_list').ajaxSubmit(options); 
+                        },
+                        'Close': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                //alert("!");
             } else 
                 alert('Выберите заявку!');
             }
@@ -249,21 +317,23 @@ $(function() {
                     buttons:{
                         'Да': function(){
                         ///!!!lysenko
-                        /*
+                        
                             var options = { 
                                 url: '<?php  echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
-                                    alert("error:"+res.responseText);
+                                    alert("error:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
                                     grid.jqGrid('delRowData',sel_);
+                                    //alert(data);
                                     $(this).dialog('close');
                                 }
-                            }; 
-                            $('#claim-form').ajaxSubmit(options); 
-                            */
+                            };
+                            $.ajax(options);
+//                            $('#claim-form').ajaxSubmit(options); 
+                            
                         },
                         'Нет': function(){
                             $(this).dialog('close');

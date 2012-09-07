@@ -197,4 +197,11 @@ class Claim extends CActiveRecord
             $reportDataSet = findAll($criteria);
             return $reportDataSet;
         }
+        
+        public function afterDelete() {
+            parent::afterDelete();
+
+            $lines = ClaimLine::model()->deleteAllByAttributes(array('claim_id'=>$this->id));
+            ClaimController::$del_lines_count=$lines;
+        }
 }

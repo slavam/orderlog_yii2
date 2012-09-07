@@ -7,7 +7,7 @@ class ClaimController extends Controller
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
 	 */
 	public $layout='//layouts/column2';
-
+        static public $del_lines_count;
 	/**
 	 * @return array action filters
 	 */
@@ -128,13 +128,17 @@ class ClaimController extends Controller
 	{
 		if(Yii::app()->request->isPostRequest)
 		{
-                    $lines = $this->loadModel($id)->claimLines;
-                    foreach ($lines as $line) {
-                        $line->delete();
+                    if (($model=$this->loadModel($id)->delete()))
+                    {
+                       // echo CJSON::encode('Удалено:<br /> Заявка № '.$model->claim_number."<br />".ClaimController::$del_lines_count.' позиций');
                     }
-
+                    else echo 'Ошибка удаление';
+                    //                    $this->loadModel($id)->claimLines;
+//                    foreach ($lines as $line) {
+//                        $line->delete();
+//                    }
 			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
+//			$this->loadModel($id)->delete();
 
 
                         
@@ -313,15 +317,19 @@ class ClaimController extends Controller
 
         public function actionGetDataForSubGrid()
         {
-            $dataProvider=new CActiveDataProvider('ClaimLine', array(
-                'pagination'=>false,
-                'criteria'=>array(
-                    'condition'=>'claim_id='.$_GET['claim_id'],
-                    'order'=>'id',
-                    ),
-            ));
-            $responce['status']='ok';
-            $complects = $dataProvider->getData();
+            if ($_GET['claim_id'])
+            {
+                $dataProvider=new CActiveDataProvider('ClaimLine', array(
+                    'pagination'=>false,
+                    'criteria'=>array(
+                        'condition'=>'claim_id='.$_GET['claim_id'],
+                        'order'=>'id',
+                        ),
+                ));
+                $responce['status']='ok';
+                $complects = $dataProvider->getData();
+            }
+            else $complects=array();
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
                 $responce['rows'][$i]['id'] = $i+1;
@@ -474,7 +482,10 @@ class ClaimController extends Controller
     {
     	if(Yii::app()->request->isAjaxRequest)
         {
+           if ($id)
+           {
             $model = $this->loadModel($id);
+           }else $model=new Claim;
 
             // For jQuery core, Yii switches between the human-readable and minified
 			// versions based on DEBUG status; so make sure to catch both of them
@@ -492,32 +503,63 @@ class ClaimController extends Controller
         echo CJSON::encode($departments);
         Yii::app()->end();
     }
+
+    
     public function actionEditWholeClaim($id){
-        $model = $this->loadModel($id);
+        if ($id)
+        {
+            $model = $this->loadModel($id);
+        }else $model=new Claim;
         if (isset($_POST['Claim'])) {
             $new_claim_fields = $_POST['Claim'];
+            
             foreach ($new_claim_fields as $field => $value) {
                 $model[key($new_claim_fields[$field])] = current($value);
             }
-            if ($model->save()) { 
+            
+            if (!$model->id)
+            {
+                $model->state_id = 1;
+                $model->budgetary = true;
+                $model->create_date = date("Y-m-d H:i:s", time());
+                $model->claim_number = $model->direction->stamp.$model->id;
+            }
+            if ($model->save()) {
+                
+                if (!$id)
+                {
+                    $model->claim_number=$model->direction->stamp.$model->id;
+                    $model->update(array('claim_number'));
+                }
                 $new_claim_lines = $_POST['ClaimLines'];
-
-                foreach ($new_claim_lines as $line => $value) {
-                    $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
-                    $model_line->count = $new_claim_lines[$line]['count'];
-        //            $model_line->attributes = $new_claim_lines[$line];
-//                    foreach ($new_claim_lines[$line] as $key => $value) {
-//                        
-//                        $model[$key] = $value;
-//                    }
-                    if (!$model_line->save())
-                    {        
-                        echo "Error"; // to do correct message
-                        return;
+                
+                if (is_array($new_claim_lines))
+                {
+                    foreach ($new_claim_lines as $line => $value) {
+                        $model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb']);
+                        $model_line->count = $new_claim_lines[$line]['count'];
+            //            $model_line->attributes = $new_claim_lines[$line];
+    //                    foreach ($new_claim_lines[$line] as $key => $value) {
+    //                        
+    //                        $model[$key] = $value;
+    //                    }
+                        if (!$model_line->save())
+                        {        
+                            echo "Error"; // to do correct message
+                            return;
+                        }
                     }
                 }
 //            if($model->validate()){
-                
+                echo CJSON::encode(array(
+                    'id'=>$model->id,
+                    'period'=>$model->period_id,
+                    'name'=>$model->claim_number,
+                    'state'=>$model->state_id,
+                    'division'=>$model->division_id,
+                    'department'=>$model->department_id,
+                    'comment'=>$model->comment,
+                ));
                     if (Yii::app()->request->isAjaxRequest) {
 //                        $this->actionGetDataForGrid(); //encode json only one asset by id
   //          $responce['status']='ok';
@@ -526,7 +568,7 @@ class ClaimController extends Controller
   //          'status' => 'ok',
     //            'message' => 'no Asset form passed!',
      //   ));            
-             
+                        
                     } else echo 'get out!';
                 }//model->save
 //            }//validate
