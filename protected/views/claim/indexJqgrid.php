@@ -149,12 +149,13 @@ $(function() {
     	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager',{view:false, del:false, add:false, edit:false, refresh:false},
     {}, // default settings for edit
-   {}, // default settings for add
-   {}, // delete
-   {closeOnEscape: true, multipleSearch: true, 
+    {}, // default settings for add
+    {
+    }, // delete
+    {closeOnEscape: true, multipleSearch: true, 
        sopt:['cn','eq','ne','bw','bn'],
          closeAfterSearch: true }, // search options
-   {}
+    {}
     ); //, cloneToTop:true});
     
     
@@ -276,7 +277,8 @@ $(function() {
                                     alert("error:"+res.responseText);
                                 },
                                 'success':  function(data) {
-
+//                                    data=JSON.parse(data);
+                                        grid.setRowData(sel_,data);
                                         $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
 
@@ -315,21 +317,23 @@ $(function() {
                     buttons:{
                         'Да': function(){
                         ///!!!lysenko
-                        /*
+                        
                             var options = { 
                                 url: '<?php  echo Yii::app()->createUrl('claim/delete',array('id'=>''))?>'+id_,
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
-                                    alert("error:"+res.responseText);
+                                    alert("error:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
                                     grid.jqGrid('delRowData',sel_);
+                                    //alert(data);
                                     $(this).dialog('close');
                                 }
-                            }; 
-                            $('#claim-form').ajaxSubmit(options); 
-                            */
+                            };
+                            $.ajax(options);
+//                            $('#claim-form').ajaxSubmit(options); 
+                            
                         },
                         'Нет': function(){
                             $(this).dialog('close');

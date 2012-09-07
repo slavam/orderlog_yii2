@@ -666,7 +666,6 @@ class ClaimController extends Controller
         {
             $model = $this->loadModel($id);
         }else $model=new Claim;
-        
         if (isset($_POST['Claim'])) {
             $new_claim_fields = $_POST['Claim'];
             
@@ -677,7 +676,7 @@ class ClaimController extends Controller
             if (!$model->id)
             {
                 $model->state_id = 1;
-                $model->budgetary = true; //ASK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                $model->budgetary = true;
                 $model->create_date = date("Y-m-d H:i:s", time());
                 $model->claim_number = $model->direction->stamp.$model->id;
             }
@@ -708,7 +707,15 @@ class ClaimController extends Controller
                     }
                 }
 //            if($model->validate()){
-                
+                echo CJSON::encode(array(
+                    'id'=>$model->id,
+                    'period'=>$model->period_id,
+                    'name'=>$model->claim_number,
+                    'state'=>$model->state_id,
+                    'division'=>$model->division_id,
+                    'department'=>$model->department_id,
+                    'comment'=>$model->comment,
+                ));
                     if (Yii::app()->request->isAjaxRequest) {
 //                        $this->actionGetDataForGrid(); //encode json only one asset by id
   //          $responce['status']='ok';
@@ -717,7 +724,7 @@ class ClaimController extends Controller
   //          'status' => 'ok',
     //            'message' => 'no Asset form passed!',
      //   ));            
-             
+                        
                     } else echo 'get out!';
                 }//model->save
 //            }//validate
