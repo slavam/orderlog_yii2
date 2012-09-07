@@ -28,7 +28,7 @@ class ClaimController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','list','changeClaimState',
-                                    'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
+                                    'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
                                     'editWholeClaim','ReportGroup'),
@@ -378,6 +378,38 @@ class ClaimController extends Controller
                     $row->id,
                     $row->asset->waretype->short_name, 
                     $row->asset->name, 
+                    $row->count,
+                    $row->cost,
+                    $row->amount,
+                    $row->description,
+                    );
+            }
+            echo CJSON::encode($responce);
+        }
+        
+        
+        public function actionGetDataForDialogGrid()
+        {
+            if ($_GET['claim_id'])
+            {
+                $dataProvider=new CActiveDataProvider('ClaimLine', array(
+                    'pagination'=>false,
+                    'criteria'=>array(
+                        'condition'=>'claim_id='.$_GET['claim_id'],
+                        'order'=>'id',
+                        ),
+                ));
+                $responce['status']='ok';
+                $complects = $dataProvider->getData();
+            }
+            else $complects=array();
+            $responce['rows']=array();
+            foreach ($complects as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->id,
+                    $row->asset->waretype->short_name, 
+                    $row->asset->name, 
                     $row->asset->unit->sign,
                     $row->count,
                     $row->cost,
@@ -634,6 +666,7 @@ class ClaimController extends Controller
         {
             $model = $this->loadModel($id);
         }else $model=new Claim;
+        
         if (isset($_POST['Claim'])) {
             $new_claim_fields = $_POST['Claim'];
             
@@ -644,7 +677,7 @@ class ClaimController extends Controller
             if (!$model->id)
             {
                 $model->state_id = 1;
-                $model->budgetary = true;
+                $model->budgetary = true; //ASK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 $model->create_date = date("Y-m-d H:i:s", time());
                 $model->claim_number = $model->direction->stamp.$model->id;
             }
