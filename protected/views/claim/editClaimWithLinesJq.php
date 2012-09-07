@@ -242,7 +242,7 @@ $(function() {
         colModel: [
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:300, frozen: false, editable:true},
+            {name: 'name',index:'name', width:220, frozen: false, editable:true},
             {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
@@ -268,11 +268,11 @@ $(function() {
             ]            
             }//editoptions
             },
-            {name: 'for_whom_div', width: 300, frozen:false },
+            {name: 'for_whom_div', width: 220, frozen:false },
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
-            {name: 'position', width: 200, frozen:false },
-            {name: 'description', width: 150, frozen:false },
+            {name: 'position', width: 150, frozen:false },
+            {name: 'description', width: 110, frozen:false },
             {name: 'payer', width: 70, frozen:false },
             {name: 'business', width: 100, frozen:false },
             {name: 'budget_item', width: 200, frozen:false },
