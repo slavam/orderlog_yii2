@@ -2,8 +2,6 @@
     $.jgrid.no_legacy_api = true;
     $.jgrid.useJSON = true;
 </script>
-
-<h1>Журнал регистрации договоров</h1>
 <table id="jqgrid"></table><div id="pager"></div>
 <p class="result"></p>
 
@@ -32,7 +30,7 @@
             viewrecords: false,
             sortname : 'dog_date',
             sortorder : 'asc',
-            caption : 'Документы',
+            caption : 'Журнал регистрации договоров',
             subGrid: true,
         ondblClickRow: function (rowid, iRow, iCol) {
             if (subgrid_id)
