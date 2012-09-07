@@ -51,7 +51,9 @@ class ClaimLine extends CActiveRecord
 	{
             $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
             
-            return CHtml::encode(Claim::model()->findDepartmentHiLow($worker->CODE_DIVISION)); 
+//            return CHtml::encode(Claim::model()->findDepartmentHiLow($worker->CODE_DIVISION)); 
+            return Claim::model()->findDepartmentHiLow($worker->CODE_DIVISION); 
+
 	}
 
 

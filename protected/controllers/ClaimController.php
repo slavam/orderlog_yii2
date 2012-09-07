@@ -30,7 +30,7 @@ class ClaimController extends Controller
 				'actions'=>array('index','view','show','list','changeClaimState',
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete',
-                                    'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision',
+                                    'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
                                     'editWholeClaim','ReportGroup'),
 				'users'=>array('*'),
 			),
@@ -201,6 +201,15 @@ class ClaimController extends Controller
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
+	}
+
+
+	public function actionFindWorkerDepForList($id)
+	{
+		//lysenko 16.sep.2012 - TODO check ajax stuff
+		echo ClaimLine::model()->findWorkerDepartment2levels($id);
+        Yii::app()->end();
+
 	}
 
 	/**

@@ -17,12 +17,9 @@
 <div id="wrapper">
     <div id="header">
         <div class="logo-container">
-                        <img src="/images/logo.gif"  class="site-logo"/>
+                        <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/logo.gif"  class="site-logo"/>
                         <h1 class="site-slogan colored"><?php echo CHtml::encode(Yii::app()->modules['dogovor_archiv']['modulename']); ?></h1>
-        </div>
-       
-    </div><!-- header -->
-    <div class="menu">
+                        <div class="menu">
 		<?php $this->widget('zii.widgets.CMenu',array(
                     'htmlOptions'=>array('class'=>'dropdown'),
 			'items'=>array(
@@ -113,6 +110,10 @@
 		)));
                 ?>
 	</div><!-- mainmenu -->
+        </div>
+       
+    </div><!-- header -->
+    
         <div class="clear"></div>
     <div id="middle">
         <div id="container">
