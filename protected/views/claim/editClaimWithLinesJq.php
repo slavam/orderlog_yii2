@@ -216,7 +216,9 @@ $(function() {
 			$(".hint").html("");
 			var _m;
             var hint = $grid.getCell(id, 'asset_info');
+            $grid.setColProp('name',{formatter:null});
             var name = $grid.getCell(id, 'name');
+            $grid.setColProp('name',{formatter:"select"});
             var count = $grid.getCell(id, 'count');
             var unit = $grid.getCell(id, 'unit');
             var amount = $grid.getCell(id, 'amount');
@@ -231,10 +233,13 @@ $(function() {
             var amount = count*cost;
             $grid.setCell(id, 'amount', amount);
 	};
-        
-        function unformat_field(cellvalue, options, cell)
+        function formatfield(cellvalue, options, rowObject)
         {
             return cellvalue;
+        };
+        function unformat_field(cellvalue, options, cell)
+        {
+                     return cellvalue;
         };
     var pager_selector = "#pager_";
     var worker_id;
@@ -260,7 +265,7 @@ $(function() {
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
             
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -276,8 +281,8 @@ $(function() {
                        		asset_id = $(e.target).val();
                        }
                    }
-            ]            
-            
+            ],            
+            defaultValue:'222'
             
             }//editoptions
             },//column

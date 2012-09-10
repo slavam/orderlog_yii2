@@ -84,7 +84,7 @@ $(function() {
         colModel : [
             {name:'id',index:'id', width:20, hidden:true},
             {name:'period',index:'period', width:100, sortable:false},
-            {name:'name',index:'name', width:100, sortable:true},
+            {name:'name',index:'name', width:100, sortable:true,sorttype:"text"},
             {name:'state',index:'state', width:100},
             {name:'division',index:'division', width:300},
             {name:'department',index:'department', width:300, sortable:false},
