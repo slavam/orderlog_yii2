@@ -1,4 +1,5 @@
 <?php
+/*
 $cs = Yii::app()->clientScript;
  
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
@@ -9,6 +10,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+*/
 ?>
 
 <style type="text/css">

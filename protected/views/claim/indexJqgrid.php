@@ -184,7 +184,6 @@ $(function() {
                     modal:true,
                     width:1100,
                     height:600,
-                    autoOpen: false,
                     buttons:{
                         'OK': function(){
 
@@ -216,8 +215,9 @@ $(function() {
                                         grid.addRowData(data.id,data,"last");
                                         grid.setSelection(data.id);
                                         
-                                        _dlg.dialog('close');
+//                                        _dlg.dialog('close');
 //                                        $(this).dialog('close');
+										$("#create_dialog_edit_whole_claim").dialog('close');
 
                                     }
                             }); 
@@ -231,7 +231,6 @@ $(function() {
                         }
                     }
                 });
-                _dlg.dialog('open');
                 //alert("!");
 //            } else 
 //                alert('Выберите заявку!');
@@ -286,8 +285,8 @@ $(function() {
                                 'success':  function(data) {
 //                                    data=JSON.parse(data);
                                         grid.setRowData(sel_,data);
-//                                        $("#create_dialog_edit_whole_claim").dialog('close');
-                                        $(this).dialog('close');
+                                        $("#create_dialog_edit_whole_claim").dialog('close');
+//                                        $(this).dialog('close');
 
                                     }
                             }); 
@@ -296,8 +295,8 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            //$("#create_dialog_edit_whole_claim").dialog('close');
-                            $(this).dialog('close');
+                            $("#create_dialog_edit_whole_claim").dialog('close');
+//                            $(this).dialog('close');
 
                         }
                     }
