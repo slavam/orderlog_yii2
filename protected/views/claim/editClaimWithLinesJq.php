@@ -306,7 +306,7 @@ $(function() {
             {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'asset_info', width: 300, frozen:false, hidden:true },
-            {name: 'created', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
+            {name: 'created', width: 100, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
         ],
         pager: pager_selector,
         pgbuttons: false,     // disable page control like next, back button

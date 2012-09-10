@@ -284,8 +284,8 @@ $(function() {
                                 'success':  function(data) {
 //                                    data=JSON.parse(data);
                                         grid.setRowData(sel_,data);
-                                        $("#create_dialog_edit_whole_claim").dialog('close');
-//                                        $(this).dialog('close');
+//                                        $("#create_dialog_edit_whole_claim").dialog('close');
+                                        $(this).dialog('close');
 
                                     }
                             }); 
@@ -294,7 +294,8 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            $("#create_dialog_edit_whole_claim").dialog('close');
+                            //$("#create_dialog_edit_whole_claim").dialog('close');
+                            $(this).dialog('close');
 
                         }
                     }
