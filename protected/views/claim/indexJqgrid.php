@@ -214,7 +214,7 @@ $(function() {
                                 'success':  function(data) {
                                         grid.addRowData(data.id,data,"last");
                                         grid.setSelection(data.id);
-                                        grid.focus();
+                                        
                                         $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
 
@@ -333,14 +333,18 @@ $(function() {
                                     alert("error:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
-                                    grid.jqGrid('delRowData',sel_);
-                                    //alert(data);
-                                    $(this).dialog('close');
+                                   
+                                    if (data.state =="ok")
+                                     {   
+                                        grid.jqGrid('delRowData',sel_);
+                                     }
+                                    alert(data.responce);
+                                    
                                 }
                             };
                             $.ajax(options);
 //                            $('#claim-form').ajaxSubmit(options); 
-                            
+                            $(this).dialog('close');
                         },
                         'Нет': function(){
                             $(this).dialog('close');
