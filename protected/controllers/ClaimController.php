@@ -735,7 +735,7 @@ class ClaimController extends Controller
                                 $model_line =new ClaimLine;
                             }
                             $model_line->claim_id = $model->id;
-                            $model_line->asset_id = '12';
+                            $model_line->asset_id = $value['name'];
                             $model_line->count = $value['count'];
                             $model_line->amount=$value['amount'];
                             $model_line->cost=$value['cost'];
