@@ -228,6 +228,11 @@ $(function() {
             var amount = count*cost;
             $grid.setCell(id, 'amount', amount);
 	};
+        
+        function unformat_field(cellvalue, options, cell)
+        {
+            return cellvalue;
+        };
     var pager_selector = "#pager_";
     var worker_id;
     var asset_id;
@@ -251,7 +256,7 @@ $(function() {
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", unformat:unformat_field,editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
             
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -272,7 +277,7 @@ $(function() {
             
             }//editoptions
             },//column
-            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
@@ -307,7 +312,7 @@ $(function() {
             {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
             {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'asset_info', width: 300, frozen:false, hidden:true },
+            {name: 'asset_info', width: 300, frozen:false, hidden:true},
             {name: 'created', width: 100, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
         ],
         pager: pager_selector,
