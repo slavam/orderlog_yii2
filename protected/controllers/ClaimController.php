@@ -726,13 +726,13 @@ class ClaimController extends Controller
                             $model_line->status_id=$value['status'];
                             $model_line->how_created=$value['created'];
                             
-                            if ($model->id)
-                            {
-                                $model_line->change_date=date("Y-m-d H:i:s", time());
-                            }else
-                            {
-                                $model_line->created_at=date("Y-m-d H:i:s", time());
-                            }
+//                            if ($model->id)
+//                            {
+//                                $model_line->change_date=date("Y-m-d H:i:s", time());
+//                            }else
+//                            {
+//                                $model_line->created_at=date("Y-m-d H:i:s", time());
+//                            }
 
                     //            $model_line->attributes = $new_claim_lines[$line];
             //                    foreach ($new_claim_lines[$line] as $key => $value) {
@@ -741,18 +741,19 @@ class ClaimController extends Controller
             //                    }
                                 if (!$model_line->save())
                                 {        
-                                    echo "Error"; // to do correct message
+                                    
+                                    echo "Ошибка сохранения строк заявки"; // to do correct message
                                     return;
                                 }
                             }
                 } 
                 echo CJSON::encode(array(
                     'id'=>$model->id,
-                    'period'=>$model->period_id,
+                    'period'=>$model->period->NAME,
                     'name'=>$model->claim_number,
-                    'state'=>$model->state_id,
-                    'division'=>$model->division_id,
-                    'department'=>$model->department_id,
+                    'state'=>$model->state->stateName->name,
+                    'division'=>$model->division->NAME,
+                    'department'=>$model->findDepartment($model->department_id),
                     'comment'=>$model->comment,
                 ));
                 Yii::app()->end();
