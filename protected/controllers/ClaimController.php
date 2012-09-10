@@ -583,8 +583,8 @@ class ClaimController extends Controller
 
     public function actionEditClaimWithLinesJq($id)
     {
-//    	if(Yii::app()->request->isAjaxRequest)
-//        {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
            if ($id)
            {
             $model = $this->loadModel($id);
@@ -592,12 +592,12 @@ class ClaimController extends Controller
 
             // For jQuery core, Yii switches between the human-readable and minified
 			// versions based on DEBUG status; so make sure to catch both of them
-            //Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-           // Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
 
             $this->renderPartial('editClaimWithLinesJq',array('model'=>$model),false,true);
             Yii::app()->end();
-//        } 
+        } 
     }
 
 
