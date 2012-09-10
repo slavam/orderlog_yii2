@@ -714,7 +714,26 @@ class ClaimController extends Controller
                                 $model_line =new ClaimLine;
                             }
                             $model_line->claim_id = $model->id;
+                            $model_line->asset_id = '12';
                             $model_line->count = $value['count'];
+                            $model_line->amount=$value['amount'];
+                            $model_line->cost=$value['cost'];
+                            $model_line->description=$value['description'];
+                            $model_line->for_whom=$value['for_whom'];
+                            $model_line->budget_item_id=$value['budget_item'];
+                            $model_line->business_id=$value['business'];
+                            $model_line->payer_id=$value['payer'];
+                            $model_line->status_id=$value['status'];
+                            $model_line->how_created=$value['created'];
+                            
+                            if ($model->id)
+                            {
+                                $model_line->change_date=date("Y-m-d H:i:s", time());
+                            }else
+                            {
+                                $model_line->created_at=date("Y-m-d H:i:s", time());
+                            }
+
                     //            $model_line->attributes = $new_claim_lines[$line];
             //                    foreach ($new_claim_lines[$line] as $key => $value) {
             //                        
