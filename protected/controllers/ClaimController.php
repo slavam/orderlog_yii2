@@ -29,7 +29,7 @@ class ClaimController extends Controller
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','list','changeClaimState',
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
-                                    'editClaimLineDialog','editClaimLine','claimLineDelete',
+                                    'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
                                     'editWholeClaim','ReportGroup'),
 				'users'=>array('*'),
@@ -210,6 +210,21 @@ class ClaimController extends Controller
 		echo ClaimLine::model()->findWorkerDepartment2levels($id);
         Yii::app()->end();
 
+	}
+
+	public function actionGetAssetFieldsForGrid($asset_id)
+	{
+		//lysenko 10.sep.2012 - TODO - check ajax stuff
+		$model = Asset::model()->findByPk($asset_id);
+
+                echo CJSON::encode(array(
+                    'unit_id' => $model->unit_id,
+                    'ware_type_id' => $model->ware_type_id,
+                    'asset_group_id' => $model->asset_group_id,
+                    'info' => $model->info? $model->info:''
+                ));
+  
+        Yii::app()->end();
 	}
 
 	/**
@@ -409,7 +424,7 @@ class ClaimController extends Controller
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
                     $row->asset->ware_type_id,//->short_name, 
-                    $row->asset->name, 
+                    $row->asset_id,//->name, 
                     $row->asset->unit_id,//->sign,
                     $row->count,
                     $row->cost,
@@ -583,8 +598,8 @@ class ClaimController extends Controller
 
     public function actionEditClaimWithLinesJq($id)
     {
-    	if(Yii::app()->request->isAjaxRequest)
-        {
+//    	if(Yii::app()->request->isAjaxRequest)
+//        {
            if ($id)
            {
             $model = $this->loadModel($id);
@@ -592,12 +607,12 @@ class ClaimController extends Controller
 
             // For jQuery core, Yii switches between the human-readable and minified
 			// versions based on DEBUG status; so make sure to catch both of them
-            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
 
             $this->renderPartial('editClaimWithLinesJq',array('model'=>$model),false,true);
             Yii::app()->end();
-        } 
+//        } 
     }
 
 

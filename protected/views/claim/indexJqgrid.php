@@ -186,6 +186,7 @@ $(function() {
                     height:600,
                     buttons:{
                         'OK': function(){
+
                             var rows= jQuery("#claim_line_list").jqGrid('getRowData');
                             var lines=new Array();
                             for(var i=0;i<rows.length;i++){
@@ -224,7 +225,8 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            $(this).dialog('close');
+                            $("#create_dialog_edit_whole_claim").dialog('close');
+
                         }
                     }
                 });
@@ -292,7 +294,8 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            $(this).dialog('close');
+                            $("#create_dialog_edit_whole_claim").dialog('close');
+
                         }
                     }
                 });

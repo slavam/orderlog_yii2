@@ -228,6 +228,7 @@ $(function() {
 	};
     var pager_selector = "#pager_";
     var worker_id;
+    var asset_id;
     var new_line_added=false;
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
@@ -247,13 +248,33 @@ $(function() {
             //TODO: formatter - numeric fields!
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
-            {name: 'type', width: 25, frozen: false, editable:true, edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true},
-            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            
+            				dataInit: function (elem) {
+                                var v = $(elem).val();
+                                asset_id = v;
+                                //alert(v);
+                            },
+			dataEvents: 
+			[
+                   {
+                       type: 'change',
+                       fn: function(e) {
+                       		//var v = parseInt($(e.target).val(), 10);
+                       		asset_id = $(e.target).val();
+                       }
+                   }
+            ]            
+            
+            
+            }//editoptions
+            },//column
+            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
-            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
+            {name: 'assetgroup', width: 120, frozen:false,/* editable:true,*/ edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
             {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
 
@@ -299,6 +320,7 @@ $(function() {
                 beforeSelectRow: function (rowid) {
                     if ((rowid !== lastSel)&&(!new_line_added)) {
                         $(this).jqGrid('restoreRow', lastSel);
+						$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                         fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
@@ -311,6 +333,8 @@ $(function() {
         
             	$grid.setGridParam({editurl:'#'});
 				//$grid.setGridParam({datatype:'json'});
+
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
@@ -325,6 +349,7 @@ $(function() {
                     		new_line_added=false;
                     		calc_amount(rowid);
                     		fill_pane(rowid);
+
                     		//o.lysenko 6.sep.2012 19:16
                     		//ajax load department of worker
                     		
@@ -332,15 +357,22 @@ $(function() {
                     		
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
-//        data:{"dir":$("#AssetTemplate_direction_id").val()}
             })
             .done(function(data) { 
-//                data=jQuery.parseJSON(data);
-//                $("#AssetTemplate_asset_group_id").html(data);
-//				alert(data);
 				$grid.setCell(rowid,'for_whom_div',data);
             });
+         $.ajax({
+        url: "getAssetFieldsForGrid?asset_id="+asset_id
+            })
+            .done(function(data) { 
+            	var xdata = $.parseJSON(data);
+				$grid.setCell(rowid,'unit',xdata["unit_id"]);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
+				$grid.setCell(rowid,'asset_info',xdata["info"]);
+            });
 
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
@@ -350,6 +382,8 @@ $(function() {
 	                    		$grid.delRowData(rowid);
 	                    		new_line_added=false;
 	                    	}
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+
 	                    } 
                     );
 
@@ -425,6 +459,7 @@ $(function() {
                $grid.addRowData(rowid,row,"last");
                $grid.setSelection(rowid, true);
 
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
@@ -437,6 +472,7 @@ $(function() {
                     		new_line_added=false;
                     		calc_amount(rowid);
                     		fill_pane(rowid);
+
                     		
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
@@ -445,6 +481,18 @@ $(function() {
 				$grid.setCell(rowid,'for_whom_div',data);
             });
 
+         $.ajax({
+        url: "getAssetFieldsForGrid?asset_id="+asset_id
+            })
+            .done(function(data) { 
+            	var xdata = $.parseJSON(data);
+				$grid.setCell(rowid,'unit',xdata["unit_id"]);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
+				$grid.setCell(rowid,'asset_info',xdata["info"]);
+            });
+
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
@@ -454,6 +502,8 @@ $(function() {
 	                    		$grid.delRowData(rowid);
 	                    		new_line_added=false;
 	                    	}
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+
 	                    } 
                     );
 
