@@ -1,5 +1,5 @@
 <?php
-/*
+
 $cs = Yii::app()->clientScript;
  
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
@@ -10,7 +10,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
-*/
+
 ?>
 
 <style type="text/css">
@@ -214,12 +214,15 @@ $(function() {
 	function fill_pane(id)
 	{
 			$(".hint").html("");
+			var _m;
             var hint = $grid.getCell(id, 'asset_info');
             var name = $grid.getCell(id, 'name');
             var count = $grid.getCell(id, 'count');
             var unit = $grid.getCell(id, 'unit');
             var amount = $grid.getCell(id, 'amount');
-            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+            if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
+            $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+            _msg="[";
 	};
 	function calc_amount(id)
 	{
@@ -237,6 +240,7 @@ $(function() {
     var worker_id;
     var asset_id;
     var new_line_added=false;
+   	var _msg="[";
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -256,7 +260,7 @@ $(function() {
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", unformat:unformat_field,editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
             
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -328,7 +332,7 @@ $(function() {
                     if ((rowid !== lastSel)&&(!new_line_added)) {
                         $(this).jqGrid('restoreRow', lastSel);
 						$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
-                        fixPositionsOfFrozenDivs.call(this);
+                        //fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
                     }
@@ -353,10 +357,6 @@ $(function() {
                     	null, 
                     	function(){/*aftersave*/
 
-                    		new_line_added=false;
-                    		calc_amount(rowid);
-                    		fill_pane(rowid);
-
                     		//o.lysenko 6.sep.2012 19:16
                     		//ajax load department of worker
                     		
@@ -377,7 +377,27 @@ $(function() {
 				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
 				$grid.setCell(rowid,'asset_info',xdata["info"]);
+
+				if(xdata["quantity_type_id"]!=1)
+				{
+					$grid.setCell(rowid,'count',xdata["quantity"]);
+					_msg+="К";
+				}
+				if(xdata["quantity_type_id"]!=2)
+				{
+					$grid.setCell(rowid,'cost',xdata["cost"]);
+					_msg+="Ц";
+				}
+				_msg+="]";
+
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		new_line_added=false;
+					
+				//if(_msg!="") alert(_msg);
             });
+
+
 
 							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
@@ -393,6 +413,8 @@ $(function() {
 
 	                    } 
                     );
+
+
 
                     /*fixPositionsOfFrozenDivs.call(this);*/
                     return;
@@ -429,7 +451,7 @@ $(function() {
 				if(new_line_added)
 				{
                         $grid.delRowData(rowid);
-                        fixPositionsOfFrozenDivs.call(this);
+                        //fixPositionsOfFrozenDivs.call(this);
 				}
 	
 				new_line_added=true;	
@@ -476,9 +498,6 @@ $(function() {
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-                    		new_line_added=false;
-                    		calc_amount(rowid);
-                    		fill_pane(rowid);
 
                     		
          $.ajax({
@@ -493,10 +512,25 @@ $(function() {
             })
             .done(function(data) { 
             	var xdata = $.parseJSON(data);
+            	var _msg="";
 				$grid.setCell(rowid,'unit',xdata["unit_id"]);
 				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
 				$grid.setCell(rowid,'asset_info',xdata["info"]);
+
+				$grid.setCell(rowid,'cost',xdata["cost"]);
+				$grid.setCell(rowid,'count',xdata["quantity"]);
+				if(xdata["quantity_type_id"]!=1)
+					_msg+="К";
+				if(xdata["quantity_type_id"]!=2)
+					_msg+="Ц";
+
+				_msg+="]";
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		new_line_added=false;
+				
+				//if(_msg!="") alert(_msg);
             });
 
 					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");

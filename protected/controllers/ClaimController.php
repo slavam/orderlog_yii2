@@ -227,6 +227,10 @@ class ClaimController extends Controller
                     'unit_id' => $model->unit_id,
                     'ware_type_id' => $model->ware_type_id,
                     'asset_group_id' => $model->asset_group_id,
+                    'price_type_id' => $model->price_type_id,
+                    'quantity_type_id' => $model->quantity_type_id,
+                    'cost' => $model->cost,
+                    'quantity' => $model->quantity,
                     'info' => $model->info? $model->info:''
                 ));
   
