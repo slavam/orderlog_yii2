@@ -1,15 +1,15 @@
 <?php
 
-$cs = Yii::app()->clientScript;
- 
-$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
-$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
- 
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+//$cs = Yii::app()->clientScript;
+// 
+//$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+//$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+// 
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 ?>
 
@@ -233,10 +233,7 @@ $(function() {
             var amount = count*cost;
             $grid.setCell(id, 'amount', amount);
 	};
-        function formatfield(cellvalue, options, rowObject)
-        {
-            return cellvalue;
-        };
+        
         function unformat_field(cellvalue, options, cell)
         {
                      return cellvalue;
