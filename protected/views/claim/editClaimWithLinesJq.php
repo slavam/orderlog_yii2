@@ -168,7 +168,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <table id="claim_line_list"></table> 
 <div id="pager_"></div> 
-<div id="edit_dlg"></div>
+<!-- <div id="edit_dlg"></div> -->
 
 <script type="text/javascript">
 $(function() {
