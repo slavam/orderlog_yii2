@@ -408,28 +408,37 @@ class ClaimController extends Controller
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
-                    $row->asset->waretype->short_name, 
+                    $row->asset->ware_type_id,//->short_name, 
                     $row->asset->name, 
-                    $row->asset->unit->sign,
+                    $row->asset->unit_id,//->sign,
                     $row->count,
                     $row->cost,
                     $row->amount,
-                    $row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
+                    $row->asset->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
                     'цель?',//zel'
-                    $row->for_whom>0? $row->findWorker($row->for_whom): '',                  //for_whom
+
+                    //TODO: check if returns '' on view
+
+                    $row->for_whom>0? $row->for_whom: '',//>0? $row->findWorker($row->for_whom): '',                  //for_whom
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
                     $row->findFeaturesAsString($row->id),
                     $row->findProductsAsString($row->id),
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
-                    $row->position_id>0 ? $row->findAddress($row->position_id): '',
+                    //TODO: check if returns '' on view
+                    $row->position_id>0? $row->position_id: '', //? $row->findAddress($row->position_id): '',
                     $row->description,
-                    $row->payer_id>0? Division::model()->findDivisionById($row->payer_id): '',//ZFO
-                    $row->getBusinessName($row->business_id),
-                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
-                    $row->status->short_name,
+                    //TODO: check if returns '' on view
+                    $row->payer_id>0? $row->payer_id: '',//Division::model()->findDivisionById($row->payer_id): '',//ZFO
+                    
+                    //TODO: check if returns '' on view
+                    $row->business_id,//$row->getBusinessName($row->business_id),
+                    //TODO: check if returns '' on view
+                    $row->budget_item_id>0 ? $row->budget_item_id:'', //CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
+                    $row->status_id,//->short_name,
                     $row->asset->info,
-                    $row->complect_id==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
+                    //TODO: should be creation_method!!!
+                    $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );
             }
             echo CJSON::encode($responce);
