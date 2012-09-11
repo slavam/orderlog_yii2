@@ -31,7 +31,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup'),
+                                    'editWholeClaim','ReportGroup','FormDlg'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -95,7 +95,26 @@ class ClaimController extends Controller
                 'model'=>$model,
             ));
 	}
+        
+    public function actionFormDlg()
+    {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
+            //$this->layout='//layouts/ajax';
 
+            $model = new Claim;
+            //$model = $this->loadModel($id);
+
+            // For jQuery core, Yii switches between the human-readable and minified
+			// versions based on DEBUG status; so make sure to catch both of them
+			Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+			Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+
+            $this->renderPartial('claim_add_form',array('model'=>$model),false,true);
+            Yii::app()->end();
+        } 
+    }
+        
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -608,8 +627,8 @@ class ClaimController extends Controller
 
     public function actionEditClaimWithLinesJq($id)
     {
-//    	if(Yii::app()->request->isAjaxRequest)
-//        {
+    	if(Yii::app()->request->isAjaxRequest)
+        {
            if ($id)
            {
             $model = $this->loadModel($id);
@@ -617,12 +636,12 @@ class ClaimController extends Controller
 
             // For jQuery core, Yii switches between the human-readable and minified
 			// versions based on DEBUG status; so make sure to catch both of them
-//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
+            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
 
             $this->renderPartial('editClaimWithLinesJq',array('model'=>$model),false,true);
             Yii::app()->end();
-//        } 
+        } 
     }
 
 
@@ -712,77 +731,91 @@ class ClaimController extends Controller
             foreach ($new_claim_fields as $field => $value) {
                 $model[key($new_claim_fields[$field])] = current($value);
             }
-            
-            if (!$model->id)
+            if ($model->validate())
             {
-                $model->state_id = 1;
-                $model->budgetary = true;
-                $model->create_date = date("Y-m-d H:i:s", time());
-                $model->claim_number = $model->direction->stamp.$model->id;
-            }
-            if ($model->save()) {
-                
-                if (!$id)
+            
+                if (!$model->id)
                 {
-                    $model->claim_number=$model->direction->stamp.$model->id;
-                    $model->update(array('claim_number'));
+                    $model->state_id = 1;
+                    $model->budgetary = true;
+                    $model->create_date = date("Y-m-d H:i:s", time());
+                    $model->claim_number = $model->direction->stamp.$model->id;
                 }
-                $new_claim_lines = $_POST['ClaimLines'];
-                
-                if (is_array($new_claim_lines))
-                {
-                    foreach ($new_claim_lines as $line => $value) {
-                        
-                        
-                            if(!($model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb'])))
-                            {
-                                $model_line =new ClaimLine;
-                            }
-                            $model_line->claim_id = $model->id;
-                            $model_line->asset_id = $value['name'];
-                            $model_line->count = $value['count'];
-                            $model_line->amount=$value['amount'];
-                            $model_line->cost=$value['cost'];
-                            $model_line->description=$value['description'];
-                            $model_line->for_whom=$value['for_whom'];
-                            $model_line->budget_item_id=$value['budget_item'];
-                            $model_line->business_id=$value['business'];
-                            $model_line->payer_id=$value['payer'];
-                            $model_line->status_id=$value['status'];
-                            $model_line->how_created=$value['created'];
-                            
-//                            if ($model->id)
-//                            {
-//                                $model_line->change_date=date("Y-m-d H:i:s", time());
-//                            }else
-//                            {
-//                                $model_line->created_at=date("Y-m-d H:i:s", time());
-//                            }
-
-                    //            $model_line->attributes = $new_claim_lines[$line];
-            //                    foreach ($new_claim_lines[$line] as $key => $value) {
-            //                        
-            //                        $model[$key] = $value;
-            //                    }
-                                if (!$model_line->save())
-                                {        
-                                    
-                                    echo "Ошибка сохранения строк заявки"; // to do correct message
-                                    return;
+                if ($model->save()) {
+                     $responce = array();
+                    if (!$id)
+                    {
+                        $model->claim_number=$model->direction->stamp.$model->id;
+                        $model->update(array('claim_number'));
+                    }
+                    $new_claim_lines = $_POST['ClaimLines'];
+                    
+                    if ($_REQUEST['deletedrows'])
+                                {
+                                    $cr = new CDbCriteria();
+                                    $cr->addInCondition('id', $_REQUEST['deletedrows']);
+                                    if (ClaimLine::model()->deleteAll($cr))
+                                    {
+                                        $responce['message'] ='Удалены '.count($_REQUEST['deletedrows']).' строк заявки';
+                                    }
                                 }
-                            }
-                } 
-                echo CJSON::encode(array(
-                    'id'=>$model->id,
-                    'period'=>$model->period->NAME,
-                    'name'=>$model->claim_number,
-                    'state'=>$model->state->stateName->name,
-                    'division'=>$model->division->NAME,
-                    'department'=>$model->findDepartment($model->department_id),
-                    'comment'=>$model->comment,
-                ));
-                Yii::app()->end();
-            }
+                    if (is_array($new_claim_lines))
+                    {
+                        foreach ($new_claim_lines as $line => $value) {
+
+                                
+                                if(!($model_line = ClaimLine::model()->findByPk($new_claim_lines[$line]['iddb'])))
+                                {
+                                    $model_line =new ClaimLine;
+                                }
+                                $model_line->claim_id = $model->id;
+                                $model_line->asset_id = $value['name'];
+                                $model_line->count = $value['count'];
+                                $model_line->amount=$value['amount'];
+                                $model_line->cost=$value['cost'];
+                                $model_line->description=$value['description'];
+                                $model_line->for_whom=$value['for_whom'];
+                                $model_line->budget_item_id=$value['budget_item'];
+                                $model_line->business_id=$value['business'];
+                                $model_line->payer_id=$value['payer'];
+                                $model_line->status_id=$value['status'];
+                                $model_line->how_created=$value['created'];
+
+    //                            if ($model->id)
+    //                            {
+    //                                $model_line->change_date=date("Y-m-d H:i:s", time());
+    //                            }else
+    //                            {
+    //                                $model_line->created_at=date("Y-m-d H:i:s", time());
+    //                            }
+
+                        //            $model_line->attributes = $new_claim_lines[$line];
+                //                    foreach ($new_claim_lines[$line] as $key => $value) {
+                //                        
+                //                        $model[$key] = $value;
+                //                    }
+                                    if (!$model_line->save())
+                                    {        
+
+                                        echo "Ошибка сохранения строк заявки"; // to do correct message
+                                        return;
+                                    }
+                                }
+                    } 
+                    $responce['row']=array(
+                        'id'=>$model->id,
+                        'period'=>$model->period->NAME,
+                        'name'=>$model->claim_number,
+                        'state'=>$model->state->stateName->name,
+                        'division'=>$model->division->NAME,
+                        'department'=>$model->findDepartment($model->department_id),
+                        'comment'=>$model->comment,
+                        );
+                    echo CJSON::encode($responce);
+                    Yii::app()->end();
+                }
+            }//validate
+            else  echo CJSON::encode(array('status'=>'error','message'=>$model->errors));
         } else
         if (Yii::app()->request->isAjaxRequest) {
         echo CJSON::encode(array(

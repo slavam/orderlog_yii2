@@ -72,6 +72,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <script type="text/javascript">
 $(function() {
+    
     var grid=$("#list");
     var pager_selector = "#pager";
     grid.jqGrid( {
@@ -140,8 +141,10 @@ $(function() {
         },
         
         gridComplete: function () {
+        
             grid.setGridParam({datatype:'local'});
             $(".subgrid-data").css('background','#ddd');
+            
         },
 //        onPaging : function(which_button) {
 //            grid.setGridParam({datatype:'json'});
@@ -197,6 +200,7 @@ $(function() {
                             //  alert(paras[0]['name']);
                             var values = {};
                             var x = $.makeArray(lines);
+                            
                             $.each($('#whole-claim-form').serializeArray(), function(i, field) {
 //                                alert(field.name.substr(6,field.name.length-7));
                                 values[field.name.substr(6,field.name.length-7)] = field.value;
@@ -212,13 +216,21 @@ $(function() {
                                     alert("error:"+res.responseText);
                                 },
                                 'success':  function(data) {
-                                        grid.addRowData(data.id,data,"last");
-                                        grid.setSelection(data.id);
-                                        
-//                                        _dlg.dialog('close');
-//                                        $(this).dialog('close');
-										$("#create_dialog_edit_whole_claim").dialog('close');
-
+                                        if (data.status == 'error')
+                                            {
+                                                var message='';
+                                            $.each(data.message, function(i, field) {
+                                               message += field+'\n';
+                                            });
+                                             alert(message);
+                                             
+                                            }
+                                            else
+                                            {
+                                                grid.addRowData(data.row.id,data.row,"last");
+                                                grid.setSelection(data.row.id);
+                                                $("#create_dialog_edit_whole_claim").dialog('close');
+                                            }
                                     }
                             }); 
 
@@ -268,6 +280,7 @@ $(function() {
                             //  alert(paras[0]['name']);
                             var values = {};
                             var x = $.makeArray(lines);
+                            var deletedrows=$('#claim_line_list').data('deletedrows');
                             $.each($('#whole-claim-form').serializeArray(), function(i, field) {
 //                                alert(field.name.substr(6,field.name.length-7));
                                 values[field.name.substr(6,field.name.length-7)] = field.value;
@@ -275,7 +288,7 @@ $(function() {
 
                             $.ajax( {                                //'f2[]':$("#whole-claim-form").serialize()
 //                                'data': {'ClaimLines[]':JSON.stringify(paras), 'Claim[]':values}, 
-                                'data': {'ClaimLines':x, 'Claim[]':values}, 
+                                'data': {'ClaimLines':x, 'Claim[]':values,'deletedrows':deletedrows}, 
                                 'url': "editWholeClaim?id="+id_,
                                 'type': "POST",
                                 'dataType': "json",
@@ -284,7 +297,17 @@ $(function() {
                                 },
                                 'success':  function(data) {
 //                                    data=JSON.parse(data);
-                                        grid.setRowData(sel_,data);
+    
+                                        grid.setRowData(sel_,data.row); 
+                                        if (data.message)
+                                            {
+                                               alert(data.message);
+                                            }
+                                        var col = $("#"+sel_+" td.sgexpanded");
+                                        if(col.length>0)
+                                            {
+                                               $("#list_"+sel_+"_t").trigger("reloadGrid");
+                                            }
                                         $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
 
@@ -356,7 +379,6 @@ $(function() {
                 };
         }
         });
-
-
 });
+
 </script>

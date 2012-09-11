@@ -47,7 +47,7 @@ class Claim extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('claim_number, division_id, create_date', 'required'),
+			array('division_id, direction_id, department_id', 'required'),
 			array('division_id, direction_id, state_id, period_id, department_id', 'numerical', 'integerOnly'=>true),
 			array('budgetary, comment, description, department_id', 'safe'),
 			// The following rule is used by search().
