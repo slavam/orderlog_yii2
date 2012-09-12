@@ -715,6 +715,8 @@ class ClaimController extends Controller
 */
 
     public function actionEditWholeClaim($id){
+    	$is_new_claim=false;
+
         if ($id)
         {
             $model = $this->loadModel($id);
@@ -722,7 +724,7 @@ class ClaimController extends Controller
         else 
         {
             $model=new Claim;
-            
+            $is_new_claim=true;
         }
         
         if (isset($_POST['Claim'])) {
@@ -750,7 +752,7 @@ class ClaimController extends Controller
                     }
                     $new_claim_lines = $_POST['ClaimLines'];
                     
-                    if ($_REQUEST['deletedrows'])
+                    if ($_REQUEST['deletedrows']&&$is_new_claim)
                                 {
                                     $cr = new CDbCriteria();
                                     $cr->addInCondition('id', $_REQUEST['deletedrows']);
