@@ -261,7 +261,7 @@ $(function() {
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
             {name: 'position', width: 150, frozen:false },
-            {name: 'description', width: 110, frozen:false, editable:true, edittype:'textarea' },
+            {name: 'description', width: 110, frozen:false, editable:true, edittype:'text' },
             {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
             
             {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
@@ -394,7 +394,7 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager_',{view:false, add:false, del:true,  edit:false, refresh:false,search:false,delfunc:delclaimlinerow},{},{},{},{});
+    }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
            
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
@@ -409,6 +409,7 @@ $(function() {
             	               $grid.delRowData(last_row_id);
 				}*/
 
+				alert(lastSel);
                 $grid.jqGrid('restoreRow', lastSel);
 
 				if(new_line_added)
@@ -557,8 +558,21 @@ $(function() {
 
             } 
          });
- 
 
+	   $grid.jqGrid('navButtonAdd',pager_selector,{
+            caption: '',//'Группа',
+            title: 'Удалить строку',
+            buttonicon: 'ui-icon-trash',
+            onClickButton: function()
+            {
+         
+            var sel_ = $grid.getGridParam('selrow');
+            if(sel_) {
+            	delclaimlinerow(sel_);
+            }
+            else alert ("Выберите строку!");
+        }
+        });
 		function after_save(rowID, response ) 
 		{
 //			  var ret_iddb = $.parseJSON(response.responseText);

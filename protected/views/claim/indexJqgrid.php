@@ -301,7 +301,7 @@ $(function() {
                                         grid.setRowData(sel_,data.row); 
                                         if (data.message)
                                             {
-                                               alert(data.message);
+                                               alert("! "+data.message);
                                             }
                                         var col = $("#"+sel_+" td.sgexpanded");
                                         if(col.length>0)
@@ -362,6 +362,7 @@ $(function() {
                                      {   
                                         grid.jqGrid('delRowData',sel_);
                                      }
+
                                     alert(data.responce);
                                     
                                 }
