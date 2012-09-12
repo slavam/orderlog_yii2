@@ -29,7 +29,8 @@ class ClaimLineController extends Controller
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','showConsolidatedClaim','getClaimParams',
                                     'createLinesByComplect','getWaresForTemplatesByComplect',
-                                    'editClaimLineDialog','editClaimLine'), //'selectWaresFromTemplates'), //,'isTemplatesIntoComplect'),
+                                    'editClaimLineDialog','editClaimLine','checkLimits',
+                                    'getLimits','getClaimLinesByArticle'), //'selectWaresFromTemplates'), //,'isTemplatesIntoComplect'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -134,7 +135,7 @@ class ClaimLineController extends Controller
                         $model->budget_item_id=$asset->budget_item_id;
                         $model->save();
                     }
-                    $this->redirect(array('claim/show','id'=>$model->claim_id));
+                    $this->redirect(array('claim/show','id'=>$claim_id));
                 }
             }
 
@@ -285,9 +286,10 @@ class ClaimLineController extends Controller
             $model=new Claim;
             if(isset($_POST['Claim']))
             {                          
-                $this->redirect(array('claimLine/showConsolidatedClaim',
+                $this->redirect(array('claimLine/checkLimits', //showConsolidatedClaim',
                     'period_id'=>$_POST['Claim']['period_id'],
-                    'direction_id'=>$_POST['Claim']['direction_id']
+                    'direction_id'=>$_POST['Claim']['direction_id'],
+                    'division_id'=>$_POST['Claim']['division_id']
                 ));
             }
             $this->render('getClaimParams',array(
@@ -304,6 +306,75 @@ class ClaimLineController extends Controller
                 'direction_id'=>$direction_id,
                 'model'=>$model,
 		));
+        }
+        
+        public function actionGetLimits($direction_id, $period_id, $division_id){
+            $sql = '
+                select c.division_id  as id, budget_item_id, sum(amount) as amount
+                from claim_lines c_l
+                join claims c on c.id=c_l.claim_id and c.division_id='.$division_id.'
+                where budget_item_id > 0 and c.direction_id='.$direction_id.'
+                    and c.period_id='.$period_id.'
+                group by c.division_id, budget_item_id
+                order by c.division_id';
+            $lines = ClaimLine::model()->findAllBySql($sql);
+            $responce['rows']=array();
+            
+            foreach ($lines as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $l = BudgetItem::model()->getLimit($period_id, $row->budget_item_id, $row->id);
+                $responce['rows'][$i]['cell'] = array(
+                    $row->budget_item_id,
+                    $period_id,
+                    $row->id,  // division_id
+                    $direction_id,
+                    Division::model()->findByPk($row->id)->NAME, //->findDivisionById($row->id), 
+//                    $row->budgetItem->NAME,
+                    $row->budget_item_id,
+                    $l, //$limits[$row->id][$row->budget_item_id], 
+                    $row->amount,
+                    $l-$row->amount,
+                    );
+            }
+            echo CJSON::encode($responce);            
+        }
+        
+        public function actionGetClaimLinesByArticle()
+        {
+            $sql = 'select c_l.*
+                from claim_lines c_l
+                join claims c on c.id=c_l.claim_id
+                where budget_item_id='.$_GET['article_id'].' and 
+                    c.direction_id='.$_GET['direction_id'].' and 
+                    c.division_id='.$_GET['division_id'].' and 
+                    c.period_id='.$_GET['period_id'];
+            $lines = ClaimLine::model()->findAllBySql($sql);
+            $responce['rows']=array();
+            foreach ($lines as $i=>$row) {
+                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['cell'] = array(
+                    $row->claim->claim_number,
+                    $row->asset->waretype->short_name, 
+                    $row->asset->name, 
+                    $row->asset->unit_id,
+                    $row->count,
+                    $row->cost,
+                    $row->amount,
+                    $row->description,
+                    );
+            }
+            echo CJSON::encode($responce);
+        }
+
+        
+        public function actionCheckLimits()
+        {
+            $this->render('checkLimits',array(
+                'dataProvider'=>null, //$dataProvider,
+                'period_id'=>$_GET['period_id'],
+                'direction_id'=>$_GET['direction_id'],
+                'division_id'=>$_GET['division_id'],
+            ));
         }
 
 //    public function actionEditClaimLineDialog($id)
