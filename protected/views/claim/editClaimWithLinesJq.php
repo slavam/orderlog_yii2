@@ -1,14 +1,16 @@
 <?php
-$cs = Yii::app()->clientScript;
- 
-$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
-$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
- 
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+
+//$cs = Yii::app()->clientScript;
+// 
+//$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+//$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+// 
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+
 ?>
 
 <style type="text/css">
@@ -57,13 +59,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <div class="form">
 
-<?php $form=$this->beginWidget('CActiveForm', array(
-//    'action'=>'editClaim',
-    'id'=>'whole-claim-form',
-    'enableAjaxValidation'=>false,
-//    'enableClientValidation' => true,
-)); ?>
-<?php echo $form->errorSummary($model); ?>
+
 
 <script type="text/javascript">
     var lastSel;
@@ -98,77 +94,22 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
                 
          var response = JSON.parse(request.responseText);
          $("#Claim_department_id").html('');
+         $("#Claim_department_id").prepend('<option value=""><Выберите подразделение></option>');
          $.each(response, function(key,value){
              $("#Claim_department_id").append('<option value="'+key+'">'+value+'</option>');
          })
+         
        } else
          alert("status is " + request.status);
      }
    }
 </script>
     
-<table class="table_edit">
-    <tr>
-    	<td>
-    		<table >
-    		<tr>
-		        <td><b>Направление</b></td>
-		        <td><?php echo $form->dropDownList($model,'direction_id',Direction::model()->findDirections(),array('empty'=>'<Выберите направление>'));?> 
-		            <?php echo $form->error($model,'direction_id'); ?></td>
-            </tr>
-            <tr>
-		        <td><b>Отделение</b></td>
-		        <td>
-		            <?php echo $form->dropDownList($model,'division_id', Division::model()->All(),array('onChange'=>'getDepartments()','empty'=>'<Выберите отделение>'));?> 
-		            <?php echo $form->error($model,'division_id'); ?>
-		        </td>        
-            </tr>
-            <tr>
-		        <td><b>Подразделение</b></td>
-		        <td>
-		            <?php if ($model->division_id>0) {
-		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartmentsByDivision($model->division_id),array('empty'=>'<Выберите подразделение>'));
-		            } else {
-		                echo $form->dropDownList($model,'department_id', Department::model()->findDepartments(),array('empty'=>'<Выберите подразделение>'));
-		            }
-		            ?> 
-		            <?php echo $form->error($model,'department_id'); ?>
-		        </td>
-            </tr>
-		    <tr>
-		        <td><b>Комментарий</b></td>
-		        <td>
-		            <?php echo $form->textField($model,'comment',array('size'=>60)); ?>
-				<?php echo $form->error($model,'comment'); ?>
-		        </td>
-		    </tr>
-            </table>
-        </td>
-        <td>
-        	<table>
-        	<tr>
-		        <td><b>Период</b></td>
-		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods(),array('empty'=>'<Выберите период>'));?> 
-		            <?php echo $form->error($model,'period_id'); ?></td>
-		    	</td>
-        	</tr>
-        	<tr>
-		        <td><b>Описание</b></td>
-		        <td>
-		            <?php echo $form->textArea($model,'description',array('rows'=>5, 'cols'=>60)); ?>
-				<?php echo $form->error($model,'description'); ?>
-		        </td>
-        	</tr>
-        	</table>
-        </td>
-    </tr>
-</table>
-
-<?php $this->endWidget(); ?>
+<? $this->renderPartial('claim_add_form',array('model'=>$model),false,true);?>
 
 <table id="claim_line_list"></table> 
 <div id="pager_"></div> 
-<div id="edit_dlg"></div>
+<!-- <div id="edit_dlg"></div> -->
 
 <script type="text/javascript">
 $(function() {
@@ -212,12 +153,17 @@ $(function() {
 	function fill_pane(id)
 	{
 			$(".hint").html("");
+			var _m;
             var hint = $grid.getCell(id, 'asset_info');
+            $grid.setColProp('name',{formatter:null});
             var name = $grid.getCell(id, 'name');
+            $grid.setColProp('name',{formatter:"select"});
             var count = $grid.getCell(id, 'count');
             var unit = $grid.getCell(id, 'unit');
             var amount = $grid.getCell(id, 'amount');
-            $(".hint").html('<div><b>'+name+'&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+            if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
+            $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+            _msg="[";
 	};
 	function calc_amount(id)
 	{
@@ -226,9 +172,26 @@ $(function() {
             var amount = count*cost;
             $grid.setCell(id, 'amount', amount);
 	};
+        
+        function unformat_field(cellvalue, options, cell)
+        {
+                     return cellvalue;
+        };
+        
+        function delclaimlinerow(rowid)
+        {
+          var x=$grid.getCell(rowid,'iddb');
+          deletedrows.push(x);
+          $('#claim_line_list').data('deletedrows',deletedrows);
+          $grid.delRowData(rowid);
+        };
+        
     var pager_selector = "#pager_";
     var worker_id;
+    var asset_id;
     var new_line_added=false;
+    var deletedrows=[];
+   	var _msg="[";
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -247,13 +210,33 @@ $(function() {
             //TODO: formatter - numeric fields!
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
-            {name: 'type', width: 25, frozen: false, editable:true, edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true},
-            {name: 'unit', width: 40, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            
+            				dataInit: function (elem) {
+                                var v = $(elem).val();
+                                asset_id = v;
+                                //alert(v);
+                            },
+			dataEvents: 
+			[
+                   {
+                       type: 'change',
+                       fn: function(e) {
+                       		//var v = parseInt($(e.target).val(), 10);
+                       		asset_id = $(e.target).val();
+                       }
+                   }
+            ],            
+            defaultValue:'222'
+            
+            }//editoptions
+            },//column
+            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
-            {name: 'assetgroup', width: 120, frozen:false, editable:true, edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
+            {name: 'assetgroup', width: 120, frozen:false,/* editable:true,*/ edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
             {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
 
@@ -284,8 +267,8 @@ $(function() {
             {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
             {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'asset_info', width: 300, frozen:false, hidden:true },
-            {name: 'created', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
+            {name: 'asset_info', width: 300, frozen:false, hidden:true},
+            {name: 'created', width: 100, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
         ],
         pager: pager_selector,
         pgbuttons: false,     // disable page control like next, back button
@@ -293,13 +276,26 @@ $(function() {
         viewrecords: false,
         loadComplete: function () {
             $grid.setGridParam({datatype:'local'});
-            $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
+            //$grid.setGridParam({});
+            ////проверка статуса при удалении, пока отключаем
+           <? //if ($model->id) :?> 
+           //var state = <?// echo $model->state->id;?>;
+//           if(state !== 1 & state !==5) 
+//           {
+//                var gid = $grid.jqID($grid.id);
+                //var $td = $('#del_claim_line_list');
+               // $td.hide();
+//           }
+           <?//endif;?>
+           $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
+            
         },
                 //----------------------------------------------------
                 beforeSelectRow: function (rowid) {
                     if ((rowid !== lastSel)&&(!new_line_added)) {
                         $(this).jqGrid('restoreRow', lastSel);
-                        fixPositionsOfFrozenDivs.call(this);
+						$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+                        //fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
                     }
@@ -312,6 +308,8 @@ $(function() {
             	$grid.setGridParam({editurl:'#'});
 				//$grid.setGridParam({datatype:'json'});
 
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
+
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
                         $('#'+rowid+'_type').focus(); //
@@ -322,9 +320,6 @@ $(function() {
                     	null, 
                     	function(){/*aftersave*/
 
-                    		new_line_added=false;
-                    		calc_amount(rowid);
-                    		fill_pane(rowid);
                     		//o.lysenko 6.sep.2012 19:16
                     		//ajax load department of worker
                     		
@@ -332,15 +327,42 @@ $(function() {
                     		
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
-//        data:{"dir":$("#AssetTemplate_direction_id").val()}
             })
             .done(function(data) { 
-//                data=jQuery.parseJSON(data);
-//                $("#AssetTemplate_asset_group_id").html(data);
-//				alert(data);
 				$grid.setCell(rowid,'for_whom_div',data);
             });
+         $.ajax({
+        url: "getAssetFieldsForGrid?asset_id="+asset_id
+            })
+            .done(function(data) { 
+            	var xdata = $.parseJSON(data);
+				$grid.setCell(rowid,'unit',xdata["unit_id"]);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
+				$grid.setCell(rowid,'asset_info',xdata["info"]);
 
+				if(xdata["quantity_type_id"]!=1)
+				{
+					$grid.setCell(rowid,'count',xdata["quantity"]);
+					_msg+="К";
+				}
+				if(xdata["quantity_type_id"]!=2)
+				{
+					$grid.setCell(rowid,'cost',xdata["cost"]);
+					_msg+="Ц";
+				}
+				_msg+="]";
+
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		new_line_added=false;
+					
+				//if(_msg!="") alert(_msg);
+            });
+
+
+
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
@@ -350,8 +372,12 @@ $(function() {
 	                    		$grid.delRowData(rowid);
 	                    		new_line_added=false;
 	                    	}
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+
 	                    } 
                     );
+
+
 
                     /*fixPositionsOfFrozenDivs.call(this);*/
                     return;
@@ -368,7 +394,7 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager_',{view:false, del:false, add:false, edit:false, refresh:false,search:false});
+    }).navGrid('#pager_',{view:false, add:false, del:true,  edit:false, refresh:false,search:false,delfunc:delclaimlinerow},{},{},{},{});
            
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
@@ -388,7 +414,7 @@ $(function() {
 				if(new_line_added)
 				{
                         $grid.delRowData(rowid);
-                        fixPositionsOfFrozenDivs.call(this);
+                        //fixPositionsOfFrozenDivs.call(this);
 				}
 	
 				new_line_added=true;	
@@ -425,6 +451,7 @@ $(function() {
                $grid.addRowData(rowid,row,"last");
                $grid.setSelection(rowid, true);
 
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
@@ -434,9 +461,7 @@ $(function() {
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-                    		new_line_added=false;
-                    		calc_amount(rowid);
-                    		fill_pane(rowid);
+
                     		
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
@@ -445,6 +470,33 @@ $(function() {
 				$grid.setCell(rowid,'for_whom_div',data);
             });
 
+         $.ajax({
+        url: "getAssetFieldsForGrid?asset_id="+asset_id
+            })
+            .done(function(data) { 
+            	var xdata = $.parseJSON(data);
+            	var _msg="";
+				$grid.setCell(rowid,'unit',xdata["unit_id"]);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
+				$grid.setCell(rowid,'asset_info',xdata["info"]);
+
+				$grid.setCell(rowid,'cost',xdata["cost"]);
+				$grid.setCell(rowid,'count',xdata["quantity"]);
+				if(xdata["quantity_type_id"]!=1)
+					_msg+="К";
+				if(xdata["quantity_type_id"]!=2)
+					_msg+="Ц";
+
+				_msg+="]";
+                    		calc_amount(rowid);
+                    		fill_pane(rowid);
+                    		new_line_added=false;
+				
+				//if(_msg!="") alert(_msg);
+            });
+
+					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
@@ -454,6 +506,8 @@ $(function() {
 	                    		$grid.delRowData(rowid);
 	                    		new_line_added=false;
 	                    	}
+							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+
 	                    } 
                     );
 

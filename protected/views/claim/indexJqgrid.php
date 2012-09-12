@@ -72,6 +72,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <script type="text/javascript">
 $(function() {
+    
     var grid=$("#list");
     var pager_selector = "#pager";
     grid.jqGrid( {
@@ -84,7 +85,7 @@ $(function() {
         colModel : [
             {name:'id',index:'id', width:20, hidden:true},
             {name:'period',index:'period', width:100, sortable:false},
-            {name:'name',index:'name', width:100, sortable:true},
+            {name:'name',index:'name', width:100, sortable:true,sorttype:"text"},
             {name:'state',index:'state', width:100},
             {name:'division',index:'division', width:300},
             {name:'department',index:'department', width:300, sortable:false},
@@ -140,8 +141,10 @@ $(function() {
         },
         
         gridComplete: function () {
+        
             grid.setGridParam({datatype:'local'});
             $(".subgrid-data").css('background','#ddd');
+            
         },
 //        onPaging : function(which_button) {
 //            grid.setGridParam({datatype:'json'});
@@ -178,7 +181,7 @@ $(function() {
             //lysenko 1!!!?!?!?!?!
 //                $("#alertmod").detach();
 
-                $("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
+                var _dlg=$("#create_dialog_edit_whole_claim").load('editClaimWithLinesJq?id='+id_);
                 $("#create_dialog_edit_whole_claim").dialog({
                     title: 'Добавить заявку и строки',
                     modal:true,
@@ -186,6 +189,7 @@ $(function() {
                     height:600,
                     buttons:{
                         'OK': function(){
+
                             var rows= jQuery("#claim_line_list").jqGrid('getRowData');
                             var lines=new Array();
                             for(var i=0;i<rows.length;i++){
@@ -196,6 +200,7 @@ $(function() {
                             //  alert(paras[0]['name']);
                             var values = {};
                             var x = $.makeArray(lines);
+                            
                             $.each($('#whole-claim-form').serializeArray(), function(i, field) {
 //                                alert(field.name.substr(6,field.name.length-7));
                                 values[field.name.substr(6,field.name.length-7)] = field.value;
@@ -211,12 +216,21 @@ $(function() {
                                     alert("error:"+res.responseText);
                                 },
                                 'success':  function(data) {
-                                        grid.addRowData(data.id,data,"last");
-                                        grid.setSelection(data.id);
-                                        grid.focus();
-                                        $("#create_dialog_edit_whole_claim").dialog('close');
-//                                        $(this).dialog('close');
-
+                                        if (data.status == 'error')
+                                            {
+                                                var message='';
+                                            $.each(data.message, function(i, field) {
+                                               message += field+'\n';
+                                            });
+                                             alert(message);
+                                             
+                                            }
+                                            else
+                                            {
+                                                grid.addRowData(data.row.id,data.row,"last");
+                                                grid.setSelection(data.row.id);
+                                                $("#create_dialog_edit_whole_claim").dialog('close');
+                                            }
                                     }
                             }); 
 
@@ -224,7 +238,8 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            $(this).dialog('close');
+                            $("#create_dialog_edit_whole_claim").dialog('close');
+
                         }
                     }
                 });
@@ -265,6 +280,7 @@ $(function() {
                             //  alert(paras[0]['name']);
                             var values = {};
                             var x = $.makeArray(lines);
+                            var deletedrows=$('#claim_line_list').data('deletedrows');
                             $.each($('#whole-claim-form').serializeArray(), function(i, field) {
 //                                alert(field.name.substr(6,field.name.length-7));
                                 values[field.name.substr(6,field.name.length-7)] = field.value;
@@ -272,7 +288,7 @@ $(function() {
 
                             $.ajax( {                                //'f2[]':$("#whole-claim-form").serialize()
 //                                'data': {'ClaimLines[]':JSON.stringify(paras), 'Claim[]':values}, 
-                                'data': {'ClaimLines':x, 'Claim[]':values}, 
+                                'data': {'ClaimLines':x, 'Claim[]':values,'deletedrows':deletedrows}, 
                                 'url': "editWholeClaim?id="+id_,
                                 'type': "POST",
                                 'dataType': "json",
@@ -281,7 +297,17 @@ $(function() {
                                 },
                                 'success':  function(data) {
 //                                    data=JSON.parse(data);
-                                        grid.setRowData(sel_,data);
+    
+                                        grid.setRowData(sel_,data.row); 
+                                        if (data.message)
+                                            {
+                                               alert(data.message);
+                                            }
+                                        var col = $("#"+sel_+" td.sgexpanded");
+                                        if(col.length>0)
+                                            {
+                                               $("#list_"+sel_+"_t").trigger("reloadGrid");
+                                            }
                                         $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
 
@@ -292,7 +318,9 @@ $(function() {
 //                            $('#claim_line_list').ajaxSubmit(options); 
                         },
                         'Close': function(){
-                            $(this).dialog('close');
+                            $("#create_dialog_edit_whole_claim").dialog('close');
+//                            $(this).dialog('close');
+
                         }
                     }
                 });
@@ -329,14 +357,18 @@ $(function() {
                                     alert("error:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
-                                    grid.jqGrid('delRowData',sel_);
-                                    //alert(data);
-                                    $(this).dialog('close');
+                                   
+                                    if (data.state =="ok")
+                                     {   
+                                        grid.jqGrid('delRowData',sel_);
+                                     }
+                                    alert(data.responce);
+                                    
                                 }
                             };
                             $.ajax(options);
 //                            $('#claim-form').ajaxSubmit(options); 
-                            
+                            $(this).dialog('close');
                         },
                         'Нет': function(){
                             $(this).dialog('close');
@@ -347,7 +379,6 @@ $(function() {
                 };
         }
         });
-
-
 });
+
 </script>

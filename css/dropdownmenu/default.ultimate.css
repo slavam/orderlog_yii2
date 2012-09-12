@@ -50,12 +50,13 @@ ul.dropdown ul span {
 
 ul.dropdown li.hover,
 ul.dropdown li:hover {
- background: url(../../../../images/default/grad2.png) 0 100% repeat-x;
+ background: url(/images/dropdownmenu/default/grad2.png) 0 100% repeat-x;
  color: #000;
 }
 
 ul.dropdown li a:active {
- background: url(../../../../images/default/grad1.png) repeat-x;
+ background: url(/images/dropdownmenu/default/grad1.png) repeat-x;
+  background:#fff;
 }
 
 	ul.dropdown ul {
