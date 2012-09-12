@@ -1,5 +1,6 @@
 <h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
 <h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
+<h4>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></h4>
 <?php
 $cs = Yii::app()->clientScript;
  
@@ -25,8 +26,9 @@ $(function() {
     var grid=$("#list");
     var direction_id = <?echo $direction_id;?>;
     var period_id = <?echo $period_id;?>;
+    var division_id = <?echo $division_id;?>;
     grid.jqGrid( {
-        url : 'getLimits?direction_id='+direction_id+'&period_id='+period_id,
+        url : 'getLimits?direction_id='+direction_id+'&period_id='+period_id+'&division_id='+division_id,
         datatype : 'json',
         width : '1160',
         height : '400',
@@ -38,10 +40,11 @@ $(function() {
             {name:'division_id',index:'division_id', width:20, hidden:true},
             {name:'direction_id',index:'direction_id', width:20, hidden:true},
             {name:'division',index:'division', width:200, sortable:false},
-            {name:'article',index:'article', width:300, sortable:false},
-            {name:'limit',index:'limit', width:100, sortable:true},
-            {name:'sum',index:'sum', width:100},
-            {name:'delta',index:'delta', width:100},
+//            {name:'article',index:'article', width:300, sortable:false},
+            {name: 'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name:'limit',index:'limit', width:70, sortable:true},
+            {name:'sum',index:'sum', width:70},
+            {name:'delta',index:'delta', width:70},
         ],
         caption : 'Контроль лимитов',
         rowNum : 300000,
@@ -69,10 +72,12 @@ $(function() {
                 height : 'auto',
                 width : '1000',
 //                loadonce:true,
-                colNames: ['Тип','Название','Количество','Цена','Сумма','Примечание'],
+                colNames: ['Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание'],
                 colModel: [
+                    {name: 'claim_num', width: 50 },
                     {name: 'type', width: 50 },
                     {name:'name',index:'name', width:300},
+                    {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
                     {name: 'quantity', width: 70 },
                     {name: 'cost', width: 60 },
                     {name: 'amount', width: 60 },
