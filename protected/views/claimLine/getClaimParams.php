@@ -24,6 +24,6 @@ $form=$this->beginWidget('CActiveForm', array(
 <?php $this->endWidget(); ?>
     
 <?
-echo CHtml::link('Отчет "Группы"','/index.php/claim/ReportGroup');
+//echo CHtml::link('Отчет "Группы"','/index.php/claim/ReportGroup');
 ?>
 </div><!-- form -->

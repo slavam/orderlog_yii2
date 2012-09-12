@@ -1,18 +1,4 @@
-<?php
-$this->breadcrumbs=array(
-	'Заявки'=>array('claim/index'),
-);
-
-$this->menu=array(
-	array('label'=>'List ClaimLine', 'url'=>array('index')),
-	array('label'=>'Create ClaimLine', 'url'=>array('create')),
-	array('label'=>'Update ClaimLine', 'url'=>array('update', 'id'=>$model->id)),
-	array('label'=>'Delete ClaimLine', 'url'=>'#', 'linkOptions'=>array('submit'=>array('delete','id'=>$model->id),'confirm'=>'Are you sure you want to delete this item?')),
-	array('label'=>'Manage ClaimLine', 'url'=>array('admin')),
-);
-?>
-
-<h1>Консолидированная заявка</h1>
+<!--<h1>Консолидированная заявка</h1>-->
 <h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
 <h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
 <?php 

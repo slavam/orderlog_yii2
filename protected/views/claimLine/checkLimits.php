@@ -1,0 +1,115 @@
+<h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
+<h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
+<?php
+$cs = Yii::app()->clientScript;
+ 
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+ 
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+?>
+<script type="text/javascript">
+   $.jgrid.no_legacy_api = true;
+   $.jgrid.useJSON = true;
+</script>
+
+<table id="list"></table> 
+<div id="pager"></div> 
+
+<script type="text/javascript">
+$(function() {
+    var grid=$("#list");
+    var direction_id = <?echo $direction_id;?>;
+    var period_id = <?echo $period_id;?>;
+    grid.jqGrid( {
+        url : 'getLimits?direction_id='+direction_id+'&period_id='+period_id,
+        datatype : 'json',
+        width : '1160',
+        height : '400',
+        mtype : 'GET',
+        colNames : ['ID','period_id','division_id','direction_id','Отделение','Статья бюджета','Лимит','Сумма','Отклонение'],
+        colModel : [
+            {name:'id',index:'id', width:20, hidden:true},
+            {name:'period_id',index:'period_id', width:20, hidden:true},
+            {name:'division_id',index:'division_id', width:20, hidden:true},
+            {name:'direction_id',index:'direction_id', width:20, hidden:true},
+            {name:'division',index:'division', width:200, sortable:false},
+            {name:'article',index:'article', width:300, sortable:false},
+            {name:'limit',index:'limit', width:100, sortable:true},
+            {name:'sum',index:'sum', width:100},
+            {name:'delta',index:'delta', width:100},
+        ],
+        caption : 'Контроль лимитов',
+        rowNum : 300000,
+        pgbuttons: false,     // disable page control like next, back button
+        pgtext: null,  
+        viewrecords: true,
+        sortorder: "asc",
+        sortname: "name",
+        pager: '#pager',
+        subGrid: true,
+        loadonce: true,
+        subGridRowExpanded: function (subgridDivId, rowId) {
+            var article_id = $('#list').getCell(rowId, 'id');
+            var period_id = $('#list').getCell(rowId, 'period_id');
+            var division_id = $('#list').getCell(rowId, 'division_id');
+            var direction_id = $('#list').getCell(rowId, 'direction_id');
+            var subgridTableId = subgridDivId + "_t";
+            var pager_id = "p_"+subgridTableId;
+            $(".subgrid-cell").css('background','#ddd');
+            $(".subgrid-data").css('background','#ddd');
+            $("#" + subgridDivId).html("<table id='"+subgridTableId+"' class='scroll'></table><div id='"+ pager_id +"' class='scroll'></div>");
+            $("#" + subgridTableId).jqGrid({
+                url : "getClaimLinesByArticle?article_id="+article_id+'&period_id='+period_id+'&division_id='+division_id+'&direction_id='+direction_id,
+                datatype : 'json',
+                height : 'auto',
+                width : '1000',
+//                loadonce:true,
+                colNames: ['Тип','Название','Количество','Цена','Сумма','Примечание'],
+                colModel: [
+                    {name: 'type', width: 50 },
+                    {name:'name',index:'name', width:300},
+                    {name: 'quantity', width: 70 },
+                    {name: 'cost', width: 60 },
+                    {name: 'amount', width: 60 },
+                    {name: 'description', width: 200 }
+                ],
+            pager: null, //pager_id,
+            pgbuttons: false,     // disable page control like next, back button
+            pgtext: null,  
+            viewrecords: false,
+            gridComplete: function () {
+//                $(".subgrid-data").css('background','#ddd');
+            }
+            });
+        },
+        
+        gridComplete: function () {
+            grid.setGridParam({datatype:'local'});
+            var rows = grid.jqGrid('getDataIDs');
+            var cl;
+            for( i=0; i < rows.length; i++){
+                row = grid.jqGrid('getRowData',rows[i]);
+                var delta = row['delta'];
+
+                if(delta >= 0 ) cl="";
+                else cl="red";
+                grid.jqGrid('setCell',rows[i],'delta','',{'color':cl});
+            } 
+        },
+    	loadError: function(xhr, status, error) {alert(status +error)}
+    }).navGrid('#pager',{view:false, del:false, add:false, edit:false, refresh:false},
+    {}, // default settings for edit
+    {}, // default settings for add
+    {}, // delete
+    {closeOnEscape: true, multipleSearch: true, 
+       sopt:['cn','eq','ne','bw','bn'],
+         closeAfterSearch: true }, // search options
+    {}
+    ); //, cloneToTop:true});
+});
+</script>
