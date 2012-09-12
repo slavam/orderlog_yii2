@@ -11,11 +11,13 @@ public $valueStart_date;
 public $attributeStop_date;
 public $nameStop_date;
 public $valueStop_date;
-        
+public $disabled;
+
 function run()
 {
     if($this->attributeStart_date && $this->attributeStop_date) {
     $this->attribute = TRUE;
+    
     }   
     if($this->hasModel())
         {
@@ -35,7 +37,8 @@ function run()
                     'dateFormat'=>'dd.mm.yy',
                 ),
                 'htmlOptions'=>array(
-                    'style'=>'height:20px;'
+                    'style'=>'height:20px;',
+                    'disabled'=>  $this->disabled?true:false,
                 ),
                 ));
              echo '</td>';
@@ -55,7 +58,8 @@ function run()
                             'dateFormat'=>'dd.mm.yy',
                         ),
                         'htmlOptions'=>array(
-                            'style'=>'height:20px;'
+                            'style'=>'height:20px;',
+                            'disabled'=>  $this->disabled?true:false,
                         ),
                     ));
                 echo '</td>';    

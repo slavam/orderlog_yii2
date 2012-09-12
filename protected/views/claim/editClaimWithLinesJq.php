@@ -394,8 +394,26 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager_',{view:false, add:false, del:true,  edit:false, refresh:false,search:false,delfunc:delclaimlinerow},{},{},{},{});
-           
+    }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false,delfunc:delclaimlinerow},{},{},{},{});
+    
+    
+    //Кнопка удаления
+    $grid.jqGrid('navButtonAdd',pager_selector,{
+                caption: '',//'Группа',
+                title: 'Удалить строку',
+                buttonicon: 'ui-icon-trash',
+                onClickButton:function()
+                {
+                    var rowid = $grid.getGridParam('selrow');
+                    if(rowid)
+                    {
+                        delclaimlinerow(rowid);
+                    }
+                    else alert('Выберите запись');
+                }
+    });
+
+
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
             title: 'Добавить строку',

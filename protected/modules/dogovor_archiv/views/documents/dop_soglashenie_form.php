@@ -1,6 +1,7 @@
 <div class="form">
 <?php
-
+if($model->scenario!=='view')
+{
 $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
     'id'=>'dog_select',
     // additional javascript options for the dialog plugin
@@ -28,7 +29,10 @@ $this->beginWidget('zii.widgets.jui.CJuiDialog', array(
 ));
 
 $this->endWidget('zii.widgets.jui.CJuiDialog');
-
+echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Добавить главный договор', '#', array(
+   'onclick'=>"$(\"#dog_select\").dialog(\"open\").load('".Yii::app()->createUrl('/dogovor_archiv/documents/index')."'); return false;",
+));
+}
 // the link that may open the dialog
 ?>
     
@@ -38,9 +42,7 @@ $this->endWidget('zii.widgets.jui.CJuiDialog');
   </div>  
     <?endif;?>
 <?
-echo CHtml::link(CHtml::image(Yii::app()->request->baseUrl.'/images/add.png').'Добавить главный договор', '#', array(
-   'onclick'=>"$(\"#dog_select\").dialog(\"open\").load('".Yii::app()->createUrl('/dogovor_archiv/documents/view')."'); return false;",
-));
+
 echo $form->renderBegin();
 //echo CHtml::hiddenField('Document[parent_id]');
 echo $form['parent_doc_id'];
@@ -184,10 +186,12 @@ echo CHtml::tag('p',array('id'=>'document_identify'),'Главный догов�
         </tr>
     </table>
 </div> 
-<?php 
+<?php
+if($model->scenario !=='view')
+{
 foreach($form->getButtons() as $element)
     echo $element->render();
-    
+}
 echo $form->renderEnd(); //endform
 $this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
 ?>

@@ -137,8 +137,11 @@ echo $form->renderBegin();
     </table>
 </div>    
 <?php 
+if($model->scenario !=='view')
+{
 foreach($form->getButtons() as $element)
     echo $element->render();
+}
 echo $form->renderEnd();
 
 $this->widget('application.components.DocAttachmentBlock',array('model'=>$model,'title'=>'Список прикрепленных файлов'));
