@@ -395,7 +395,7 @@ $(function() {
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
-           
+
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
             title: 'Добавить строку',
@@ -559,20 +559,24 @@ $(function() {
             } 
          });
 
-	   $grid.jqGrid('navButtonAdd',pager_selector,{
-            caption: '',//'Группа',
-            title: 'Удалить строку',
-            buttonicon: 'ui-icon-trash',
-            onClickButton: function()
-            {
-         
-            var sel_ = $grid.getGridParam('selrow');
-            if(sel_) {
-            	delclaimlinerow(sel_);
-            }
-            else alert ("Выберите строку!");
-        }
-        });
+ 
+    
+    //Кнопка удаления
+    $grid.jqGrid('navButtonAdd',pager_selector,{
+                caption: '',//'Группа',
+                title: 'Удалить строку',
+                buttonicon: 'ui-icon-trash',
+                onClickButton:function()
+                {
+                    var rowid = $grid.getGridParam('selrow');
+                    if(rowid)
+                    {
+                        delclaimlinerow(rowid);
+                    }
+                    else alert('Выберите запись');
+                }
+    });
+
 		function after_save(rowID, response ) 
 		{
 //			  var ret_iddb = $.parseJSON(response.responseText);

@@ -9,9 +9,6 @@ class DocumentsController extends Controller {
 
     public $_model;
 
-function actionIndex() {
-    $this->actionView();
-}
     
 function filters() {
         return array(
@@ -20,7 +17,7 @@ function filters() {
     }
     
     
-function actionView() {
+function actionIndex() {
 $cs = Yii::app()->clientScript;    
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
@@ -131,6 +128,43 @@ public function actionGetAllSubDocuments()
         }
     }
     else throw new CException('Не переданы параметры');
+}
+
+public function actionView()
+{
+    
+    $model=$this->loadModel();
+    $arguments['model']=$model; //Записываем неизменную модель в массив аргументов для вьюхи
+    if ($_REQUEST['sub_document'])
+    {
+        $arguments['parent_model']=$model; //Записываем неизменную модель как родительскую в массив аргументов для вьюхи
+        foreach ($model->dop_sogl as $key=>$value)
+            {
+                if ($value->_id !== null && $value->_id == $_REQUEST['sub_document'])
+                {
+                    $model=$value;
+                    $arguments['model']=$model; //Записываем уже измененную модель в аргументы вьюхи. Т.е. модель вложенного документа
+                    break;
+                }
+            }
+    
+    }
+    $arguments['model']->scenario='view';
+    $form = new CForm($model->form_builder('view'), $model);
+    $arguments['form']=$form;
+    $cs = Yii::app()->clientScript;   
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/js/jquery.lightbox-0.5.min.js', CClientScript::POS_END);
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/lightbox/lightboxinit.js' ,CClientScript::POS_END);
+    $cs->registerCssFile(Yii::app()->request->baseUrl.'/js/lightbox/css/jquery.lightbox-0.5.css');
+    $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+    $cs->registerCoreScript('jquery');
+    
+    
+    if ($this->getViewFile($model->templ_name.'_form'))
+    {
+        $this->render($model->templ_name.'_form', $arguments);
+    }
+    else $this->render('document_form', $arguments);
 }
 
 public function actionUpdate()
