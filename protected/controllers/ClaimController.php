@@ -648,6 +648,7 @@ class ClaimController extends Controller
     public function actionGetDepartmensByDivision($division_id)
     {
         $departments = Department::model()->findDepartmentsByDivision($division_id);
+        
         echo CJSON::encode($departments);
         Yii::app()->end();
     }

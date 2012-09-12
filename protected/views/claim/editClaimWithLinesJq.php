@@ -94,9 +94,11 @@
                 
          var response = JSON.parse(request.responseText);
          $("#Claim_department_id").html('');
+         $("#Claim_department_id").prepend('<option value=""><Выберите подразделение></option>');
          $.each(response, function(key,value){
              $("#Claim_department_id").append('<option value="'+key+'">'+value+'</option>');
          })
+         
        } else
          alert("status is " + request.status);
      }
@@ -275,15 +277,16 @@ $(function() {
         loadComplete: function () {
             $grid.setGridParam({datatype:'local'});
             //$grid.setGridParam({});
-           <? if ($model->id) :?> 
-           var state = <?echo $model->state->id;?>;
-           if(state !== 1 & state !==5)
-           {
+            ////проверка статуса при удалении, пока отключаем
+           <? //if ($model->id) :?> 
+           //var state = <?// echo $model->state->id;?>;
+//           if(state !== 1 & state !==5) 
+//           {
 //                var gid = $grid.jqID($grid.id);
-                var $td = $('#del_claim_line_list');
-                $td.hide();
-           }
-           <?endif;?>
+                //var $td = $('#del_claim_line_list');
+               // $td.hide();
+//           }
+           <?//endif;?>
            $(".ui-dialog-buttonpane").append('<div class="hint"></div>');
             
         },
