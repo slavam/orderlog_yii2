@@ -45,7 +45,7 @@ $(function() {
          { name : 'comment', index : 'comment', width : 200, editable: true, sortable:false },
          { name : 'stamp', index : 'stamp', width : 20, editable: true, sortable:false, editrules:{required:true} },                         /* */
 //         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, edittype:'select', editrules:{required:true, number:true}, editoptions: {dataUrl:'getDirectionsForSelect'}},
-         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, edittype: 'select', editoptions: {value: <?php echo Helpers::BuildEditOptions(Direction::model(),array('key'=>'id','value'=>'short_name'))?> }},
+         { name : 'dir', index : 'dir', width : 50, editable: true, sortable:false, formatter:'select', edittype: 'select', editrules:{required:true, number:true}, editoptions: {value: <?php echo Helpers::BuildEditOptions(Direction::model(),array('key'=>'id','value'=>'short_name'))?> }},
 
 /*		 { name : 'btns', index : 'btns', width : 25, sortable:false,formatter:'actions', formatoptions:{keys:true,delbutton:false}},*/
         ],

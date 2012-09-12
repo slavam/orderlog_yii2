@@ -351,7 +351,7 @@ class AssetGroupController extends Controller
 				
             foreach ($blocks_ as $i=>$row) {
                 $responce['rows'][$r_i]['id'] = $r_i+1;
-                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp, $row->directions->short_name,'0','null',false,false,true);
+                $responce['rows'][$r_i]['cell'] = array($row->id, $row->name, $row->comment, $row->stamp, $row->direction_id /*$row->directions->short_name*/,'0','null',false,false,true);
                 $r_i++;
 
 	            $dataProvider_group = new CActiveDataProvider('AssetGroup' , array(

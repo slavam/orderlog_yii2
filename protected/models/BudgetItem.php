@@ -149,4 +149,48 @@ class BudgetItem extends CActiveRecord
             }			
                 return $data;
         }
+
+        //temporary - o.lysenko 7.sep.2012 10:27
+        //WORKS!!!
+        public function get3LevelAllNameBudgetItemOptionList(){
+
+            $sql="
+select bd.id as id, p.name ||' => '|| bd.name ||' ('||bd.code||')' as name 
+from FIN.budget_directory bd 
+join FIN.budget_directory p on bd.parent_id=p.id and bd.BUDGET_GROUPS_ID in (9,7)
+order by name
+";
+//                
+            
+            //$sql =" select * from FIN.budget_directory";
+
+            $budgetItems = BudgetItem::model()->findAllBySql($sql);
+
+         
+            
+/*            foreach($budgetItems as $key => $value){              
+
+                $article =BudgetItem::model()->findByPk($key);
+                $art2name=$this->get2LevelNameBudgetItem($key);
+ 
+                if ($art2name) {
+                    $budgetItems[$key]->NAME = $art2name;//." (".$article->CODE.")";
+                }
+            }			
+*/
+                return $budgetItems;
+
+        }
+
+        public function getLimit($period_id, $budget_item_id, $division_id){
+            $sql ='select sum(bv.value*bd.sign)*100 as PARENT_ID
+      from FIN.budget_value bv
+      join FIN.budget_factor bf on bf.id=bv.budget_factor_id
+      join FIN.budget_directory bd on bd.id=bf.budget_directory_id and bd.budget_groups_id in (7,9)       
+      where bv.budget_flag_correction_id=41 
+       and bv.periods_id='.$period_id.'
+       and bd.id='.$budget_item_id.'
+       and bv.division_id='.$division_id;
+           return BudgetItem::model()->findBySql($sql)->PARENT_ID/100; 
+        }
 }

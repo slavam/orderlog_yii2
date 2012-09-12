@@ -18,12 +18,18 @@ $form=$this->beginWidget('CActiveForm', array(
             <?php echo $form->dropDownList($model,'direction_id', Direction::model()->findDirections());?> 
             <?php echo $form->error($model,'direction_id'); ?>
 	</div>
+	<div class="row">
+            <b>Отделение</b>
+            <br>
+            <?php echo $form->dropDownList($model,'division_id', Division::model()->All());?> 
+            <?php echo $form->error($model,'division_id'); ?>
+	</div>
     	<div class="row buttons">
             <?php echo CHtml::submitButton('Показать'); ?>
 	</div>
 <?php $this->endWidget(); ?>
     
 <?
-echo CHtml::link('Отчет "Группы"','/index.php/claim/ReportGroup');
+//echo CHtml::link('Отчет "Группы"','/index.php/claim/ReportGroup');
 ?>
 </div><!-- form -->

@@ -91,6 +91,7 @@ class ClaimLine extends CActiveRecord
                     'position' => array(self::BELONGS_TO, 'Place', 'position_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
                     'worker' => array(self::BELONGS_TO, 'Worker', 'for_whom'),
+                    'status' => array(self::BELONGS_TO, 'Status', 'status_id'),
                     'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
                     'payer' => array(self::BELONGS_TO, 'Division', 'payer_id'),
 //                    'claim_sum'=>array(self::HAS_MANY,'Claim','claime_id',)
@@ -203,6 +204,7 @@ class ClaimLine extends CActiveRecord
                 return '';
             }
         }
+
         public function getBusinessName($business_id)
         {
             $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb

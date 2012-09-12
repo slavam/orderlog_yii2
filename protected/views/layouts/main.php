@@ -46,7 +46,7 @@
 //                                                    array('label'=>'Доверенности', 'url'=>array('#')),
                                                   )
                                     ),
-                                array('label'=>'Отчеты', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                                array('label'=>'Отчеты', 'url'=>array('/claimLine/getClaimParams'),'linkOptions'=>array('class'=>'dir'),
                                         'items'=>array(
 //                                                        array('label'=>'Контроль лимитов', 'url'=>array('#')),
 //                                                        array('label'=>'Заказы по отделениям', 'url'=>array('#')),
