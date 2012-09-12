@@ -27,6 +27,9 @@
 class Asset extends CActiveRecord
 {
 	public $selection;
+	public $sel_man;
+	public $sel_prod;
+	public $sel_feat;
 	/**
 	 * Returns the static model of the specified AR class.
 	 * @return Asset the static model class
@@ -149,6 +152,19 @@ class Asset extends CActiveRecord
 		));
 	}
         
+        private function CheckSave($arr_for_check) {
+                                
+                $tmpcount = count($arr_for_check);
+                
+		if(count($arr_for_check) > 1) {
+			$tmp_str = implode(',',$arr_for_check);
+		} else {
+			$tmp_str=$arr_for_check[0];
+		}
+       		$tmp_str = "{".$tmp_str."}";
+           return $tmp_str;           
+        }
+        
 	public function afterFind() {
             
             if (isset($this->place_id)) {
@@ -157,6 +173,25 @@ class Asset extends CActiveRecord
             } else {
                 $this->selection = NULL;
             }
+            if (isset($this->manufacturer_id)) {
+                $this->manufacturer_id = trim($this->manufacturer_id,"{}");
+                $this->sel_man = explode(',',$this->manufacturer_id);
+            } else {
+                $this->sel_man = NULL;
+            }
+            if (isset($this->product_id)) {
+                $this->product_id = trim($this->product_id,"{}");
+                $this->sel_prod = explode(',',$this->product_id);
+            } else {
+                $this->sel_prod = NULL;
+            }
+            if (isset($this->feature_id)) {
+                $this->feature_id = trim($this->feature_id,"{}");
+                $this->feature_id = explode(',',$this->feature_id);
+            } else {
+                $this->sel_feat = NULL;
+            }
+
 	}
 	/**
 	 * This is invoked before the record is saved.
@@ -165,18 +200,26 @@ class Asset extends CActiveRecord
 	protected function beforeSave()
 	{
         if (isset($this->selection)) {
-                
-                $tmpcount = count($this->selection);
-                
-		if(count($this->selection) > 1) {
-			$this->place_id=implode(',',$this->selection);
-		} else {
-			$this->place_id=$this->selection;
-		}
-       		$this->place_id = "{".$this->place_id."}";
+                $this->place_id = $this->CheckSave($this->selection);
         } else {
                 $this->place_id = NULL;
+        }     
+        if (isset($this->sel_man)) {
+                $this->manufacturer_id = $this->CheckSave($this->sel_man);
+        } else {
+                $this->manufacturer_id = NULL;
         }
+        if (isset($this->sel_prod)) {
+                $this->product_id = $this->CheckSave($this->sel_prod);
+        } else {
+                $this->product_id = NULL;
+        }
+        if (isset($this->sel_feat)) {
+                $this->feature_id = $this->CheckSave($this->sel_feat);
+        } else {
+                $this->feature_id = NULL;
+        }
+
 		return parent::beforeSave();
 //       		return TRUE;
 

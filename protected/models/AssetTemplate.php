@@ -20,7 +20,8 @@
  */
 class AssetTemplate extends CActiveRecord
 {
-	/**
+        public $direction_id_val;
+        /**
 	 * Returns the static model of the specified AR class.
 	 * @return AssetTemplate the static model class
 	 */

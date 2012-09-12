@@ -1,13 +1,196 @@
+<? /*php
+$cs = Yii::app()->clientScript;
+ 
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.multiselect.css');
+ 
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqModal.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqDnR.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/ui.multiselect.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+*/?>
+<style type="text/css">
+    th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+
+</style>
 
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
+
+$.maxZIndex = $.fn.maxZIndex = function(opt) {
+    /// <summary>
+    /// Returns the max zOrder in the document (no parameter)
+    /// Sets max zOrder by passing a non-zero number
+    /// which gets added to the highest zOrder.
+    /// </summary>    
+    /// <param name="opt" type="object">
+    /// inc: increment value, 
+    /// group: selector for zIndex elements to find max for
+    /// </param>
+    /// <returns type="jQuery" />
+    var def = { inc: 10, group: "*" };
+    $.extend(def, opt);    
+    var zmax = 0;
+    $(def.group).each(function() {
+        var cur = parseInt($(this).css('z-index'));
+        zmax = cur > zmax ? cur : zmax;
+    });
+    if (!this.jquery)
+        return zmax;
+
+    return this.each(function() {
+        zmax += def.inc;
+        $(this).css("z-index", zmax);
+    });
+}
+
 </script>
 
 <script type="text/javascript">
     var lastSel;
+    var place_text = $("#place_id_selector");
+    var place_data = $("#Asset_place_id");
+
     var request = false;
-    try {
+    var grid=$("#create_multiple_dialog_table");
+    var id_multiple=1;
+    var id_direction=1;
+    var emptyMsgDiv = $('<div style="padding: 30px;" ><h3>Для этого напраления нет характеристик !</h3></div>');
+    
+    var idsOfSelectedRows = [],
+        updateIdsOfSelectedRows = function (id, isSelected) {
+           var index = $.inArray(id, idsOfSelectedRows);
+           if (!isSelected && index >= 0) {
+                idsOfSelectedRows.splice(index, 1); // remove id from the list
+           } else if (index < 0) {
+                idsOfSelectedRows.push(id);
+           }
+        };
+        
+//    alert(id_multiple);
+    grid.jqGrid( {
+//        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
+        url : "getDataForMultipleChoice",
+        datatype : 'json',
+        width : '750',
+        height : '480',
+        mtype : 'POST',
+        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
+//        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
+        colNames : [ 'ID','Наименование'],
+        colModel : [
+        { name : 'id', index : 'id', width : 20, hidden:true },
+        { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
+],
+        multiselect: true,
+        pager : null,
+        rowNum : 1000000,
+        gridview: true,
+        rownumbers: true,
+        onSelectRow: updateIdsOfSelectedRows,
+        emptyrecords: 'No URLs have been loaded for evaluation.',
+        
+        loadComplete: function () {
+//          var arr_isset = $("#Asset_place_id").val();
+//          var recs = parseInt(grid.getGridParam("records"),10);          
+         // var recs = parseInt(grid.getGridParam("records"));          
+          //alert('Записей: ' + recs);
+          
+          var arr_isset = place_data.val();
+          
+          if (arr_isset) {
+//             idsOfSelectedRows = $("#Asset_place_id").val().split(/[,]/);;
+             idsOfSelectedRows = place_data.val().split(/[,]/);;
+          } 
+                
+           var $this = $(this), i, count;
+           for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
+                $this.jqGrid('setSelection', idsOfSelectedRows[i], false);
+           }
+        },
+        
+       gridComplete: function() {
+//          var recs = parseInt(grid.getGridParam("records"),10);
+//          var selId    = grid.jqGrid('getGridParam','datatype');
+//        var recs = parseInt( grid.getGridParam("records"),10);
+//          alert (selId+ ' ' + recs);
+        
+        var count = grid.getGridParam();
+        
+        var ts = grid[0];
+        alert (ts.p.reccount);
+        
+        if (ts.p.reccount === 0) {
+             grid.hide();
+             emptyMsgDiv.show();
+        } else {
+             grid.show();
+             emptyMsgDiv.hide();
+        }
+/*        
+        if (isNaN(recs) || recs == 0) {
+            $("#gridWrapper").hide();
+        }
+        else {
+            $('#gridWrapper').show();
+            alert('records > 0');
+        }
+*/
+        
+    },
+    
+  
+//        rowList : [ 50, 100, 500, 1000 ],
+        sortname : 'name',
+        sortorder : 'asc',
+//        recordtext: 'Товар(ы) {0} - {1}',
+//        viewrecords : true,
+        caption : false,
+//        toppager: false,
+
+//        rowList: [],         // disable page size dropdown
+        pgbuttons: false,      // disable page control like next, back button
+        pgtext: null,          // disable pager text like 'Page 0 of 10'
+        viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
+        loadonce: true         // to enable sorting on client side
+    
+
+    });
+    $("#cb_" + grid[0].id).hide();
+    emptyMsgDiv.insertAfter(grid.parent());
+
+/*    try {
      request = new XMLHttpRequest();
    } catch (trymicrosoft) {
      try {
@@ -23,15 +206,38 @@
 
    if (!request)
      alert("Error initializing XMLHttpRequest!");
- 
+*/ 
+
     function getTemplates() {
-        var template_id = document.getElementById("Asset_asset_template_id").value;
-        var url = 'GetTemplateByAsset/?template_id='+template_id;
+        
+    var template_id = document.getElementById("Asset_asset_template_id").value;
+        
+  $.ajax({
+       'type': "POST",
+        'url': 'GetTemplateByAsset',
+        data : {'template_id':template_id}     
+        })
+       .done(function(data) { 
+             var response = JSON.parse(data);
+             alert (response['direction_id_val'])
+             
+         $("#asset_group_id").html('');
+         $("#asset_group_id").val(response['asset_group_id']);
+         $("#budget_item_id").val(response['budget_item_id']);
+         $("#direction_id").val(response['direction_id']);
+         $("#Asset_direction_id_val").val(response['direction_id_val']);
+         $("#ware_type_id").val(response['ware_type_id']);
+         $("#info").val(response['info']);
+             
+            });
+
+/*        var url = 'GetTemplateByAsset/?template_id='+ template_id;
         request.open("GET", url, true);
         request.onreadystatechange = updateTemplates;
         request.send(null);
+*/
     }
-    function updateTemplates() {
+/*    function updateTemplates() {
 
       if (request.readyState == 4) {
             if (request.status == 200) {
@@ -41,12 +247,162 @@
          $("#asset_group_id").val(response['asset_group_id']);
          $("#budget_item_id").val(response['budget_item_id']);
          $("#direction_id").val(response['direction_id']);
+         $("#direction_id_val").val(response['direction_id_val']);
          $("#ware_type_id").val(response['ware_type_id']);
          $("#info").val(response['info']);
+         
+         alert("direction_id " + response['direction_id_val']);
        } else
          alert("status is " + request.status);
      }
    }
+*/
+
+function send (id_multiple_param){
+    id_multiple=id_multiple_param;            //set global var
+    
+//    if(sel_) id_ = grid.getCell(sel_, 'id');
+
+      id_direction = $("#Asset_direction_id_val").val();
+      if(id_direction) {
+
+    var strtitle;
+        
+switch (id_multiple_param) {
+  case 1:
+    strtitle = 'Редактировать расположение';
+    place_text = $("#place_id_selector");
+    place_data = $("#Asset_place_id");
+    break;
+  case 2:
+    place_text = $("#man_id_selector");
+    place_data = $("#Asset_manufacturer_id");
+    strtitle = 'Редактировать фирму производителя';
+    break;
+  case 3:
+    place_text = $("#prod_id_selector");
+    place_data = $("#Asset_product_id");
+    strtitle = 'Редактировать продукты';
+    break;
+  case 4:
+    place_text = $("#feat_id_selector");
+    place_data = $("#Asset_feature_id");
+    strtitle = 'Редактировать характеристики';
+    break;
+  default:
+    alert('Я таких значений не знаю')
+    }
+    
+ //   alert(strtitle);
+ //   alert(id_multiple_param);
+
+    idsOfSelectedRows.length = 0;
+//    grid.jqGrid('setGridParam', {url: 'ggetDataForMultipleChoice?id='+id_multiple_param}).trigger('reloadGrid');
+    //grid.jqGrid('GridUnload');
+    
+      grid.jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});     
+      grid.trigger("reloadGrid");
+
+//      grid.setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+//    grid.setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+
+//    grid.trigger("reloadGrid");
+//    var selId    = grid.jqGrid('getGridParam','datatype'); 
+    
+    
+    //var parent_ = id_;
+    
+             	$("#create_multiple_dialog").dialog({
+             		title: strtitle,
+                        modal:true,
+                        width:800,
+                        height:600,
+                        zIndex: $.maxZIndex()+ 1,
+                        buttons:{
+                            'OK': function(){
+                            var asset_id = $("#create_dialog").data("parent_id");
+                        
+//     alert(idsOfSelectedRows);
+//                               alert(asset_id);
+
+//                            alert(asset_id+"   "+idsOfSelectedRows);
+                 $.ajax({
+                  'type': "POST",
+                   'url': 'editMultipleChoice',
+                   data : {'id':asset_id, 'multiple_arr': idsOfSelectedRows,'type_data':id_multiple}
+                  }).done(function (data){
+
+                       var contact = JSON.parse(data);
+                       
+//                      $("#place_id_selector").html(contact.text_plase);
+//                      $("#Asset_place_id").val(contact.data_plase);
+                      place_text.html(contact.text_place);
+                      place_data.val(contact.data_place);
+                      
+//                      $("#Asset_place_id").append(contact.data_plase);
+//                      alert(contact);
+//                      alert(contact.text_plase);
+//                      alert(contact.data_plase);
+
+                  });
+
+
+/*                           
+  var options = {
+//                success: function(data){alert(data);},
+     url: 'editMultipleChoice/?id='+asset_id+'&plase_arr='+idsOfSelectedRows,
+     type: 'post',
+     dataType: 'json',
+     error: function(res, status, exeption) {
+            alert("error:"+res.responseText);
+     },
+     success:  function(data) {
+
+     var status = data['status'];
+                			
+     if(status=="ok"){
+         
+       grid.setGridParam({datatype:'json'});
+       rd = data['rows'][0]['cell'];     //row data
+					 //!!! OMG, why it uses only associated array!?
+					 //TODO: try to make for cycle...
+       grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
+       $("#create_dialog").dialog('close');
+
+      }
+      else if(status=="err"){
+	      alert("error:"+data['message']);
+      }
+      
+      else
+      {
+        var response= jQuery.parseJSON (data);
+
+        $.each(response, function(key, value) { 
+            $("#"+key+"_em_").show();
+            $("#"+key+"_em_").html(value[0]);
+        });
+      }
+      
+      }
+}; 
+
+*/
+//                                alert($("#create_multiple_dialog_table").val());
+//                                $response = $("#asset-form").submit();
+                                 $(this).dialog('close');
+                               },
+                            'Отмена': function(){
+                                $(this).dialog('close');
+                            }
+                        }
+
+                    });
+
+    } else alert('Выберите шаблон!');   // end if(id_direction)
+
+}
+
 </script>
 <?php 
       
@@ -87,7 +443,11 @@
                 <td><b>Группа</b></td>
 		<td align="left"><?php echo CHtml::textField('asset_group_id',$model->assettemplate->asset_group_id > 0 ? $model->assettemplate->assetgroup->block->name.' => '.$model->assettemplate->assetgroup->name:"" , array('size'=>120,'disabled'=>true)); ?></td>
                 <td><b>Направление</b></td>
-		<td align="left"><?php echo CHtml::textField('direction_id', $model->assettemplate->direction_id > 0 ? $model->assettemplate->direction->short_name:"" , array('size'=>8,'disabled'=>true)); ?></td>
+		<td align="left"><?php echo CHtml::textField('direction_id', $model->assettemplate->direction_id > 0 ? $model->assettemplate->direction->short_name: "" , array('size'=>8,'disabled'=>true)); 
+                                      // if ($model->asset_template_id) 
+                                      echo $form->hiddenField($model,'direction_id_val', array('value'=>$model->asset_template_id  > 0 ? $model->assettemplate->direction_id:'', 'style'=>'display: none;')); 
+//                                       else echo $form->hiddenField($model,'direction_id_val', array('value'=>$model->assettemplate->direction_id, 'style'=>'display: none;'));
+                                       ?></td>
 	</tr>
 	<tr>
                 
@@ -151,25 +511,44 @@
 
 	</tr>
 	<tr>
+        </div>
+
 		<td><b>Расположение</b></td>
-		<td colspan="5"><?php echo ($model->place_id> 0 ? $this->replacementPlace($model->place_id):""); 
-                                      echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение');?></td>
+		<td colspan="5" ><span id="place_id_selector"><?php  echo ($model->place_id> 0 ? $this->replacementPlace($model->place_id,1):"");?></span>                                      
+                      <?php echo "&nbsp"."&nbsp";
+                                      
+                                      echo CHtml::link(
+                                                    CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение', 
+                                                    array( 'class'=>$class,'onClick'=>'send(1)',)), array('#'));
+                                      echo $form->hiddenField($model,'place_id', array('value'=>$model->place_id, 'style'=>'display: none;')); ?></td>
 	</tr>
-	<tr>
-		<td><b>Производитель</b></td>
-		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение');?></td>
-	</tr>
+<!-- Zabil do lychih vremen  -->
+<!--         <tr>  -->
+<!-- 		<td><b>Производитель</b></td>   -->
+<!--		<td colspan="5"><span id="man_id_selector">  --><?php // echo ($model->manufacturer_id> 0 ? $this->replacementPlace($model->manufacturer_id,2):""); ?><!--  </span>   -->
+                                      <?php // echo "&nbsp"."&nbsp";
+                                      // echo CHtml::link(
+                                      //              CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать фирму производителя', 
+                                      //              array( 'class'=>$class,'onClick'=>'send(2)',)), array('#'));
+                                      // echo $form->hiddenField($model,'manufacturer_id', array('value'=>$model->manufacturer_id, 'style'=>'display: none;')); ?> <!--  </td>   -->
+<!--	</tr>   -->
 	<tr>
 		<td><b>Продукты</b></td>
-		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение');?></td>
+		<td colspan="5"><span id="prod_id_selector"><?php echo ($model->product_id > 0 ? $this->replacementPlace($model->product_id,3):""); ?></span>
+                                      <?php echo "&nbsp"."&nbsp";
+                                      echo CHtml::link(
+                                                    CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать продукты', 
+                                                    array( 'class'=>$class,'onClick'=>'send(3)',)), array('#'));
+                                      echo $form->hiddenField($model,'product_id', array('value'=>$model->product_id, 'style'=>'display: none;')); ?></td>
 	</tr>
 	<tr>
 		<td><b>Характеристики</b></td>
-		<td colspan="5"><?php echo "&nbsp"."&nbsp";
-                                      echo CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение');?></td>
+		<td colspan="5"><span id="feat_id_selector"><?php echo ($model->feature_id> 0 ? $this->replacementPlace($model->feature_id,4):""); ?></span> 
+                                      <?php echo "&nbsp"."&nbsp";
+                                      echo CHtml::link(
+                                                    CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать характеристики товара', 
+                                                    array( 'class'=>$class,'onClick'=>'send(4)',)), array('#'));
+                                      echo $form->hiddenField($model,'feature_id', array('value'=>$model->feature_id, 'style'=>'display: none;')); ?></td>
 	</tr>
 </table>
 		</td>
@@ -187,5 +566,9 @@
 
     
 <?php $this->endWidget(); ?>
-
+<div id="create_multiple_dialog" style="display: none;">
+<table class="ui-jqgrid" id="create_multiple_dialog_table">
+    <div id="noResultsDiv" style="display: none;">"Enter the data" </div>
+</table>
+</div>
 </div><!-- form -->

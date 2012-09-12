@@ -35,7 +35,7 @@ $this->breadcrumbs=array(
 <script type="text/javascript">
 $(function() {
     var lastSel;
-//    var sel_id;
+    var id_;
     var grid=$("#list");
     var pager_selector = "#pager";
     grid.jqGrid( {
@@ -112,7 +112,7 @@ grid.setGridParam({datatype:'json'});
             if (id && id != lastSel) { 
                 grid.restoreRow(lastSel);
             	grid.setGridParam({editurl:'updateRow'});
-				grid.setGridParam({datatype:'json'});
+        	grid.setGridParam({datatype:'json'});
                 grid.editRow(id, true);
                 lastSel = id;
             }
@@ -136,22 +136,26 @@ grid.setGridParam({datatype:'json'});
              	//alert("!");
 //             	$("#create_dialog").load('create');
             	var sel_ = grid.getGridParam('selrow');
-            	if(sel_) var id_ = grid.getCell(sel_, 'id');
+            	if(sel_) id_ = grid.getCell(sel_, 'id');
 
 	           	if(id_) {
-	
+
+
                 $("#create_dialog").load('editAssetDialog?id='+id_);
-             	$("#create_dialog").dialog({
+                $("#create_dialog").data('parent_id', id_);
+
+                        $("#create_dialog").dialog({
              			title: 'Редактировать товар',
                         modal:true,
                         width:1160,
                         height:540,
+                        //stack: false,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());
 //                                $response = $("#asset-form").submit();
 
-var options = { 
+var options = {
 //                success: function(data){alert(data);},
                 url: 'editAsset/?id='+id_,
                 type: 'post',
@@ -166,7 +170,7 @@ var options = {
                 			if(status=="ok"){
 	                	 			grid.setGridParam({datatype:'json'});
 //	                	 			grid.setGridParam({url:'getDataForGrid'}); //?id='+id_}); 
-									rd = data['rows'][0]['cell']; //row data
+							rd = data['rows'][0]['cell']; //row data
 									//!!! OMG, why it uses only associated array!?
 									//TODO: try to make for cycle...
 //									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
@@ -254,9 +258,9 @@ $.ajax({
 		    grid.trigger("reloadGrid");
 
       });
-
 });
 
+//-------------------------------------------------------------------------------------------------      
 
 </script>
 

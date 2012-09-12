@@ -122,6 +122,71 @@ class AssetController extends Controller {
         */
     }
 
+    public function actionEditMultipleChoice() {
+        
+
+    if (isset($_POST['id'])) {
+        
+        $id = $_POST['id'];
+        
+        $model = $this->loadModel($id);
+        
+        if (isset($_POST['type_data']) && isset($_POST['multiple_arr'])) {
+            
+            $save_type = $_POST['type_data'];
+            $save_arr  = $_POST['multiple_arr'];               
+        
+            switch ($save_type) {
+            case 1:           
+                $model->selection = $save_arr;
+            break;
+            case 2:           
+                $model->sel_man = $save_arr;
+            break;
+            case 3:           
+                $model->sel_prod = $save_arr;
+            break;
+            case 4:           
+                $model->sel_feat = $save_arr;
+            break;
+            }    
+        }
+        if($model->validate()){
+            if ($model->save()) { 
+            //  $_POST['id_return'] = $model->id;
+                if (Yii::app()->request->isAjaxRequest) {
+//                    $v[text_plase] = $this->replacementPlace($save_arr);
+//                    $v[data_plase] = $save_arr;                   
+                    echo CJSON::encode(array(  
+                    'text_place'=>$this->replacementPlace($save_arr,$save_type),
+                    'data_place'=>$save_arr));                          
+                    Yii::app()->end();
+                } else echo 'get out!';
+            } //model->save
+        } //validate
+        else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end(); }
+
+/*       else {
+            $y=CActiveForm::validate($model);
+            $x=CJSON::encode(CActiveForm::validate($model)); 
+            echo $x;
+            Yii::app()->end();}
+ * 
+ */
+    }
+    else 
+     if (Yii::app()->request->isAjaxRequest) {
+        echo CJSON::encode(array(
+            'status' => 'err',
+            'message' => 'no Asset form passed!',
+        ));
+        Yii::app()->end();            
+    }  else {
+        echo 'get out!';
+     }
+
+     
+    }
     /**
      * Updates a particular model.
      * If update is successful, the browser will be redirected to the 'view' page.
@@ -268,6 +333,78 @@ class AssetController extends Controller {
         } 
     }
 
+//    public function actionGetDataForMultipleChoice($id)
+    public function actionGetDataForMultipleChoice()
+    {
+    
+      if ((isset($_POST['multiple_id'])) && (isset($_POST['direction_id']))) {
+          
+        $multiple_id = $_POST['multiple_id'];
+        $direction_id = $_POST['direction_id'];
+        
+//        if ($multiple_id && $direction_id) {
+        
+        $responce = array();
+	$responce['rows']=array();
+      	//$responce['status']='no';
+
+        // $to_index = Place::model()->findAllTowns();
+        
+        switch ($multiple_id) {
+        case 1:
+            $to_index = Place::model()->findAllTowns();
+        break;
+        case 2:
+   	    $mans = Manufacturer::model()->findAll(array('order' => 'name'));
+            foreach ($mans as $item) {
+                $to_index[$item->id] = $item->name;
+            }
+        break;
+        case 3:
+            $criteria=new CDbCriteria;
+            $criteria->condition="direction_id=".$direction_id;
+            $criteria->order='name';
+
+   	    $mans = Product::model()->findAll($criteria);
+            foreach ($mans as $item) {
+                $to_index[$item->id] = $item->name;
+            }
+            break;
+    case 4:
+            $criteria=new CDbCriteria;
+            $criteria->condition="direction_id=".$direction_id;
+            $criteria->order='name';
+
+   	    $mans = Feature::model()->findAll($criteria);
+            foreach ($mans as $item) {
+                $to_index[$item->id] = $item->name;
+            }
+        break;
+        }
+
+     if ($to_index) {
+	$responce['status']='ok';
+        
+        $i = 0;
+        foreach ($to_index as $key=>$row) {
+
+                 $responce['rows'][$i]['id'] = $key;           
+                 $responce['rows'][$i]['cell'] = array(
+	         	$key, 
+	                $row,
+                 );
+                 $i++;
+        }
+                
+    } 
+     $responce['records'] = count($responce['rows']);               
+//     }
+ 
+     echo CJSON::encode($responce);
+        }
+      }
+   
+
     public function actionUpdateRow()
         {
             if(isset($_REQUEST['id']))
@@ -392,34 +529,65 @@ class AssetController extends Controller {
 
     }
 
-    public function replacementPlace($place_id)
+    public function replacementPlace($place_id, $sel_type)
   {
-        $PlaceArr = explode(',',$place_id);
-        foreach($PlaceArr as $key) {
-            $PlaceName = Place::model()->findTown($key);
-		$ret_str .= "<b>".$PlaceName->title."</b>"."; ";
+        $ret_str = NULL;
+        
+        if (isset($place_id)) {
+            if(!is_array($place_id))
+              $PlaceArr = explode(',',$place_id);
+            else $PlaceArr=$place_id;
+        }
+        if (($PlaceArr) && (isset($sel_type))) {
+//        if ($PlaceArr) {
+            foreach($PlaceArr as $key) {
+//                $SelName = Place::model()->findTown($key);
+//        	$ret_str .= "<b>".$SelName->title."</b>"."; ";
+                
+                switch ($sel_type) {
+                case 1:           
+                    $SelName = Place::model()->findTown($key)->title;
+                break;
+                case 2:           
+                    $SelName = Manufacturer::model()->findByPk($key)->name;
+                break;
+                case 3:           
+                    $SelName = Product::model()->findByPk($key)->name;
+                break;
+                case 4:           
+                    $SelName = Feature::model()->findByPk($key)->name;
+                break;
+                }    
+        	$ret_str .= "<b>".$SelName."</b>"."; ";
+
+            }
         }
         return 	$ret_str;	
 	
   }
-     public function actionGetTemplateByAsset($template_id)
+     public function actionGetTemplateByAsset()
     {
-        $template = new AssetTemplate;
+         $template_id = $_POST['template_id'];
+
+         $template = array();
         
         if ($template_id) {
-            $template = AssetTemplate::model()->findByPk($template_id);
-            $template->asset_group_id = $template->assetgroup->block->name.' => '.$template->assetgroup->name;
-            $template->ware_type_id = $template->waretype->short_name;
+            
+            $templ_model = AssetTemplate::model()->findByPk($template_id);
+            
+            $template[asset_group_id] = $templ_model->assetgroup->block->name.' => '.$templ_model->assetgroup->name;
+            $template[ware_type_id] = $templ_model->waretype->short_name;
         
-            if ($template->budget_item_id) {
-                $article=BudgetItem::model()->findByPk($template->budget_item_id);
+            if ($templ_model->budget_item_id) {
+                $article=BudgetItem::model()->findByPk($templ_model->budget_item_id);
                 $article_code = $article->CODE;
-                $template->budget_item_id = $article->get2LevelNameBudgetItem($template->budget_item_id)." => ".$article_code;
+                $template[budget_item_id] = $article->get2LevelNameBudgetItem($templ_model->budget_item_id)." => ".$article_code;
             } else {
-                $template->budget_item_id = "Н/Д";            
+                $template[budget_item_id] = "Н/Д";            
             }
-            $template->direction_id = $template->direction->short_name;
-            $template->ware_type_id = $template->waretype->short_name;
+            $template[direction_id_val] = $templ_model->direction_id;
+            $template[direction_id] = $templ_model->direction->short_name;
+            $template[ware_type_id] = $templ_model->waretype->short_name;
         }
         
         echo CJSON::encode($template);
