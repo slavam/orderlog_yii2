@@ -9,6 +9,7 @@
     $(function() {
         var main_rowid='';
         var grid = jQuery("#jqgrid");
+        var dblclkfalg=false;
         jQuery("#jqgrid").jqGrid( {
             url : '<?echo Yii::app()->createUrl('dogovor_archiv/documents/Jqgrid')?>',
             datatype : 'json',
@@ -33,10 +34,13 @@
             caption : 'Журнал регистрации договоров',
             subGrid: true,
         ondblClickRow: function (rowid, iRow, iCol) {
-            if (subgrid_id)
+            var x=$(this).getGridParam('id');
+
+            if (!dblclkfalg)
                 {
-                    alert(rowid+' '+iRow+'  '+iCol);
+                     $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/view');?>?id='+rowid);
                 }
+                dblclkfalg=false;
         },
 
     subGridRowExpanded: 
@@ -66,9 +70,9 @@
                 caption : 'Доп. соглашения',
                 ondblClickRow:
                     function(rowid,e,iCol,iRow){
-                        //$(location).attr('href','<?//echo Yii::app()->createUrl('dogovor_archiv/documents/update',array('id'=>''));?>'+rowid);
-                        alert('33');
-                       
+                     var x=$(this).getGridParam('id');
+                     dblclkfalg =true;
+                      $(location).attr('href','<?echo Yii::app()->createUrl('dogovor_archiv/documents/view');?>?id='+row_id+'&sub_document='+rowid);
                 }
 	    }).jqGrid('navGrid', '#'+subgrid_table_id+'_pager',{add: false, del: false, edit: false, search: false},
                 {

@@ -37,40 +37,40 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
             $this->templ_name=$template->name;
             $this->templ_description=$template->description;
         } else {
-            if (!isset($this->form)) {
-                $this->form = array(
-//                    'doc_type',
-                    'dog_kind',
-                    'provider',
-                    'okpo',
-                    'dog_number',
-                    'dog_date',
-                    'start_date',
-                    'stop_date',
-                    'branch',
-                    'author_login',
-                    'status',
-                    'pay_system',
-                    'note',
-                );
+                if (!isset($this->form)) {
+                    $this->form = array(
+        //                    'doc_type',
+                        'dog_kind',
+                        'provider',
+                        'okpo',
+                        'dog_number',
+                        'dog_date',
+                        'start_date',
+                        'stop_date',
+                        'branch',
+                        'author_login',
+                        'status',
+                        'pay_system',
+                        'note',
+                    );
+                }
+                $this->form_rules = array(
+                    'dog_number' => array('safe' => true, 'required' => true),
+                    'dog_date' => array('safe' => true, 'required' => true),
+                    'okpo' => array('safe' => true, 'required' => true),
+                    'branch' => array('safe' => true, 'required' => true),
+    //                'doc_type' => array('safe' => true, 'required' => true,'default'=>array('value' => $this->templ_description)),
+                    'dog_kind' => array('safe' => true, 'required' => true),
+                    'start_date' => array('safe' => true, 'compare' => array('compareAttribute' => 'stop_date', 'operator' => '<'), 'date' => array('allowEmpty' => false, 'format' => 'dd.mm.yyyy'),),
+                    'stop_date' => array('safe' => true, 'compare' => array('compareAttribute' => 'start_date', 'operator' => '>'), 'date' => array('allowEmpty' => false, 'format' => 'dd.mm.yyyy')),
+                    'provider' => array('safe' => true, 'required' => true),
+                    'author_login' => array('default' => array('value' => 'v.kriuchkov')),
+                    'pay_system' => array('safe' => true,),
+                    'note' => array(
+                        'required' => true,
+                    )
+                ); 
             }
-            $this->form_rules = array(
-                'dog_number' => array('safe' => true, 'required' => true),
-                'dog_date' => array('safe' => true, 'required' => true),
-                'okpo' => array('safe' => true, 'required' => true),
-                'branch' => array('safe' => true, 'required' => true),
-//                'doc_type' => array('safe' => true, 'required' => true,'default'=>array('value' => $this->templ_description)),
-                'dog_kind' => array('safe' => true, 'required' => true),
-                'start_date' => array('safe' => true, 'compare' => array('compareAttribute' => 'stop_date', 'operator' => '<'), 'date' => array('allowEmpty' => false, 'format' => 'dd.mm.yyyy'),),
-                'stop_date' => array('safe' => true, 'compare' => array('compareAttribute' => 'start_date', 'operator' => '>'), 'date' => array('allowEmpty' => false, 'format' => 'dd.mm.yyyy')),
-                'provider' => array('safe' => true, 'required' => true),
-                'author_login' => array('default' => array('value' => 'v.kriuchkov')),
-                'pay_system' => array('safe' => true,),
-                'note' => array(
-                    'required' => true,
-                )
-            );
-        }
         parent::afterConstruct();
     }
 
@@ -301,7 +301,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
         return $col;
     }
 
-    public function form_builder() {
+    public function form_builder($action='update') {
         uksort($this->form, 'Document::form_sort');
         $complete_form['title'] = 'Создание нового договора';
         $complete_form['activeForm'] = array(
@@ -320,6 +320,13 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
                         'type' => $ElementData['type'],
                         'attributes' => $ElementData['attributes'],
                     );
+                        
+                    //Проверяем экшн, если это просмотр, блокируем поля
+                    if ($action=='view')
+                    {
+                        $complete_form['elements'][$ElementKey]['attributes']['disabled']=true;
+                    }
+                    
                     if (isset($ElementData['items'])) {
                         $complete_form['elements'][$ElementKey]['items'] = $ElementData['items'];
                     }
