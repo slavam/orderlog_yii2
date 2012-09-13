@@ -729,17 +729,19 @@ class ClaimController extends Controller
         }
         
         if (isset($_POST['Claim'])) {
-            $new_claim_fields = $_POST['Claim'];
-            
-            foreach ($new_claim_fields as $field => $value) {
-                $model[key($new_claim_fields[$field])] = current($value);
+//            $new_claim_fields = $_POST['Claim'];
+//            
+            foreach ($_POST['Claim'] as $key => $value) {
+                $model[key($value)] = current($value);
             }
+//            $model->attributes=$_POST['Claim'];
+            
             if ($model->validate())
             {
             
                 if (!$model->id)
                 {
-                    $model->state_id = 1;
+                    //$model->state_id = 1;
                     $model->budgetary = true;
                     $model->create_date = date("Y-m-d H:i:s", time());
                     $model->claim_number = $model->direction->stamp.$model->id;
