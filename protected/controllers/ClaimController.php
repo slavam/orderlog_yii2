@@ -452,13 +452,13 @@ class ClaimController extends Controller
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
-                    $row->asset->ware_type_id,//->short_name, 
+                    $row->asset->assettemplate->ware_type_id,//->short_name, 
                     $row->asset_id,//->name, 
                     $row->asset->unit_id,//->sign,
                     $row->count,
                     $row->cost,
                     $row->amount,
-                    $row->asset->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
+                    $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
                     'цель?',//zel'
 
                     //TODO: check if returns '' on view
@@ -480,7 +480,7 @@ class ClaimController extends Controller
                     //TODO: check if returns '' on view
                     $row->budget_item_id>0 ? $row->budget_item_id:'', //CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
                     $row->status_id,//->short_name,
-                    $row->asset->info,
+                    $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
                     $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );
@@ -729,17 +729,19 @@ class ClaimController extends Controller
         }
         
         if (isset($_POST['Claim'])) {
-            $new_claim_fields = $_POST['Claim'];
-            
-            foreach ($new_claim_fields as $field => $value) {
-                $model[key($new_claim_fields[$field])] = current($value);
+//            $new_claim_fields = $_POST['Claim'];
+//            
+            foreach ($_POST['Claim'] as $key => $value) {
+                $model[key($value)] = current($value);
             }
+//            $model->attributes=$_POST['Claim'];
+            
             if ($model->validate())
             {
             
                 if (!$model->id)
                 {
-                    $model->state_id = 1;
+                    //$model->state_id = 1;
                     $model->budgetary = true;
                     $model->create_date = date("Y-m-d H:i:s", time());
                     $model->claim_number = $model->direction->stamp.$model->id;
@@ -753,7 +755,7 @@ class ClaimController extends Controller
                     }
                     $new_claim_lines = $_POST['ClaimLines'];
                     
-                    if ($_REQUEST['deletedrows']&&$is_new_claim)
+                    if ($_REQUEST['deletedrows']&&(!$is_new_claim))
                                 {
                                     $cr = new CDbCriteria();
                                     $cr->addInCondition('id', $_REQUEST['deletedrows']);

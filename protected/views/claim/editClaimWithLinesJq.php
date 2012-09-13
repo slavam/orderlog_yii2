@@ -62,7 +62,6 @@
 
 
 <script type="text/javascript">
-    var lastSel;
     var request = false;
     try {
      request = new XMLHttpRequest();
@@ -192,6 +191,8 @@ $(function() {
     var new_line_added=false;
     var deletedrows=[];
    	var _msg="[";
+    var lastSel;
+    
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -211,7 +212,7 @@ $(function() {
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'),'name')?>,
             
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -261,7 +262,7 @@ $(function() {
             {name: 'features', width: 100, frozen:false },
             {name: 'products', width: 100, frozen:false },
             {name: 'position', width: 150, frozen:false },
-            {name: 'description', width: 110, frozen:false, editable:true, edittype:'textarea' },
+            {name: 'description', width: 110, frozen:false, editable:true, edittype:'text' },
             {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
             
             {name: 'business', width: 100, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Business::model()->findBusinessesOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
@@ -292,28 +293,36 @@ $(function() {
         },
                 //----------------------------------------------------
                 beforeSelectRow: function (rowid) {
-                    if ((rowid !== lastSel)&&(!new_line_added)) {
+                    if ((rowid !== lastSel)&&(!new_line_added)) { //
                         $(this).jqGrid('restoreRow', lastSel);
 						$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                         //fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
+                    } 
+                    if ((rowid!=lastSel)&&new_line_added) {
+   	                    		$grid.delRowData(lastSel);
+	                    		new_line_added=false;
                     }
+
+                    
                     return true;
                 },
                 //----------------------------------------------------
                 // 
         ondblClickRow: function (rowid, iRow, iCol, e) {
-        
+
             	$grid.setGridParam({editurl:'#'});
+//           		lastSel = rowid;
+
 				//$grid.setGridParam({datatype:'json'});
 
 					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
-                        $('#'+rowid+'_type').focus(); //
-
+                        $('#'+rowid+'_name').focus(); //
+                        
                     	},
                     	null,
                     	'',
@@ -394,8 +403,8 @@ $(function() {
 //            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
-    }).navGrid('#pager_',{view:false, add:false, del:true,  edit:false, refresh:false,search:false,delfunc:delclaimlinerow},{},{},{},{});
-           
+    }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
+
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
             title: 'Добавить строку',
@@ -417,10 +426,9 @@ $(function() {
                         //fixPositionsOfFrozenDivs.call(this);
 				}
 	
-				new_line_added=true;	
 
                var last_row_id = $grid.getGridParam("reccount");
-               var lastSel=rowid=last_row_id+1;
+               lastSel=rowid=last_row_id+1;
                var row = {                      "iddb":null,
 						"type":"",
 						"name":"",
@@ -451,11 +459,13 @@ $(function() {
                $grid.addRowData(rowid,row,"last");
                $grid.setSelection(rowid, true);
 
+				new_line_added=true;	
+
 					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
-                        $('#'+rowid+'_type').focus(); //
+                        $('#'+rowid+'_name').focus(); //
                    	},
                     	null,
                     	'',
@@ -557,7 +567,24 @@ $(function() {
 
             } 
          });
+
  
+    
+    //Кнопка удаления
+    $grid.jqGrid('navButtonAdd',pager_selector,{
+                caption: '',//'Группа',
+                title: 'Удалить строку',
+                buttonicon: 'ui-icon-trash',
+                onClickButton:function()
+                {
+                    var rowid = $grid.getGridParam('selrow');
+                    if(rowid)
+                    {
+                        delclaimlinerow(rowid);
+                    }
+                    else alert('Выберите запись');
+                }
+    });
 
 		function after_save(rowID, response ) 
 		{
