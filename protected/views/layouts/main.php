@@ -33,7 +33,7 @@
                     'htmlOptions'=>array('class'=>'dropdown'),
 			'items'=>array(
 				array('label'=>'Главная', 'url'=>array('/site/index'),),
-				array('label'=>'Документы', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+				array('label'=>'Документы', 'linkOptions'=>array('class'=>'dir'),
                                     'items'=>array(
                                                     array('label'=>'Первичные заявки', 'url'=>array('/claim/indexJqgrid')),
 //                                                    array('label'=>'Консолидированная заявка', 'url'=>array('/claimLine/getClaimParams')),
@@ -63,9 +63,9 @@
 //                                                        array('label'=>'Сопровождающие документы', 'url'=>array('#')),
                                                     )
                                         ),
-                            array('label'=>'Каталоги и справочники', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                            array('label'=>'Каталоги и справочники', 'linkOptions'=>array('class'=>'dir'),
                                         'items'=>array(
-                                                        array('label'=>'Глобальные', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                                                        array('label'=>'Глобальные', 'linkOptions'=>array('class'=>'dir'),
                                                             'items'=>array(
 //                                                                array('label'=>'Отделения', 'url'=>array('#')),
 //                                                                array('label'=>'Подразделения', 'url'=>array('#')),
@@ -76,7 +76,7 @@
                                                                  array('label'=>'Объекты заявки (товары)', 'url'=>array('/asset/index')),
                                                                 )
                                                             ),
-                                                        array('label'=>'Внешние классификаторы', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                                                        array('label'=>'Внешние классификаторы', 'linkOptions'=>array('class'=>'dir'),
                                                             'items'=>array(
 //                                                              
                                                                 array('label'=>'Расположения', 'url'=>array('/place/tree')),
@@ -84,7 +84,7 @@
                                                                 array('label'=>'Продукты', 'url'=>array('/product/index')),
                                                                 )
                                                             ),
-                                                        array('label'=>'Фин. контур', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                                                        array('label'=>'Фин. контур', 'linkOptions'=>array('class'=>'dir'),
                                                                         'items'=>array(
 //                                                                            array('label'=>'ЦФО', 'url'=>array('#')),
 //                                                                            array('label'=>'Статьи бюджета', 'url'=>array('#')),
@@ -94,7 +94,7 @@
                                                                             
                                                                             )
                                                                         ),
-                                             array('label'=>'Логистика', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
+                                             array('label'=>'Логистика', 'linkOptions'=>array('class'=>'dir'),
                                                                         'items'=>array(
                                                                            
 //                                                                            array('label'=>'Единицы измерения', 'url'=>array('#')),
