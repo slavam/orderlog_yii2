@@ -71,6 +71,7 @@ class AssetTemplate extends CActiveRecord
                     'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id'),
                     'priceType' => array(self::BELONGS_TO, 'PriceType', 'price_type_id'),
                     'block' => array(self::HAS_ONE, 'Block', array('block_id'=>'id'),'through'=>'assetgroup'),
+                    'asset' => array(self::HAS_ONE, 'Asset',array('id'=>'asset_group_id'),'through'=>'assetgroup'),
 		);
 	}
 
