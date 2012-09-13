@@ -12,6 +12,7 @@ public $attributeStop_date;
 public $nameStop_date;
 public $valueStop_date;
 public $disabled;
+public $readonly;
 
 function run()
 {
@@ -38,7 +39,7 @@ function run()
                 ),
                 'htmlOptions'=>array(
                     'style'=>'height:20px;',
-                    'disabled'=>  $this->disabled?true:false,
+                    'readonly'=>  $this->readonly?true:false,
                 ),
                 ));
              echo '</td>';
@@ -59,7 +60,7 @@ function run()
                         ),
                         'htmlOptions'=>array(
                             'style'=>'height:20px;',
-                            'disabled'=>  $this->disabled?true:false,
+                            'readonly'=>  $this->readonly?true:false,
                         ),
                     ));
                 echo '</td>';    
