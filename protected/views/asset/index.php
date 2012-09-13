@@ -18,6 +18,34 @@ $this->breadcrumbs=array(
 );
 */
 ?>
+<style type="text/css">
+      th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+</style>
+
 
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
@@ -25,8 +53,10 @@ $this->breadcrumbs=array(
 </script>
 
 <div id="create_dialog" style="display:none;">
-<table class="ui-jqgrid" id="create_dialog_table"></table>
+<table id="create_dialog_table"></table>
 </div>
+
+<div id="firstLoad"></div>
 
 <table id="list"></table> 
 <div id="pager"></div> 
@@ -35,9 +65,10 @@ $this->breadcrumbs=array(
 <script type="text/javascript">
 $(function() {
     var lastSel;
-//    var sel_id;
+    var id_;
     var grid=$("#list");
     var pager_selector = "#pager";
+    var firstLoad=true;
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
@@ -102,6 +133,7 @@ afterInsertRow: function(row_id, row_data){
 
 gridComplete: function () {
     grid.setGridParam({datatype:'local'});
+    $("#firstLoad").data('firstLoad', firstLoad);
 },
 //
 onPaging : function(which_button) {
@@ -112,7 +144,7 @@ grid.setGridParam({datatype:'json'});
             if (id && id != lastSel) { 
                 grid.restoreRow(lastSel);
             	grid.setGridParam({editurl:'updateRow'});
-				grid.setGridParam({datatype:'json'});
+        	grid.setGridParam({datatype:'json'});
                 grid.editRow(id, true);
                 lastSel = id;
             }
@@ -136,22 +168,40 @@ grid.setGridParam({datatype:'json'});
              	//alert("!");
 //             	$("#create_dialog").load('create');
             	var sel_ = grid.getGridParam('selrow');
-            	if(sel_) var id_ = grid.getCell(sel_, 'id');
+            	if(sel_) id_ = grid.getCell(sel_, 'id');
 
 	           	if(id_) {
-	
+
+                
+        //        var firstLoad = $("#firstLoad").data("firstLoad");
+                //if(!firstLoad) {
+//                    alert('resurect!');
+                    //$("#create_multiple_dialog_table").jqGrid('clearGridData');
+                    
+                    //$("#create_multiple_dialog_table").jqGrid('GridUnload');
+                    //$("#create_multiple_dialog_table").empty();
+                    //$("#create_multiple_dialog_table").remove();
+                    //$('#resurection').append("<table id='create_multiple_dialog_table'></table>");
+  //                  firstLoad=true;
+    //                $("#firstLoad").data("firstLoad",firstLoad);
+                    
+      //          }
+                
                 $("#create_dialog").load('editAssetDialog?id='+id_);
-             	$("#create_dialog").dialog({
+                $("#create_dialog").data('parent_id', id_);
+
+                        $("#create_dialog").dialog({
              			title: 'Редактировать товар',
                         modal:true,
                         width:1160,
                         height:540,
+                        //stack: false,
                         buttons:{
                             'OK': function(){
                                 //alert($("#supergroups-list").val());
 //                                $response = $("#asset-form").submit();
 
-var options = { 
+var options = {
 //                success: function(data){alert(data);},
                 url: 'editAsset/?id='+id_,
                 type: 'post',
@@ -166,7 +216,7 @@ var options = {
                 			if(status=="ok"){
 	                	 			grid.setGridParam({datatype:'json'});
 //	                	 			grid.setGridParam({url:'getDataForGrid'}); //?id='+id_}); 
-									rd = data['rows'][0]['cell']; //row data
+							rd = data['rows'][0]['cell']; //row data
 									//!!! OMG, why it uses only associated array!?
 									//TODO: try to make for cycle...
 //									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
@@ -199,7 +249,14 @@ var options = {
 
 //                                $(this).dialog('close');
                                 },
-                            'Отмена': function(){
+
+
+                 'Отмена': function(){
+//                               $("#create_multiple_dialog_table").empty();
+//                                $("#create_multiple_dialog_table").jqGrid('GridUnload');
+//                                $("#create_multiple_dialog_table").jqGrid('clearGridData');
+//   alert('From index:' + parseInt($("#create_multiple_dialog_table").getGridParam("records"),10));
+
                                 $(this).dialog('close');
                             }
                         },
@@ -254,9 +311,9 @@ $.ajax({
 		    grid.trigger("reloadGrid");
 
       });
-
 });
 
+//-------------------------------------------------------------------------------------------------      
 
 </script>
 

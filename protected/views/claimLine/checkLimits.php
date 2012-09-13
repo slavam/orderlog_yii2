@@ -39,7 +39,7 @@ $(function() {
             {name:'period_id',index:'period_id', width:20, hidden:true},
             {name:'division_id',index:'division_id', width:20, hidden:true},
             {name:'direction_id',index:'direction_id', width:20, hidden:true},
-            {name:'division',index:'division', width:200, sortable:false},
+            {name:'division',index:'division', width:200, sortable:false, hidden:true},
 //            {name:'article',index:'article', width:300, sortable:false},
             {name: 'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name:'limit',index:'limit', width:70, sortable:true},
@@ -89,8 +89,12 @@ $(function() {
             pgtext: null,  
             viewrecords: false,
             ondblClickRow: function(id) {
-                window.location.href = "<?echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
-                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
+//                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
+                var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
+                    
+//                window.location.href = "<?//echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
+//                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');

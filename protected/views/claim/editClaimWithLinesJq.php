@@ -355,7 +355,7 @@ $(function() {
 					$grid.setCell(rowid,'count',xdata["quantity"]);
 					_msg+="К";
 				}
-				if(xdata["quantity_type_id"]!=2)
+				if(xdata["price_type_id"]!=2)
 				{
 					$grid.setCell(rowid,'cost',xdata["cost"]);
 					_msg+="Ц";

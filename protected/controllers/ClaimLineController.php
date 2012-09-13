@@ -316,7 +316,7 @@ class ClaimLineController extends Controller
                 where budget_item_id > 0 and c.direction_id='.$direction_id.'
                     and c.period_id='.$period_id.'
                 group by c.division_id, budget_item_id
-                order by c.division_id';
+                order by c.division_id, budget_item_id';
             $lines = ClaimLine::model()->findAllBySql($sql);
             $responce['rows']=array();
             
