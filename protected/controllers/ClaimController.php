@@ -753,7 +753,7 @@ class ClaimController extends Controller
                     }
                     $new_claim_lines = $_POST['ClaimLines'];
                     
-                    if ($_REQUEST['deletedrows']&&$is_new_claim)
+                    if ($_REQUEST['deletedrows']&&(!$is_new_claim))
                                 {
                                     $cr = new CDbCriteria();
                                     $cr->addInCondition('id', $_REQUEST['deletedrows']);
