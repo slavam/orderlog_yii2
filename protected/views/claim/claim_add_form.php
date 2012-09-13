@@ -48,7 +48,10 @@
         	<tr>
 		        <td><b>Период</b></td>
 		        <td><?php echo $form->dropDownList($model,'period_id', Period::model()->findPeriods(),array('empty'=>'<Выберите период>'));?> 
-		            <?php echo $form->error($model,'period_id'); ?></td>
+		            <?php echo $form->error($model,'period_id'); ?>
+		    	<b>Cтатус</b>
+		        <?php echo $form->dropDownList($model,'state_id', $model->id?CHtml::listData(State::model()->findStates(1),'id','stateName.name'):array('1'=>'Черновик'));?> 
+		            <?php echo $form->error($model,'state_id'); ?>
 		    	</td>
         	</tr>
         	<tr>

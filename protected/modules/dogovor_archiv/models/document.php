@@ -324,7 +324,7 @@ class Document extends EMongoDocument // Notice: We extend EMongoDocument class 
                     //Проверяем экшн, если это просмотр, блокируем поля
                     if ($action=='view')
                     {
-                        $complete_form['elements'][$ElementKey]['attributes']['disabled']=true;
+                        $complete_form['elements'][$ElementKey]['attributes']['readonly']=true;
                     }
                     
                     if (isset($ElementData['items'])) {
