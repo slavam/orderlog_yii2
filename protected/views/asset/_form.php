@@ -1,7 +1,7 @@
 <? /*php
 $cs = Yii::app()->clientScript;
  
-$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jq$("#create_multiple_dialog_table").css');
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.multiselect.css');
  
@@ -13,35 +13,18 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custo
 
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/ui.multiselect.js');
-$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/$("#create_multiple_dialog_table").locale-ru.js');
 */?>
-<style type="text/css">
-    th.ui-th-column div {
-            /* see http://stackoverflow.com/a/7256972/315935 for details */
-            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
-            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-            white-space: -pre-wrap;     /* Opera 4-6 */
-            white-space: -o-pre-wrap;   /* Opera 7 */
-            white-space: pre-wrap;      /* CSS3 */
-            overflow: hidden;
-            height: auto !important;
-            vertical-align: middle;
-        }
-        .ui-jqgrid tr.jqgrow td {
-            white-space: normal !important;
-            height: auto;
-            vertical-align: middle;
-            padding-top: 2px;
-            padding-bottom: 2px;
-        }
-        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
-            padding-top: 2px;
-            padding-bottom: 2px;
-        }
-        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
-            overflow: hidden;
-        }
 
+<style type="text/css">
+
+    #asset-form table {
+     	margin-bottom: 0; /*0.2em;*/
+     	font-size: 11px !important;
+     }
+     #asset-form table th, #asset-form table td {
+     	padding: 0px 10px 0px 5px;
+     }
 </style>
 
 <script type="text/javascript">
@@ -86,8 +69,8 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
     var grid=$("#create_multiple_dialog_table");
     var id_multiple=1;
     var id_direction=1;
-    var emptyMsgDiv = $('<div style="padding: 30px;" ><h3>Для этого напраления нет характеристик !</h3></div>');
-    
+//    var emptyMsgDiv = $('<div style="padding: 30px;" ><h3>Для этого напраления нет характеристик !</h3></div>');
+    //var firstLoad = true;
     var idsOfSelectedRows = [],
         updateIdsOfSelectedRows = function (id, isSelected) {
            var index = $.inArray(id, idsOfSelectedRows);
@@ -99,7 +82,7 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         };
         
 //    alert(id_multiple);
-    grid.jqGrid( {
+var grid_opts = {
 //        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
         url : "getDataForMultipleChoice",
         datatype : 'json',
@@ -123,10 +106,15 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         
         loadComplete: function () {
 //          var arr_isset = $("#Asset_place_id").val();
-//          var recs = parseInt(grid.getGridParam("records"),10);          
-         // var recs = parseInt(grid.getGridParam("records"));          
-          //alert('Записей: ' + recs);
-          
+//          var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"),10);          
+//          var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"));          
+          //firstLoad = false;
+                var _first=false;
+                $("#firstLoad").data('firstLoad', _first);
+          //request = true;
+          //alert('1' + firstLoad + '  ' + request);
+
+//          alert('load complete '+place_data.val());
           var arr_isset = place_data.val();
           
           if (arr_isset) {
@@ -141,23 +129,24 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         },
         
        gridComplete: function() {
-//          var recs = parseInt(grid.getGridParam("records"),10);
-//          var selId    = grid.jqGrid('getGridParam','datatype');
-//        var recs = parseInt( grid.getGridParam("records"),10);
+          var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"),10);
+//          var selId    = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+//        var recs = parseInt( $("#create_multiple_dialog_table").getGridParam("records"),10);
 //          alert (selId+ ' ' + recs);
-        
-        var count = grid.getGridParam();
-        
+//        alert ('gridComplete!  Записей: ' + recs);
+
+        /*
+        var count = $("#create_multiple_dialog_table").getGridParam();        
         var ts = grid[0];
-        alert (ts.p.reccount);
         
         if (ts.p.reccount === 0) {
-             grid.hide();
+             $("#create_multiple_dialog_table").hide();
              emptyMsgDiv.show();
         } else {
-             grid.show();
+             $("#create_multiple_dialog_table").show();
              emptyMsgDiv.hide();
         }
+        */
 /*        
         if (isNaN(recs) || recs == 0) {
             $("#gridWrapper").hide();
@@ -183,12 +172,19 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         pgbuttons: false,      // disable page control like next, back button
         pgtext: null,          // disable pager text like 'Page 0 of 10'
         viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
-        loadonce: true         // to enable sorting on client side
-    
+        loadonce: true,         // to enable sorting on client side
+ 
+        loadui: 'disable'
 
-    });
-    $("#cb_" + grid[0].id).hide();
-    emptyMsgDiv.insertAfter(grid.parent());
+};
+ var LoadGrid = function () {
+
+    $("#create_multiple_dialog_table").jqGrid( grid_opts );
+    //$("#create_multiple_dialog_table").trigger("reloadGrid");
+    //$("#cb_" + grid[0].id).hide();
+    
+    //emptyMsgDiv.insertAfter($("#create_multiple_dialog_table").parent());
+}
 
 /*    try {
      request = new XMLHttpRequest();
@@ -219,8 +215,6 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         })
        .done(function(data) { 
              var response = JSON.parse(data);
-             alert (response['direction_id_val'])
-             
          $("#asset_group_id").html('');
          $("#asset_group_id").val(response['asset_group_id']);
          $("#budget_item_id").val(response['budget_item_id']);
@@ -258,10 +252,10 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
    }
 */
 
-function send (id_multiple_param){
+function send(id_multiple_param){
     id_multiple=id_multiple_param;            //set global var
     
-//    if(sel_) id_ = grid.getCell(sel_, 'id');
+//    if(sel_) id_ = $("#create_multiple_dialog_table").getCell(sel_, 'id');
 
       id_direction = $("#Asset_direction_id_val").val();
       if(id_direction) {
@@ -295,19 +289,50 @@ switch (id_multiple_param) {
     
  //   alert(strtitle);
  //   alert(id_multiple_param);
-
-    idsOfSelectedRows.length = 0;
-//    grid.jqGrid('setGridParam', {url: 'ggetDataForMultipleChoice?id='+id_multiple_param}).trigger('reloadGrid');
-    //grid.jqGrid('GridUnload');
     
-      grid.jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});     
-      grid.trigger("reloadGrid");
+    idsOfSelectedRows.length = 0;
+//    $("#create_multiple_dialog_table").jqGrid('setGridParam', {url: 'ggetDataForMultipleChoice?id='+id_multiple_param}).trigger('reloadGrid');
+    //$("#create_multiple_dialog_table").jqGrid('GridUnload');
+    
+      //$("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});     
+      //alert(grid);
+      //if (!firstLoad) {
+          //$("#create_multiple_dialog_table").trigger("reloadGrid");
+          //alert ('2 '+firstLoad + '  ' + request);
+  //    }
+//var selId;
+//var _first = $("#firstLoad").data("firstLoad");
+//alert("child "+_first);
+                //$("#create_multiple_dialog_table").jqGrid('clearGridData');
+                //$("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});
+                $("#create_multiple_dialog_table").jqGrid('GridUnload');
+                grid_opts['datatype']="json";
+                grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
+                //$("#create_multiple_dialog_table").jqGrid(grid_opts);
+                var arr = new String(grid_opts);
+                
+                //alert(arr);
+                LoadGrid();
+                $("#create_multiple_dialog_table").trigger("reloadGrid");
+        //if(!_first){
+                //selId = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+                //alert(selId);
+                //$("#create_multiple_dialog_table").trigger("reloadGrid");
+            
+        //}
+        //else
+        /*
+            {
+                selId = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+                alert(selId);
+                LoadGrid();
+            }
+    */
 
-//      grid.setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
-//    grid.setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+//      $("#create_multiple_dialog_table").setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+    //$("#create_multiple_dialog_table").setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
 
-//    grid.trigger("reloadGrid");
-//    var selId    = grid.jqGrid('getGridParam','datatype'); 
+//    $("#create_multiple_dialog_table").trigger("reloadGrid");
     
     
     //var parent_ = id_;
@@ -362,11 +387,11 @@ switch (id_multiple_param) {
                 			
      if(status=="ok"){
          
-       grid.setGridParam({datatype:'json'});
+       $("#create_multiple_dialog_table").setGridParam({datatype:'json'});
        rd = data['rows'][0]['cell'];     //row data
 					 //!!! OMG, why it uses only associated array!?
 					 //TODO: try to make for cycle...
-       grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
+       $("#create_multiple_dialog_table").jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
        $("#create_dialog").dialog('close');
 
       }
@@ -402,6 +427,8 @@ switch (id_multiple_param) {
     } else alert('Выберите шаблон!');   // end if(id_direction)
 
 }
+
+    //LoadGrid();
 
 </script>
 <?php 
@@ -455,7 +482,7 @@ switch (id_multiple_param) {
 		<td align="left"><?php 
                        $article=BudgetItem::model()->findByPk($model->assettemplate->budget_item_id);
                        $article_code = $article->CODE;
-                    echo CHtml::textField('budget_item_id', $model->assettemplate->budget_item_id > 0 ? $article->get2LevelNameBudgetItem($model->assettemplate->budget_item_id)." => ".$article_code:"", array('size'=>120,'disabled'=>true)); ?></td>
+                       echo CHtml::textField('budget_item_id', $model->assettemplate->budget_item_id > 0 ? $article->get2LevelNameBudgetItem($model->assettemplate->budget_item_id)." => ".$article_code:"", array('size'=>120,'disabled'=>true)); ?></td>
 		<td><b>Тип</b></td>
 		<td align="left"><?php echo CHtml::textField('ware_type_id',$model->assettemplate->waretype->short_name, array('size'=>8,'disabled'=>true)); ?></td>
 	</tr>
@@ -465,6 +492,11 @@ switch (id_multiple_param) {
 	</tr>
 </table>
 		</td>
+	</tr>
+	<tr><td><?php echo CHtml::image(Yii::app()->request->baseUrl.'/images/1x1.gif','',array(
+                            'width'=>'1',
+			    'height'=>'5',
+                        )); ?></td>
 	</tr>
 	<tr>
 		<td>
@@ -506,7 +538,10 @@ switch (id_multiple_param) {
 	</tr>
 	<tr>
 		<td><b>Статья бюджета</b></td>
-		<td colspan="5"><?php echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->get3LevelAllNameBudgetItem(),array('empty' => '<Выбор статьи бюджета>'));?> 
+		<td colspan="5"><?php 
+                 echo $form->dropDownList($model,'budget_item_id', CHtml::listData(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(),'ID','NAME'), array('empty' => '<Выбор статьи бюджета>'));
+//                 echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->get3LevelAllNameBudgetItem(),array('empty' => '<Выбор статьи бюджета>'));
+                ?> 
 		<?php echo $form->error($model,'budget_item_id'); ?></td>
 
 	</tr>
@@ -567,8 +602,9 @@ switch (id_multiple_param) {
     
 <?php $this->endWidget(); ?>
 <div id="create_multiple_dialog" style="display: none;">
-<table class="ui-jqgrid" id="create_multiple_dialog_table">
-    <div id="noResultsDiv" style="display: none;">"Enter the data" </div>
+    <div id="resurection">
+<table id="create_multiple_dialog_table">
 </table>
+    </div>
 </div>
 </div><!-- form -->

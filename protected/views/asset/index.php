@@ -18,6 +18,34 @@ $this->breadcrumbs=array(
 );
 */
 ?>
+<style type="text/css">
+      th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+</style>
+
 
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
@@ -25,8 +53,10 @@ $this->breadcrumbs=array(
 </script>
 
 <div id="create_dialog" style="display:none;">
-<table class="ui-jqgrid" id="create_dialog_table"></table>
+<table id="create_dialog_table"></table>
 </div>
+
+<div id="firstLoad"></div>
 
 <table id="list"></table> 
 <div id="pager"></div> 
@@ -38,6 +68,7 @@ $(function() {
     var id_;
     var grid=$("#list");
     var pager_selector = "#pager";
+    var firstLoad=true;
     grid.jqGrid( {
         url : 'getDataForGrid',
         datatype : 'json',
@@ -102,6 +133,7 @@ afterInsertRow: function(row_id, row_data){
 
 gridComplete: function () {
     grid.setGridParam({datatype:'local'});
+    $("#firstLoad").data('firstLoad', firstLoad);
 },
 //
 onPaging : function(which_button) {
@@ -140,7 +172,21 @@ grid.setGridParam({datatype:'json'});
 
 	           	if(id_) {
 
-
+                
+        //        var firstLoad = $("#firstLoad").data("firstLoad");
+                //if(!firstLoad) {
+//                    alert('resurect!');
+                    //$("#create_multiple_dialog_table").jqGrid('clearGridData');
+                    
+                    //$("#create_multiple_dialog_table").jqGrid('GridUnload');
+                    //$("#create_multiple_dialog_table").empty();
+                    //$("#create_multiple_dialog_table").remove();
+                    //$('#resurection').append("<table id='create_multiple_dialog_table'></table>");
+  //                  firstLoad=true;
+    //                $("#firstLoad").data("firstLoad",firstLoad);
+                    
+      //          }
+                
                 $("#create_dialog").load('editAssetDialog?id='+id_);
                 $("#create_dialog").data('parent_id', id_);
 
@@ -203,7 +249,14 @@ var options = {
 
 //                                $(this).dialog('close');
                                 },
-                            'Отмена': function(){
+
+
+                 'Отмена': function(){
+//                               $("#create_multiple_dialog_table").empty();
+//                                $("#create_multiple_dialog_table").jqGrid('GridUnload');
+//                                $("#create_multiple_dialog_table").jqGrid('clearGridData');
+//   alert('From index:' + parseInt($("#create_multiple_dialog_table").getGridParam("records"),10));
+
                                 $(this).dialog('close');
                             }
                         },
