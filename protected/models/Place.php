@@ -127,7 +127,7 @@ public $PATH;
                     select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
                       FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
                   select id, path as title from temp1 where level=3 ORDER BY PATH");
-            $data = array(''=>'Задайте расположение');
+//            $data = array(''=>'Задайте расположение');
             foreach($positions as $position){
                     $data[$position->id] = $position->title;
             }			
