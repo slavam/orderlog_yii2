@@ -439,6 +439,7 @@ class ClaimController extends Controller
                 $dataProvider=new CActiveDataProvider('ClaimLine', array(
                     'pagination'=>false,
                     'criteria'=>array(
+                   //     'with'=>array('asset.assettemplate'=>array('alias'=>'assettemplate')),
                         'condition'=>'claim_id='.$_GET['claim_id'],
                         'order'=>'id',
                         ),

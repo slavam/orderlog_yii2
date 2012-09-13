@@ -89,8 +89,12 @@ $(function() {
             pgtext: null,  
             viewrecords: false,
             ondblClickRow: function(id) {
-                window.location.href = "<?echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
-                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
+//                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
+                var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
+                    
+//                window.location.href = "<?//echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
+//                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');

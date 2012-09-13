@@ -132,6 +132,7 @@ $(function() {
             pgtext: null,  
             viewrecords: false,
             gridComplete: function () {
+                
 //                $(".subgrid-data").css('background','#ddd');
 
             }
@@ -139,12 +140,43 @@ $(function() {
 //            jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
             
         },
-        
+//        onSelectRow: function(rowId){ 
+//      grid.expandSubGridRow(rowId); 
+//   },
         gridComplete: function () {
-        
             grid.setGridParam({datatype:'local'});
             $(".subgrid-data").css('background','#ddd');
-            
+                var rowIds = grid.getDataIDs();
+                var claim_id;
+                <?if ($_GET['claim_id']):?>
+                    claim_id = <? echo $_GET['claim_id'];?>;
+                <? else: ?>
+                    claim_id=0;
+                <?endif;?>
+                if (claim_id != 0)
+                    {
+                        var i;
+                        for (i = 0; i < rowIds.length ; i++) {
+                            if (grid.getCell(rowIds[i], 'id') == claim_id) {
+                                grid.expandSubGridRow(rowIds[i]); 
+                                
+                                break;
+                            }
+                            
+                        }
+//                        grid.expandSubGridRow(rowIds[i]); 
+                        
+                        if (i+1<rowIds.length)
+                            grid.setSelection(rowIds[i+1]);
+                        grid.setSelection(rowIds[i]);
+//                        $.each(rowIds, function (index, rowId) {
+//                            if (grid.getCell(rowId, 'id') == claim_id) {
+//                                grid.expandSubGridRow(rowId); 
+//                                grid.setSelection(rowId);
+////                                exit;
+//                            }
+//                        }); 
+                    }
         },
 //        onPaging : function(which_button) {
 //            grid.setGridParam({datatype:'json'});
