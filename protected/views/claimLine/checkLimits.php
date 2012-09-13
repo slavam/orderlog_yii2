@@ -71,9 +71,10 @@ $(function() {
                 datatype : 'json',
                 height : 'auto',
                 width : '1000',
-//                loadonce:true,
-                colNames: ['Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание'],
+                loadonce:true,
+                colNames: ['claim_id','Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание'],
                 colModel: [
+                    {name: 'claim_id', width: 50, hidden:true },
                     {name: 'claim_num', width: 50 },
                     {name: 'type', width: 50 },
                     {name:'name',index:'name', width:300},
@@ -87,6 +88,10 @@ $(function() {
             pgbuttons: false,     // disable page control like next, back button
             pgtext: null,  
             viewrecords: false,
+            ondblClickRow: function(id) {
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
+                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
+            },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
             }

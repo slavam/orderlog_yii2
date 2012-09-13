@@ -353,6 +353,7 @@ class ClaimLineController extends Controller
             foreach ($lines as $i=>$row) {
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
+                    $row->claim_id,
                     $row->claim->claim_number,
                     $row->asset->waretype->short_name, 
                     $row->asset->name, 
@@ -365,7 +366,6 @@ class ClaimLineController extends Controller
             }
             echo CJSON::encode($responce);
         }
-
         
         public function actionCheckLimits()
         {
