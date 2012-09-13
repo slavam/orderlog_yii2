@@ -62,7 +62,6 @@
 
 
 <script type="text/javascript">
-    var lastSel;
     var request = false;
     try {
      request = new XMLHttpRequest();
@@ -192,6 +191,8 @@ $(function() {
     var new_line_added=false;
     var deletedrows=[];
    	var _msg="[";
+    var lastSel;
+
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -292,27 +293,35 @@ $(function() {
         },
                 //----------------------------------------------------
                 beforeSelectRow: function (rowid) {
-                    if ((rowid !== lastSel)&&(!new_line_added)) {
+                    if ((rowid !== lastSel)&&(!new_line_added)) { //
                         $(this).jqGrid('restoreRow', lastSel);
 						$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                         //fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
+                    } else if (new_line_added) {
+                    	
+   	                    		$grid.delRowData(lastSel);
+	                    		new_line_added=false;
                     }
+
+                    
                     return true;
                 },
                 //----------------------------------------------------
                 // 
         ondblClickRow: function (rowid, iRow, iCol, e) {
-        
+
             	$grid.setGridParam({editurl:'#'});
+//           		lastSel = rowid;
+
 				//$grid.setGridParam({datatype:'json'});
 
 					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
-                        $('#'+rowid+'_type').focus(); //
+                        $('#'+rowid+'_name').focus(); //
 
                     	},
                     	null,
@@ -409,7 +418,6 @@ $(function() {
             	               $grid.delRowData(last_row_id);
 				}*/
 
-				alert(lastSel);
                 $grid.jqGrid('restoreRow', lastSel);
 
 				if(new_line_added)
@@ -421,7 +429,7 @@ $(function() {
 				new_line_added=true;	
 
                var last_row_id = $grid.getGridParam("reccount");
-               var lastSel=rowid=last_row_id+1;
+               lastSel=rowid=last_row_id+1;
                var row = {                      "iddb":null,
 						"type":"",
 						"name":"",
@@ -456,7 +464,7 @@ $(function() {
 
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
-                        $('#'+rowid+'_type').focus(); //
+                        $('#'+rowid+'_name').focus(); //
                    	},
                     	null,
                     	'',
