@@ -452,13 +452,13 @@ class ClaimController extends Controller
                 $responce['rows'][$i]['id'] = $i+1;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
-                    $row->asset->ware_type_id,//->short_name, 
+                    $row->asset->assettemplate->ware_type_id,//->short_name, 
                     $row->asset_id,//->name, 
                     $row->asset->unit_id,//->sign,
                     $row->count,
                     $row->cost,
                     $row->amount,
-                    $row->asset->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
+                    $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
                     'цель?',//zel'
 
                     //TODO: check if returns '' on view
@@ -480,7 +480,7 @@ class ClaimController extends Controller
                     //TODO: check if returns '' on view
                     $row->budget_item_id>0 ? $row->budget_item_id:'', //CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
                     $row->status_id,//->short_name,
-                    $row->asset->info,
+                    $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
                     $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
                     );

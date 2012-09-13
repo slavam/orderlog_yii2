@@ -192,7 +192,7 @@ $(function() {
     var deletedrows=[];
    	var _msg="[";
     var lastSel;
-
+    
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
@@ -212,7 +212,7 @@ $(function() {
 
             {name: 'iddb',index:'iddb', width:20, hidden:true, frozen:false},
             {name: 'type', width: 25, frozen: false, /*editable:true,*/ edittype:'select',formatter:"select", editrules:{number:true}, editoptions: {value:<?echo Helpers::BuildEditOptions(WareType::model(), array('key'=>'id','value'=>'short_name'))?>} },
-            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'))?>,
+            {name: 'name',index:'name', width:220, frozen: false, editable:true, edittype:'select',formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Asset::model(), array('key'=>'id','value'=>'name'),'name')?>,
             
             				dataInit: function (elem) {
                                 var v = $(elem).val();
@@ -299,8 +299,8 @@ $(function() {
                         //fixPositionsOfFrozenDivs.call(this);
                        	fill_pane(rowid);
                         lastSel = rowid;
-                    } else if (new_line_added) {
-                    	
+                    } 
+                    if ((rowid!=lastSel)&&new_line_added) {
    	                    		$grid.delRowData(lastSel);
 	                    		new_line_added=false;
                     }
@@ -322,7 +322,7 @@ $(function() {
                     $(this).jqGrid('editRow', rowid, true, function () {
 //                        $("input, select, e.target").focus(); //
                         $('#'+rowid+'_name').focus(); //
-
+                        
                     	},
                     	null,
                     	'',
@@ -426,7 +426,6 @@ $(function() {
                         //fixPositionsOfFrozenDivs.call(this);
 				}
 	
-				new_line_added=true;	
 
                var last_row_id = $grid.getGridParam("reccount");
                lastSel=rowid=last_row_id+1;
@@ -459,6 +458,8 @@ $(function() {
 
                $grid.addRowData(rowid,row,"last");
                $grid.setSelection(rowid, true);
+
+				new_line_added=true;	
 
 					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
