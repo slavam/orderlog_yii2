@@ -238,7 +238,8 @@ $(function() {
             {name: 'cost', width: 40, frozen:false, editable:true},
             {name: 'amount', width: 60, frozen:false }, //calculated!
             {name: 'assetgroup', width: 120, frozen:false,/* editable:true,*/ edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
-            {name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
+            //{name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
+            {name: 'goal', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Purpose::model(), array('key'=>'id','value'=>'name'))?>} },
             {name: 'for_whom', width: 150, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>,
 
             				dataInit: function (elem) {
@@ -350,7 +351,7 @@ $(function() {
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
 				$grid.setCell(rowid,'asset_info',xdata["info"]);
 
-				if(xdata["quantity_type_id"]!=1)
+				if(xdata["quantity_type_id"]!=2)
 				{
 					$grid.setCell(rowid,'count',xdata["quantity"]);
 					_msg+="К";
@@ -493,9 +494,9 @@ $(function() {
 
 				$grid.setCell(rowid,'cost',xdata["cost"]);
 				$grid.setCell(rowid,'count',xdata["quantity"]);
-				if(xdata["quantity_type_id"]!=1)
-					_msg+="К";
 				if(xdata["quantity_type_id"]!=2)
+					_msg+="К";
+				if(xdata["price_type_id"]!=2)
 					_msg+="Ц";
 
 				_msg+="]";

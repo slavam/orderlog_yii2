@@ -31,7 +31,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -460,7 +460,7 @@ class ClaimController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
-                    'цель?',//zel'
+                    $row->purpose->id, //'цель?',//zel'
 
                     //TODO: check if returns '' on view
 
@@ -840,8 +840,7 @@ class ClaimController extends Controller
 //            Yii::app()->end();
 //        } 
         
-}
-
+    }
     
     public function actionReportGroup()
     {
@@ -851,5 +850,13 @@ class ClaimController extends Controller
             $result[] =$value;
         }
         $this->render('reports/reportgroup',array('result'=>$result));
+    }
+    
+    public function actionToExcel(){
+        $model = new Claim();
+        $labels = $model->attributeNames(); //Labels();
+        $data = Claim::model()->findAll();
+
+        $PHPExcel = new PHPExcel();
     }
 }
