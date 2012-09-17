@@ -172,37 +172,63 @@ class ClaimLine extends CActiveRecord
             return CHtml::encode($position[0]->title); 
 	}
 
-        public function findProductsAsString($claim_line_id)
+        public function findProductsAsString($claim_line_id,$type='string')
         {
             if ($claim_line_id>'')
             {
                 $criteria=new CDbCriteria;
                 $criteria->condition="claim_line_id=".$claim_line_id;
                 $claim_line_products = ClaimLineProduct::model()->findAll($criteria);
-                $s = '';
-                foreach ($claim_line_products as $e) {
-                    $s .= $e->product->name.'; ';
+                 switch ($type)
+                {
+                    case 'string':
+                    $res = '';
+                    foreach ($claim_line_products as $e) {
+                        $ress .= $e->product->name.'; ';
+                    }
+                    break;
+                    case 'id':
+                        $res=array();
+                        foreach ($claim_line_products as $f)
+                        {
+                            $res[]=$f->id;
+                        }
+                        break;
                 }
-                return $s;
             } else {
-                return '';
+                $res='';
             }
+            return $res;
         }
-        public function findFeaturesAsString($claim_line_id)
+        public function findFeaturesAsString($claim_line_id,$type='string')
         {
             if ($claim_line_id>'')
             {
                 $criteria=new CDbCriteria;
                 $criteria->condition="claim_line_id=".$claim_line_id;
                 $claim_line_features = ClaimLineFeature::model()->findAll($criteria);
-                $s = '';
-                foreach ($claim_line_features as $e) {
-                    $s .= $e->feature->name.'; ';
+                
+                switch ($type)
+                {
+                    case 'string':
+                    $res = '';
+                    foreach ($claim_line_features as $e) {
+                        $res .= $e->feature->name.'; ';
+                    }
+                    break;
+                    
+                    case 'id':
+                        $res=array();
+                        foreach ($claim_line_features as $f)
+                        {
+                            $res[]=$f->id;
+                        }
+                        break;
                 }
-                return $s;
-            } else {
-                return '';
-            }
+            } 
+            else {$res='';}
+            
+            return $res;
         }
 
         public function getBusinessName($business_id)

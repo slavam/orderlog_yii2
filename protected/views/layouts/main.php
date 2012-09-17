@@ -126,7 +126,7 @@
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
 
-	<?php echo $content; ?>
+	<?php echo $content;?>
 
 	<div id="footer">
 		Copyright &copy; <?php echo date('Y'); ?> ВСЕУКРАИНСКИЙ БАНК РАЗВИТИЯ.<br/>

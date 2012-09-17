@@ -53,6 +53,32 @@
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
+   $.maxZIndex = $.fn.maxZIndex = function(opt) {
+    /// <summary>
+    /// Returns the max zOrder in the document (no parameter)
+    /// Sets max zOrder by passing a non-zero number
+    /// which gets added to the highest zOrder.
+    /// </summary>    
+    /// <param name="opt" type="object">
+    /// inc: increment value, 
+    /// group: selector for zIndex elements to find max for
+    /// </param>
+    /// <returns type="jQuery" />
+    var def = { inc: 10, group: "*" };
+    $.extend(def, opt);    
+    var zmax = 0;
+    $(def.group).each(function() {
+        var cur = parseInt($(this).css('z-index'));
+        zmax = cur > zmax ? cur : zmax;
+    });
+    if (!this.jquery)
+        return zmax;
+
+    return this.each(function() {
+        zmax += def.inc;
+        $(this).css("z-index", zmax);
+    });
+}
 </script>
 
 <h1>Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
@@ -108,62 +134,155 @@
 
 <table id="claim_line_list"></table> 
 <div id="pager_"></div> 
+
+<div id="create_multiple_dialog" style="display: none;">
+        
+<table id="create_multiple_dialog_table"></table>
+</div>
+
 <!-- <div id="edit_dlg"></div> -->
 
 <script type="text/javascript">
+    
+    var firstload=true;
+    var plsel= function place_selector_grid_clk(parent_e)
+    {
+       alert(parent_e);
+       grid_opts = {
+//        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
+//        url : "getDataForMultipleChoice",
+        datatype : 'local',
+        width : '750',
+        height : '480',
+        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+//        mtype : 'POST',
+//        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
+//        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
+        colNames : [ 'ID','Наименование'],
+        colModel : [
+        { name : 'id', index : 'id', width : 20, hidden:true},
+        { name : 'title', index : 'title', width : 250, sortable:true }             /* Наименование */
+    ],
+        multiselect: false,
+        pager : null,
+        rowNum : 1000000,
+        gridview: true,
+        rownumbers: false,
+        //onSelectRow: updateIdsOfSelectedRows,
+        emptyrecords: 'No URLs have been loaded for evaluation.',
+        loadComplete: function () {
+            alert('loaded');
+            var cell = $("#claim_line_list").getCell(parent_e,'position_ids');
+//            alert(cell);
+            $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
+//        var _first=false;
+//        $("#firstLoad").data('firstLoad', _first);
+         // var arr_isset = place_data.val();
+          /*
+          if (arr_isset) {
+             idsOfSelectedRows = place_data.val().split(/[,]/);
+          }   
+           var $this = $(this), i, count;
+           for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
+                $this.jqGrid('setSelection', idsOfSelectedRows[i], false);
+           }*/
+        },
+       gridComplete: function() {
+//            var pos_id = $(parent_e.target).val();
+//            alert(parent_e.data);
+                /*
+                var $td = $(parent_e.target).closest('td'),
+                                text = $td.text(),
+                                $tr = $td.closest('tr'),
+                                rowid = $tr[0].id;
+                                alert(rowid);
+        */
+       //parent_e.replace('?id=','');
+      // var v = parseInt(parent_e, 10);
+       //alert(v);//
+//           $('#create_multiple_dialog_table').jqGrid('setSelection', pos_id, true);
+        },
+        sortname : 'title',
+        sortorder : 'asc',
+        caption : false,
+        pgbuttons: false,      // disable page control like next, back button
+        pgtext: null,          // disable pager text like 'Page 0 of 10'
+        viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
+        loadonce: true,         // to enable sorting on client side
+        loadui: 'disable'
+};
+LoadGrid(grid_opts);
+        $("#create_multiple_dialog").dialog(
+            {
+                title: 'Выбор расположения',
+                modal:true,
+                width:800,
+                height:600,
+                zIndex: $.maxZIndex()+ 1,
+                buttons:{
+                    'OK': function(){
+                        
+                        //don`t work at second time open dialog
+                        var selected = $('#create_multiple_dialog_table').jqGrid('getGridParam','selrow');
+                        var seldata_id = $('#create_multiple_dialog_table').jqGrid('getCol','id');
+                        var seldata_title = $('#create_multiple_dialog_table').jqGrid('getCol','title');
+                        alert(seldata_id[selected-1]);
+                        alert(seldata_title[selected-1]);
+//                        var rowid = $grid.getGridParam('selrow');
+                        $("#claim_line_list").setCell(parent_e,'position_ids',seldata_id[selected-1]);
+                        $("#claim_line_list").setCell(parent_e,'position',seldata_title[selected-1]);
+//                        var pl_rows =[];
+//                        $.each(s,function(rk,rv){
+//                           pl_rows.push($('#create_multiple_dialog_table').jqGrid('getRowData',rv));
+//                        });
+//                        
+//                        pl_rows=JSON.stringify(pl_rows);
+//                        var rowid = $grid.getGridParam('selrow');
+//                        
+//                        
+//                        $grid.setCell(rowid,'position',pl_rows);
+                        //$('#create_multiple_dialog_table').jqGrid('GridUnload');
+                        $(this).dialog('close');
+//                        alert('ok');
+                    }
+                }
+            }
+        );
+    };
+        
+//Обрабатываем клик по кнопке "добавить" расположение
+function LoadGrid (grid_opts) {
+//alert(JSON.stringify(grid_opts));
+
+        $("#create_multiple_dialog_table").jqGrid('GridUnload');
+        $("#create_multiple_dialog_table").jqGrid('clearGridData');
+        $("#create_multiple_dialog_table").jqGrid(grid_opts);
+
+//$("#cb_" + grid[0].id).hide();
+    
+    //emptyMsgDiv.insertAfter($("#create_multiple_dialog_table").parent());
+}
 $(function() {
 
 //	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
+    var grid_opts;
+    var $grid=$("#claim_line_list");
 
-    var $grid=$("#claim_line_list"),
-//=============================================================================================================
-                fixPositionsOfFrozenDivs = function () {
-                    var $rows;
-                    if (typeof this.grid.fbDiv !== "undefined") {
-                        $rows = $('>div>table.ui-jqgrid-btable>tbody>tr', this.grid.bDiv);
-                        $('>table.ui-jqgrid-btable>tbody>tr', this.grid.fbDiv).each(function (i) {
-                            var rowHight = $($rows[i]).height(), rowHightFrozen = $(this).height();
-                            if ($(this).hasClass("jqgrow")) {
-                                $(this).height(rowHight);
-                                rowHightFrozen = $(this).height();
-                                if (rowHight !== rowHightFrozen) {
-                                    $(this).height(rowHight + (rowHight - rowHightFrozen));
-                                }
-                            }
-                        });
-                        $(this.grid.fbDiv).height(this.grid.bDiv.clientHeight);
-                        $(this.grid.fbDiv).css($(this.grid.bDiv).position());
-                    }
-                    if (typeof this.grid.fhDiv !== "undefined") {
-                        $rows = $('>div>table.ui-jqgrid-htable>thead>tr', this.grid.hDiv);
-                        $('>table.ui-jqgrid-htable>thead>tr', this.grid.fhDiv).each(function (i) {
-                            var rowHight = $($rows[i]).height(), rowHightFrozen = $(this).height();
-                            $(this).height(rowHight);
-                            rowHightFrozen = $(this).height();
-                            if (rowHight !== rowHightFrozen) {
-                                $(this).height(rowHight + (rowHight - rowHightFrozen));
-                            }
-                        });
-                        $(this.grid.fhDiv).height(this.grid.hDiv.clientHeight);
-                        $(this.grid.fhDiv).css($(this.grid.hDiv).position());
-                    }
-                };
-//=============================================================================================================
-	function fill_pane(id)
-	{
-			$(".hint").html("");
-			var _m;
-            var hint = $grid.getCell(id, 'asset_info');
-            $grid.setColProp('name',{formatter:null});
-            var name = $grid.getCell(id, 'name');
-            $grid.setColProp('name',{formatter:"select"});
-            var count = $grid.getCell(id, 'count');
-            var unit = $grid.getCell(id, 'unit');
-            var amount = $grid.getCell(id, 'amount');
-            if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
-            $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
-            _msg="[";
-	};
+function fill_pane(id)
+{
+                $(".hint").html("");
+                var _m;
+    var hint = $grid.getCell(id, 'asset_info');
+    $grid.setColProp('name',{formatter:null});
+    var name = $grid.getCell(id, 'name');
+    $grid.setColProp('name',{formatter:"select"});
+    var count = $grid.getCell(id, 'count');
+    var unit = $grid.getCell(id, 'unit');
+    var amount = $grid.getCell(id, 'amount');
+    if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
+    $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+    _msg="[";
+};
 	function calc_amount(id)
 	{
             var count = $grid.getCell(id, 'count');
@@ -184,6 +303,8 @@ $(function() {
           $('#claim_line_list').data('deletedrows',deletedrows);
           $grid.delRowData(rowid);
         };
+
+
         
     var pager_selector = "#pager_";
     var worker_id;
@@ -192,9 +313,8 @@ $(function() {
     var deletedrows=[];
    	var _msg="[";
     var lastSel;
-    
     $grid.jqGrid( {
-//        url : "getDataForSubGrid?claim_id="+<?php echo $model->id ?>,
+//        url : "getDataForSubGrid?claim_id="+<?php // echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
         datatype : 'json',
         height : '295',
@@ -203,7 +323,7 @@ $(function() {
         shrinkToFit : false,
         loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
-            'Группа','Цель','Для кого','Для кого','Характеристики','Продукты','Расположение','Примечание','ЦФО','Бизнес',
+            'Группа','Цель','Для кого','Для кого','Характеристики','','Продукты','','Расположение','','Примечание','ЦФО','Бизнес',
             'Статья бюджета','Статус',
             'Информация', 'Добавлена'],
         colModel: [
@@ -260,8 +380,25 @@ $(function() {
             },
             {name: 'for_whom_div', width: 220, frozen:false },
             {name: 'features', width: 100, frozen:false },
+            {name: 'features_ids',hidden:true},
             {name: 'products', width: 100, frozen:false },
-            {name: 'position', width: 150, frozen:false },
+            {name: 'products_ids', hidden:true},
+            {name: 'position', width: 150, frozen:false,
+//                        formatter: 'showlink', formatoptions: {
+//                        baseLinkUrl: 'javascript:',
+//                        showAction: "place_selector_grid_clk('",
+//                        idName:'iddb',
+//                        addParam: "');"
+//                }  
+            formatter:function(cellvalue,options,rowObject) {
+                return "<a href=\"javascript:plsel("+options.rowId+")\">"+cellvalue+"111</a>";
+            },
+            unformat: function(cellvalue, options, cellobject) {
+            return cellvalue;
+                }
+
+            },
+            {name:'position_ids',hidden:true},
             {name: 'description', width: 110, frozen:false, editable:true, edittype:'text' },
             {name: 'payer', width: 70, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Division::model(), array('key'=>'ID','value'=>'NAME'),'CODE')?>} },
             
@@ -310,30 +447,28 @@ $(function() {
                 },
                 //----------------------------------------------------
                 // 
+                
+         gridComplete: function() {
+            $('.imgclickable').click(function(rowid) {
+              //  this.parentNode.click();
+              place_selector_grid_clk(rowid);
+            });
+        },       
+                
         ondblClickRow: function (rowid, iRow, iCol, e) {
 
             	$grid.setGridParam({editurl:'#'});
-//           		lastSel = rowid;
+                $(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
-				//$grid.setGridParam({datatype:'json'});
-
-					$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
-
-                    $(this).jqGrid('editRow', rowid, true, function () {
-//                        $("input, select, e.target").focus(); //
-                        $('#'+rowid+'_name').focus(); //
-                        
+                    $(this).jqGrid('editRow', rowid, true, function () 
+                        {
+                            $('#'+rowid+'_name').focus(); //
                     	},
                     	null,
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-
-                    		//o.lysenko 6.sep.2012 19:16
-                    		//ajax load department of worker
-                    		
-//                    		alert(worker_id);
-                    		
+	
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
             })
@@ -368,10 +503,7 @@ $(function() {
 					
 				//if(_msg!="") alert(_msg);
             });
-
-
-
-							$(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
+            $(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", false).removeClass("ui-state-disabled");
                     	}, 
                     	null, 
 	                    function () {/*afterrestore*/
@@ -385,22 +517,9 @@ $(function() {
 
 	                    } 
                     );
-
-
-
-                    /*fixPositionsOfFrozenDivs.call(this);*/
+                       // $grid.setCell(rowid,'position','<?//echo CHtml::image(Yii::app()->request->baseUrl.'/images/add.png','');?>');
+                        //Устанавливаем кнопки для выбора из справочников в ячейки
                     return;
-       
-
-//            alert(id+' '+lastSel);
-//            if (id && id != lastSel) { 
-//                $grid.restoreRow(lastSel);
-//            	$grid.setGridParam({editurl:'#'});
-//				$grid.setGridParam({datatype:'json'});
-//                $grid.editRow(id, true);
-//                lastSel = id;
-//				fixPositionsOfFrozenDivs.call(this);
-//            }
         },
        	loadError: function(xhr, status, error) {alert(status +error)}
     }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
@@ -593,8 +712,11 @@ $(function() {
 //			  $('#feature-grid-table').jqGrid('setCell',rowID,'iddb',ret_iddb.iddb);
 //                          iddb=ret_iddb;
 		}
-
+                
+    
 });
+
+
 </script>
 
 </div><!-- form -->

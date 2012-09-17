@@ -6,7 +6,8 @@
  */
 class Helpers extends CApplicationComponent{
 
-    /**
+    /**Построение списка выбора для колонок грида
+     * 
      * @param model 
      * Model for building
      * @param attributes array
@@ -19,6 +20,7 @@ class Helpers extends CApplicationComponent{
             $result[0]='"":'.$empty;
         }
         else $result=array();
+        
         if ($model)
         {
            
@@ -54,6 +56,28 @@ class Helpers extends CApplicationComponent{
         else return false;
     }
     
+    /**
+     * 
+     */
+    public static function BuildSpecificationsGridList($model=null,$attributes=array())
+    {
+        $result=array();
+        
+        if ($model)
+        {
+            foreach ($model as $key=>$value)
+            {
+                $attrs=array();
+                //TODO сделать проверку на переданный массив атрибутов или выводить все атрибуты модели
+                foreach($attributes as $atr_value)
+                {
+                    $attrs[$atr_value]=$value->$atr_value;
+                }
+                $result[]=$attrs;
+            }
+            return CJSON::encode($result);
+        }
+    }
 }
 
 ?>
