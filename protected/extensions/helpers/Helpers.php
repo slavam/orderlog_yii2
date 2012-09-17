@@ -68,7 +68,7 @@ class Helpers extends CApplicationComponent{
             foreach ($model as $key=>$value)
             {
                 $attrs=array();
-                //TODO сделать проверку на переданный массив атрибутов или выводить все атрибуты модели
+                //TODO сделать проверку на переданный массив атрибутов или выводить все атрибуты модели 
                 foreach($attributes as $atr_value)
                 {
                     $attrs[$atr_value]=$value->$atr_value;

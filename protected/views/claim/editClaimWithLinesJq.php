@@ -145,9 +145,10 @@
 <script type="text/javascript">
     
     var firstload=true;
+    var selected,seldata;
     var plsel= function place_selector_grid_clk(parent_e)
     {
-       alert(parent_e);
+      
        grid_opts = {
 //        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
 //        url : "getDataForMultipleChoice",
@@ -168,13 +169,14 @@
         rowNum : 1000000,
         gridview: true,
         rownumbers: false,
-        //onSelectRow: updateIdsOfSelectedRows,
+        onSelectRow: function(rowid){
+            selected=rowid;
+            //alert('selected on select = '+rowid);
+        },
         emptyrecords: 'No URLs have been loaded for evaluation.',
         loadComplete: function () {
-            alert('loaded');
-            var cell = $("#claim_line_list").getCell(parent_e,'position_ids');
+            //alert('loaded');
 //            alert(cell);
-            $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
 //        var _first=false;
 //        $("#firstLoad").data('firstLoad', _first);
          // var arr_isset = place_data.val();
@@ -188,6 +190,8 @@
            }*/
         },
        gridComplete: function() {
+            var cell = $("#claim_line_list").getCell(parent_e,'position_ids');
+            $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
 //            var pos_id = $(parent_e.target).val();
 //            alert(parent_e.data);
                 /*
@@ -223,14 +227,13 @@ LoadGrid(grid_opts);
                     'OK': function(){
                         
                         //don`t work at second time open dialog
-                        var selected = $('#create_multiple_dialog_table').jqGrid('getGridParam','selrow');
-                        var seldata_id = $('#create_multiple_dialog_table').jqGrid('getCol','id');
-                        var seldata_title = $('#create_multiple_dialog_table').jqGrid('getCol','title');
-                        alert(seldata_id[selected-1]);
-                        alert(seldata_title[selected-1]);
+                        //selected = $('#create_multiple_dialog_table').jqGrid('getGridParam','selrow');
+                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
+                        //alert(seldata.id);
+                        //alert(seldata.title);
 //                        var rowid = $grid.getGridParam('selrow');
-                        $("#claim_line_list").setCell(parent_e,'position_ids',seldata_id[selected-1]);
-                        $("#claim_line_list").setCell(parent_e,'position',seldata_title[selected-1]);
+                        $("#claim_line_list").setCell(parent_e,'position_ids',seldata.id);
+                        $("#claim_line_list").setCell(parent_e,'position',seldata.title);
 //                        var pl_rows =[];
 //                        $.each(s,function(rk,rv){
 //                           pl_rows.push($('#create_multiple_dialog_table').jqGrid('getRowData',rv));
@@ -251,12 +254,12 @@ LoadGrid(grid_opts);
     };
         
 //Обрабатываем клик по кнопке "добавить" расположение
-function LoadGrid (grid_opts) {
+function LoadGrid (grid_opts_param) {
 //alert(JSON.stringify(grid_opts));
 
         $("#create_multiple_dialog_table").jqGrid('GridUnload');
         $("#create_multiple_dialog_table").jqGrid('clearGridData');
-        $("#create_multiple_dialog_table").jqGrid(grid_opts);
+        $("#create_multiple_dialog_table").jqGrid(grid_opts_param);
 
 //$("#cb_" + grid[0].id).hide();
     
@@ -265,7 +268,7 @@ function LoadGrid (grid_opts) {
 $(function() {
 
 //	$([document, window]).unbind('.dialog-overlay');     // temporary solve issue when pressing ESC in inline-edit jqgrid closes the whole dialog
-    var grid_opts;
+    //var grid_opts;
     var $grid=$("#claim_line_list");
 
 function fill_pane(id)
@@ -391,7 +394,7 @@ function fill_pane(id)
 //                        addParam: "');"
 //                }  
             formatter:function(cellvalue,options,rowObject) {
-                return "<a href=\"javascript:plsel("+options.rowId+")\">"+cellvalue+"111</a>";
+                return "<a href=\"javascript:plsel("+options.rowId+")\">"+cellvalue+"</a>";
             },
             unformat: function(cellvalue, options, cellobject) {
             return cellvalue;
