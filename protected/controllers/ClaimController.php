@@ -514,6 +514,7 @@ class ClaimController extends Controller
                     $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
                     $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
+                    $row->asset->assettemplate->direction_id
                     );
             }
             echo CJSON::encode($responce);
