@@ -58,7 +58,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg','toExcel'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -66,7 +66,7 @@ class ClaimController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
