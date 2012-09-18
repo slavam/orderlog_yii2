@@ -136,9 +136,9 @@
 <div id="pager_"></div> 
 
 <div id="create_multiple_dialog" style="display: none;">
-        
+<p><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>      
 <table id="create_multiple_dialog_table"></table>
-<p><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>
+
 </div>
 
 <!-- <div id="edit_dlg"></div> -->
@@ -299,7 +299,7 @@
         grid_opts = {
         datatype : 'local',
         width : '750',
-        height : '480',
+        height : '500',
         data:opts.data, 
         colNames : [ 'ID','Наименование'],
         colModel : opts.colModel,
