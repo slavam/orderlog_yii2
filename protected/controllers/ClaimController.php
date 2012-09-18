@@ -887,7 +887,7 @@ class ClaimController extends Controller
     
     public function actionToExcel(){
         $letters = array(' ','A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','W','V','X','Y','Z',
+            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
             'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
             'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ',);
         
@@ -913,11 +913,11 @@ class ClaimController extends Controller
             'R'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
             'S'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
             'T'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
-            'U'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>30),
-            'V'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'U'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
             'W'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
-//            'Y'=>array('index'=>'id','title'=>'ID'),
-//            'Z'=>array('index'=>'id','title'=>'ID'),
+            'X'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
+            'Y'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
 //            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
 //            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
 );
@@ -1013,6 +1013,12 @@ class ClaimController extends Controller
                             break;
                         case 'purpose_id':
                             $aSheet->setCellValue($letters[$i].$j,$line->purpose->name);
+                            break;
+                        case 'product_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->getProductsNamesFromArray($value));
+                            break;
+                        case 'feature_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->getFeaturesNamesFromArray($value));
                             break;
                         case 'id':
                             $i--;

@@ -242,8 +242,14 @@ class ClaimLine extends CActiveRecord
             return $business->NAME;
         }
         
-        
-        
+        public function getProductsNamesFromArray($product_ids){
+            return Product::model()->getNamesFromArray($product_ids);
+        }
+
+        public function getFeaturesNamesFromArray($feature_ids){
+            return Feature::model()->getNamesFromArray($feature_ids);
+        }
+
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
 //            return nil;
