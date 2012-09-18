@@ -2,6 +2,33 @@
 
 class ClaimController extends Controller
 {
+public $mimeTypes = array(
+	'Excel5' => array(
+		'Content-type'=>'application/vnd.ms-excel',
+		'extension'=>'xls',
+	),
+	'Excel2007'	=> array(
+		'Content-type'=>'application/vnd.ms-excel',
+		'extension'=>'xlsx',
+	),
+	'PDF' =>array(
+		'Content-type' => 'application/pdf',
+		'extension'=>'pdf',
+	),
+	'HTML' =>array(
+		'Content-type'=>'text/html',
+		'extension'=>'html',
+	),
+	'CSV' =>array(
+		'Content-type'=>'application/csv',			
+		'extension'=>'csv',
+	)
+);
+
+	public $exportType = "Excel2007";
+        public $filename   = "claim";
+    
+    
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -853,10 +880,182 @@ class ClaimController extends Controller
     }
     
     public function actionToExcel(){
-        $model = new Claim();
-        $labels = $model->attributeNames(); //Labels();
-        $data = Claim::model()->findAll();
+        $letters = array(' ','A','B','C','D','E','F','G','H','I','J','K','L','M',
+            'N','O','P','Q','R','S','T','U','W','V','X','Y','Z',
+            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
+            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ',);
+        
+        $columns = array(
+            'A'=>array('index'=>'id','title'=>'ID','width'=>5),
+            'B'=>array('index'=>'claim_num','title'=>'Номер заявки','width'=>12),
+            'C'=>array('index'=>'division_id','title'=>'Отделение','width'=>30),
+            'D'=>array('index'=>'create_date','title'=>'Создана','width'=>12),
+            'E'=>array('index'=>'direction_id','title'=>'Направление'),
+            'F'=>array('index'=>'state_id','title'=>'Состояние','width'=>12),
+            'G'=>array('index'=>'period_id','title'=>'Период','width'=>14),
+            'H'=>array('index'=>'comment','title'=>'Комментарий','width'=>20),
+            'I'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'J'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20),
+            'K'=>array('index'=>'id','title'=>'Line-ID'),
+            'L'=>array('index'=>'count','title'=>'Кол-во'),
+            'M'=>array('index'=>'amount','title'=>'Сумма'),
+            'N'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'O'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
+            'P'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
+            'Q'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
+            'R'=>array('index'=>'cost','title'=>'Цена'),
+            'S'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
+            'T'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
+            'U'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
+            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>30),
+            'W'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'X'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
+//            'Y'=>array('index'=>'id','title'=>'ID'),
+//            'Z'=>array('index'=>'id','title'=>'ID'),
+//            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
+//            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
+);
+ 
+        
+        
+        
+        $data = Claim::model()->findAll(array(
+                    'order'=>'period_id, division_id, id',
+                ));
 
         $PHPExcel = new PHPExcel();
+        $PHPExcel->setActiveSheetIndex(0);
+        $aSheet = $PHPExcel->getActiveSheet();
+        $aSheet->setTitle('Заявки');
+        
+//        $model = new Claim();
+//        $labels = $model->attributeNames();
+//        $i = 1;
+//        foreach($labels as $label){
+//            if ($label!='budgetary'){
+//                $aSheet->setCellValue($letters[$i].'1',$label);
+//                $i++;
+//            }
+//        }
+//        $model = new ClaimLine();
+//        $labels = $model->attributeNames();
+//        foreach($labels as $label){
+//            if ($label!='claim_id' and $label!='state_id' and $label!='change_date' 
+//                    and $label!='created_at' and $label!='how_created'){
+//                $aSheet->setCellValue($letters[$i].'1',$label);
+//                $i++;
+//            }
+//        }
+
+//Создадим заголовок таблицы
+        foreach($columns as $key => $column) {
+            $aSheet->setCellValue($key.'1',$column['title']);
+            $aSheet->getStyle($key.'1')->getFont()->setBold(true);
+            if (!empty($column['width']))
+                $aSheet->getColumnDimension($key)->setWidth($column['width']);
+        }
+        
+        $j=2;
+        $i=0;
+        foreach ($data as $record) {
+            $i=1;
+            foreach($record as $key=>$value){
+                switch ($key) {
+                    case 'division_id':
+                        $aSheet->setCellValue($letters[$i].$j,$record->division->NAME);
+                        break;
+                    case 'create_date':
+                        $aSheet->setCellValue($letters[$i].$j,substr($value, 0, 10));
+                        break;
+                    case 'direction_id':
+                        $aSheet->setCellValue($letters[$i].$j,$record->direction->short_name);
+                        break;
+                    case 'state_id':
+                        $aSheet->setCellValue($letters[$i].$j,$record->state->stateName->name);
+                        break;
+                    case 'period_id':
+                        $aSheet->setCellValue($letters[$i].$j,$record->period->NAME);
+                        break;
+                    case 'department_id':
+                        $aSheet->setCellValue($letters[$i].$j,$record->findDepartment($record->department_id));
+                        break;
+                    case 'budgetary':
+                        $i--;
+                        break;
+                    default:
+                        $aSheet->setCellValue($letters[$i].$j,$value);
+                        break;
+                };
+                $i++;
+            }
+            $j++;
+            $claim_fields_num = $i;
+            $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
+            foreach ($claim_lines as $line) {
+                $i = $claim_fields_num;
+                foreach ($line as $key => $value) {
+                    switch ($key) {
+                        case 'for_whom':
+                            $aSheet->setCellValue($letters[$i].$j,$value>0 ? $line->findWorker($value): '');
+                            break;
+                        case 'budget_item_id':
+                            $aSheet->setCellValue($letters[$i].$j,$value>0 ? $line->budgetItem->get2LevelNameBudgetItem($value):'');
+                            break;
+                        case 'asset_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->asset->name);
+                            break;
+                        case 'business_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->getBusinessName($value));
+                            break;
+                        case 'status_id';
+                            $aSheet->setCellValue($letters[$i].$j,$line->status->short_name);
+                            break;
+                        case 'position_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): '');
+                            break;
+                        case 'payer_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->payer->NAME);
+                            break;
+                        case 'purpose_id':
+                            $aSheet->setCellValue($letters[$i].$j,$line->purpose->name);
+                            break;
+                        case 'claim_id':
+                            $i--;
+                            break;
+                        case 'state_id':
+                            $i--;
+                            break;
+                        case 'change_date';
+                            $i--;
+                            break;
+                        case 'created_at':
+                            $i--;
+                            break;
+                        case 'how_created':
+                            $i--;
+                            break;
+                        default:
+                            $aSheet->setCellValue($letters[$i].$j,$value);
+                            break;
+                    };
+                    $i++;
+                }
+                $j++;    
+            }
+            
+        }
+
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, $this->exportType);
+
+        ob_end_clean();
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-type: '.$this->mimeTypes[$this->exportType]['Content-type']);
+        header('Content-Disposition: attachment; filename="'.$this->filename.'.'.$this->mimeTypes[$this->exportType]['extension'].'"');
+        header('Cache-Control: max-age=0');				
+
+        $objWriter->save('php://output');			
+        Yii::app()->end();
+
     }
 }
