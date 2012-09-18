@@ -179,8 +179,19 @@
                         $(this).dialog('close');
                     }
     };
+    var data=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>;
+    var data_dirs=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','direction_id'));?>;
+    var features_by_direction=function(dir_id){
+            var ret_array=[];
+            $.each(data,function(i,v){
+                    if(data_dirs[i].direction_id==dir_id)
+                        ret_array.push(v);
+            });
+            return ret_array;
+    }
+    
     var opts_features={
-        data:<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>,
+        data:features_by_direction(2),
         multiselect:true,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},
@@ -234,6 +245,7 @@
             
          idsOfSelectedRows.length=0;
          var cell = $("#claim_line_list").getCell(global_rowid,'products_ids');
+      
          cell=cell.replace(/[\{\}]+/g,"").trim();
          idsOfSelectedRows = cell.length>0? cell.split(","):[];
          if(idsOfSelectedRows.length>0)
