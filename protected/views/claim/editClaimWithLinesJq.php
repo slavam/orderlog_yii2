@@ -138,6 +138,7 @@
 <div id="create_multiple_dialog" style="display: none;">
         
 <table id="create_multiple_dialog_table"></table>
+<p><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>
 </div>
 
 <!-- <div id="edit_dlg"></div> -->
@@ -147,7 +148,13 @@
     var firstload=true;
     var selected,seldata;
     var global_rowid;
-    var idsOfSelectedRows = [],
+    var idsOfSelectedRows = [];
+    var sltd=true;
+    
+    function deselect()
+            {
+                    $('#create_multiple_dialog_table').jqGrid('resetSelection');
+            }
         updateIdsOfSelectedRows = function (id, isSelected) {
            var index = $.inArray(id, idsOfSelectedRows);
            if (!isSelected && index >= 0) {
@@ -171,6 +178,8 @@
         gridComplete: function() {
             var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
             $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
+            
+            
         },
         dialogOkHandler:function(){
                         seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
