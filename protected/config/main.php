@@ -15,6 +15,7 @@ return array(
     'import' => array(
         'application.models.*',
         'application.components.*',
+	'application.extensions.*',
 	'ext.YiiMongoDbSuite.*',
         'ext.ModelRulesBuilder.*',
         'ext.Helpers.*',
@@ -40,6 +41,9 @@ return array(
             'allowAutoLogin' => true,
         ),
 
+                'excel'=>array(
+                  'class'=>'application.extensions.PHPExcel',
+                ),
 //        
 //        'urlManager'=>array(
 //		'urlFormat'=>'path',
