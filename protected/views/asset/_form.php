@@ -84,17 +84,18 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
 //    alert(id_multiple);
 var grid_opts = {
 //        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
-        url : "getDataForMultipleChoice",
-        datatype : 'json',
+//        url : "getDataForMultipleChoice",
+        datatype : 'local',
         width : '750',
         height : '480',
-        mtype : 'POST',
-        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
+        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+//        mtype : 'POST',
+//        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
 //        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
         colNames : [ 'ID','Наименование'],
         colModel : [
         { name : 'id', index : 'id', width : 20, hidden:true },
-        { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
+        { name : 'title', index : 'title', width : 250, sortable:true }             /* Наименование */
 ],
         multiselect: true,
         pager : null,
@@ -119,7 +120,8 @@ var grid_opts = {
           
           if (arr_isset) {
 //             idsOfSelectedRows = $("#Asset_place_id").val().split(/[,]/);;
-             idsOfSelectedRows = place_data.val().split(/[,]/);;
+             idsOfSelectedRows = place_data.val().split(/[,]/);
+//             alert(idsOfSelectedRows);
           } 
                 
            var $this = $(this), i, count;
@@ -161,7 +163,7 @@ var grid_opts = {
     
   
 //        rowList : [ 50, 100, 500, 1000 ],
-        sortname : 'name',
+        sortname : 'title',
         sortorder : 'asc',
 //        recordtext: 'Товар(ы) {0} - {1}',
 //        viewrecords : true,
@@ -306,10 +308,10 @@ switch (id_multiple_param) {
                 //$("#create_multiple_dialog_table").jqGrid('clearGridData');
                 //$("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});
                 $("#create_multiple_dialog_table").jqGrid('GridUnload');
-                grid_opts['datatype']="json";
-                grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
+                //grid_opts['datatype']="json";
+                //grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
                 //$("#create_multiple_dialog_table").jqGrid(grid_opts);
-                var arr = new String(grid_opts);
+                //var arr = new String(grid_opts);
                 
                 //alert(arr);
                 LoadGrid();

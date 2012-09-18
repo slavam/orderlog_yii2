@@ -495,10 +495,13 @@ public $mimeTypes = array(
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
                     $row->findFeaturesAsString($row->id),
+                    $row->findFeaturesAsString($row->id,'id'),
                     $row->findProductsAsString($row->id),
+                    $row->findProductsAsString($row->id,'id'),
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
                     //TODO: check if returns '' on view
-                    $row->position_id>0? $row->position_id: '', //? $row->findAddress($row->position_id): '',
+                    $row->position_id>0? $row->position->title: '', //? $row->findAddress($row->position_id): '',
+                    $row->position_id,
                     $row->description,
                     //TODO: check if returns '' on view
                     $row->payer_id>0? $row->payer_id: '',//Division::model()->findDivisionById($row->payer_id): '',//ZFO
@@ -809,6 +812,7 @@ public $mimeTypes = array(
                                 $model_line->description=$value['description'];
                                 $model_line->for_whom=$value['for_whom'];
                                 $model_line->budget_item_id=$value['budget_item'];
+                                $model_line->position_id=$value['position_ids'];
                                 $model_line->business_id=$value['business'];
                                 $model_line->payer_id=$value['payer'];
                                 $model_line->status_id=$value['status'];
