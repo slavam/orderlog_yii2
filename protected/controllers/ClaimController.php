@@ -467,13 +467,13 @@ class ClaimController extends Controller
                     $row->for_whom>0? $row->for_whom: '',//>0? $row->findWorker($row->for_whom): '',                  //for_whom
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
-                    $row->findFeaturesAsString($row->id),
-                    $row->findFeaturesAsString($row->id,'id'),
-                    $row->findProductsAsString($row->id),
-                    $row->findProductsAsString($row->id,'id'),
+                    Feature::model()->getNamesFromArray($row->feature_id),
+                    $row->feature_id, //features_ids
+                    Product::model()->getNamesFromArray($row->product_id),
+                    $row->product_id,
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
                     //TODO: check if returns '' on view
-                    $row->position_id>0? $row->position->title: '', //? $row->findAddress($row->position_id): '',
+                    $row->position_id>0? $row->findAddress($row->position_id): '', //? $row->findAddress($row->position_id): '',
                     $row->position_id,
                     $row->description,
                     //TODO: check if returns '' on view
@@ -785,7 +785,9 @@ class ClaimController extends Controller
                                 $model_line->description=$value['description'];
                                 $model_line->for_whom=$value['for_whom'];
                                 $model_line->budget_item_id=$value['budget_item'];
-                                $model_line->position_id=$value['position_ids'];
+                                $model_line->position_id=$value['position_ids']!=''?$value['position_ids']:null;
+                                $model_line->feature_id=$value['features_ids']!=''?$value['features_ids']:null;
+                                $model_line->product_id=$value['products_ids']!=''?$value['products_ids']:null;
                                 $model_line->business_id=$value['business'];
                                 $model_line->payer_id=$value['payer'];
                                 $model_line->status_id=$value['status'];

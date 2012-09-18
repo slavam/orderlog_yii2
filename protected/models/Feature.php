@@ -86,4 +86,23 @@ class Feature extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
+        public function getNamesFromArray($in_array)
+        {
+            $tmp;
+            $tmp = trim($in_array,"{}");
+            if($tmp) $tmp = explode(',',$tmp);
+            if(is_array($tmp)){
+                $crit= new CDbCriteria;
+                $crit->addInCondition('id', $tmp);
+                $mod=$this->findAll($crit);
+                $str="";
+                foreach($mod as $k=>$v)
+                {
+                    $str.=$v->name.";";
+                }
+                return $str;
+            }
+            else return "";
+        }
 }
