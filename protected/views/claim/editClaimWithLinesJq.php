@@ -146,68 +146,150 @@
     
     var firstload=true;
     var selected,seldata;
-    var plsel= function place_selector_grid_clk(parent_e)
+    var global_rowid;
+    var idsOfSelectedRows = [],
+        updateIdsOfSelectedRows = function (id, isSelected) {
+           var index = $.inArray(id, idsOfSelectedRows);
+           if (!isSelected && index >= 0) {
+                idsOfSelectedRows.splice(index, 1); // remove id from the list
+           } else if (index < 0) {
+                idsOfSelectedRows.push(id);
+           }
+           //alert(idsOfSelectedRows+' '+idsOfSelectedRows.length);
+           
+        }; 
+    var opts_position={
+        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+        multiselect:false,
+        colModel:[
+        { name : 'id', index : 'id', width : 20, hidden:true},
+        { name : 'title', index : 'title', width : 250, sortable:true }             /* Наименование */
+        ],
+        onSelectRow: function(rowid){
+            selected=rowid;
+        },
+        gridComplete: function() {
+            var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
+            $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
+        },
+        dialogOkHandler:function(){
+                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
+                        $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id);
+                        $("#claim_line_list").setCell(global_rowid,'position',seldata.title);
+                        $(this).dialog('close');
+                    }
+    };
+    var opts_features={
+        data:<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>,
+        multiselect:true,
+        colModel:[
+        { name : 'id', index : 'id', width : 20, hidden:true},
+        { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
+        ],
+        gridComplete: function() {
+            
+         idsOfSelectedRows.length=0;
+         var cell = $("#claim_line_list").getCell(global_rowid,'features_ids');
+         cell=cell.replace(/[\{\}]+/g,"").trim();
+         idsOfSelectedRows = cell.length>0? cell.split(","):[];
+         if(idsOfSelectedRows.length>0)
+             {
+                var $this = $(this), i, count;
+                   for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
+                        $this.jqGrid('setSelection', idsOfSelectedRows[i], false);
+           
+                     }
+             }
+           else 
+               if(cell.length>0) {
+                   $this.jqGrid('setSelection', cell, false);
+               }
+             
+        
+        },
+        onSelectRow: updateIdsOfSelectedRows,
+        dialogOkHandler:function(){
+//                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
+//                        $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id);
+//                        $("#claim_line_list").setCell(global_rowid,'position',seldata.title); 
+                        var new_str='';
+                        $.each (idsOfSelectedRows,function(i,v){
+                            seldata = $('#create_multiple_dialog_table').getCell(v,'name');
+                            new_str=new_str+seldata+"; ";
+                        });
+                        //alert(new_str);
+                        $("#claim_line_list").setCell(global_rowid,'features_ids','{'+idsOfSelectedRows+'}'); 
+                        $("#claim_line_list").setCell(global_rowid,'features',  new_str,null,null,true); 
+                        $(this).dialog('close');
+                    }
+    };
+    var opts_products={
+        data:<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','name'));?>,
+        multiselect:true,
+        colModel:[
+        { name : 'id', index : 'id', width : 20, hidden:true},
+        { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
+        ],
+        gridComplete: function() {
+            
+         idsOfSelectedRows.length=0;
+         var cell = $("#claim_line_list").getCell(global_rowid,'products_ids');
+         cell=cell.replace(/[\{\}]+/g,"").trim();
+         idsOfSelectedRows = cell.length>0? cell.split(","):[];
+         if(idsOfSelectedRows.length>0)
+             {
+                   var $this = $(this), i, count;
+                   for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
+                        $this.jqGrid('setSelection', idsOfSelectedRows[i], false);
+           
+                     }
+             }
+           else 
+               if(cell.length>0) {
+                   alert("here2");
+                   $this.jqGrid('setSelection', cell, false);
+               }
+             
+        
+        },
+        onSelectRow: updateIdsOfSelectedRows,
+        dialogOkHandler:function(){
+//                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
+//                        $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id);
+//                        $("#claim_line_list").setCell(global_rowid,'position',seldata.title); 
+                        var new_str='';
+                        $.each (idsOfSelectedRows,function(i,v){
+                            seldata = $('#create_multiple_dialog_table').getCell(v,'name');
+                            new_str=new_str+seldata+"; ";
+                        });
+                        //alert(new_str);
+                        $("#claim_line_list").setCell(global_rowid,'products_ids','{'+idsOfSelectedRows+'}'); 
+                        $("#claim_line_list").setCell(global_rowid,'products',  new_str,null,null,true); 
+                        $(this).dialog('close');
+                    }
+    };
+    
+    var plsel= function place_selector_grid_clk(rowid,opts)
     {
-      
-       grid_opts = {
-//        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
-//        url : "getDataForMultipleChoice",
+        global_rowid = rowid;
+        grid_opts = {
         datatype : 'local',
         width : '750',
         height : '480',
-        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
-//        mtype : 'POST',
-//        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
-//        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
+        data:opts.data, 
         colNames : [ 'ID','Наименование'],
-        colModel : [
-        { name : 'id', index : 'id', width : 20, hidden:true},
-        { name : 'title', index : 'title', width : 250, sortable:true }             /* Наименование */
-    ],
-        multiselect: false,
+        colModel : opts.colModel,
+        multiselect: opts.multiselect,
         pager : null,
         rowNum : 1000000,
         gridview: true,
         rownumbers: false,
-        onSelectRow: function(rowid){
-            selected=rowid;
-            //alert('selected on select = '+rowid);
-        },
-        emptyrecords: 'No URLs have been loaded for evaluation.',
-        loadComplete: function () {
-            //alert('loaded');
-//            alert(cell);
-//        var _first=false;
-//        $("#firstLoad").data('firstLoad', _first);
-         // var arr_isset = place_data.val();
-          /*
-          if (arr_isset) {
-             idsOfSelectedRows = place_data.val().split(/[,]/);
-          }   
-           var $this = $(this), i, count;
-           for (i = 0, count = idsOfSelectedRows.length; i < count; i++) {
-                $this.jqGrid('setSelection', idsOfSelectedRows[i], false);
-           }*/
-        },
-       gridComplete: function() {
-            var cell = $("#claim_line_list").getCell(parent_e,'position_ids');
-            $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
-//            var pos_id = $(parent_e.target).val();
-//            alert(parent_e.data);
-                /*
-                var $td = $(parent_e.target).closest('td'),
-                                text = $td.text(),
-                                $tr = $td.closest('tr'),
-                                rowid = $tr[0].id;
-                                alert(rowid);
-        */
-       //parent_e.replace('?id=','');
-      // var v = parseInt(parent_e, 10);
-       //alert(v);//
-//           $('#create_multiple_dialog_table').jqGrid('setSelection', pos_id, true);
-        },
+        onSelectRow: opts.onSelectRow,
+        emptyrecords: 'No data',
+        gridComplete: opts.gridComplete,
         sortname : 'title',
         sortorder : 'asc',
+        multiboxonly: false,
         caption : false,
         pgbuttons: false,      // disable page control like next, back button
         pgtext: null,          // disable pager text like 'Page 0 of 10'
@@ -215,8 +297,10 @@
         loadonce: true,         // to enable sorting on client side
         loadui: 'disable'
 };
+
 LoadGrid(grid_opts);
-        $("#create_multiple_dialog").dialog(
+
+$("#create_multiple_dialog").dialog(
             {
                 title: 'Выбор расположения',
                 modal:true,
@@ -224,30 +308,7 @@ LoadGrid(grid_opts);
                 height:600,
                 zIndex: $.maxZIndex()+ 1,
                 buttons:{
-                    'OK': function(){
-                        
-                        //don`t work at second time open dialog
-                        //selected = $('#create_multiple_dialog_table').jqGrid('getGridParam','selrow');
-                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
-                        //alert(seldata.id);
-                        //alert(seldata.title);
-//                        var rowid = $grid.getGridParam('selrow');
-                        $("#claim_line_list").setCell(parent_e,'position_ids',seldata.id);
-                        $("#claim_line_list").setCell(parent_e,'position',seldata.title);
-//                        var pl_rows =[];
-//                        $.each(s,function(rk,rv){
-//                           pl_rows.push($('#create_multiple_dialog_table').jqGrid('getRowData',rv));
-//                        });
-//                        
-//                        pl_rows=JSON.stringify(pl_rows);
-//                        var rowid = $grid.getGridParam('selrow');
-//                        
-//                        
-//                        $grid.setCell(rowid,'position',pl_rows);
-                        //$('#create_multiple_dialog_table').jqGrid('GridUnload');
-                        $(this).dialog('close');
-//                        alert('ok');
-                    }
+                    'OK': opts.dialogOkHandler
                 }
             }
         );
@@ -260,8 +321,7 @@ function LoadGrid (grid_opts_param) {
         $("#create_multiple_dialog_table").jqGrid('GridUnload');
         $("#create_multiple_dialog_table").jqGrid('clearGridData');
         $("#create_multiple_dialog_table").jqGrid(grid_opts_param);
-
-//$("#cb_" + grid[0].id).hide();
+        $("#cb_create_multiple_dialog_table").hide();
     
     //emptyMsgDiv.insertAfter($("#create_multiple_dialog_table").parent());
 }
@@ -383,9 +443,22 @@ function fill_pane(id)
             }//editoptions
             },
             {name: 'for_whom_div', width: 220, frozen:false },
-            {name: 'features', width: 100, frozen:false },
+            {name: 'features', width: 100, frozen:false,
+                formatter:function(cellvalue,options,rowObject) {
+                return '<a href=\"javascript:plsel('+options.rowId+',opts_features)\"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/add.png');?>'+cellvalue+'</a>';
+                },
+                unformat: function(cellvalue, options, cellobject) {
+                return cellvalue;
+               } 
+            },
             {name: 'features_ids',hidden:true},
-            {name: 'products', width: 100, frozen:false },
+            {name: 'products', width: 100, frozen:false,
+                formatter:function(cellvalue,options,rowObject) {
+                return '<a href=\"javascript:plsel('+options.rowId+',opts_products)\"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/add.png');?>'+cellvalue+'</a>';
+                },
+                unformat: function(cellvalue, options, cellobject) {
+                return cellvalue;
+               }  },
             {name: 'products_ids', hidden:true},
             {name: 'position', width: 150, frozen:false,
 //                        formatter: 'showlink', formatoptions: {
@@ -395,7 +468,7 @@ function fill_pane(id)
 //                        addParam: "');"
 //                }  
             formatter:function(cellvalue,options,rowObject) {
-                return "<a href=\"javascript:plsel("+options.rowId+")\">"+cellvalue+"</a>";
+            return '<a href=\"javascript:plsel('+options.rowId+',opts_position)\"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/add.png');?>'+cellvalue+'</a>';
             },
             unformat: function(cellvalue, options, cellobject) {
             return cellvalue;
@@ -564,8 +637,11 @@ function fill_pane(id)
 						"for_whom":"",
 						"for_whom_div":"",
 						"features":"",
+                                                "features_ids":"",
 						"products":"",
+                                                "products_ids":"",
 						"position":"",
+                                                "position_ids":"",
 						"description":"",
 						"payer":"",
 						"business":"",
