@@ -175,6 +175,7 @@
         onSelectRow: function(rowid){
             selected=rowid;
         },
+        loadComplete: function() {},
         gridComplete: function() {
             var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
             $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
@@ -188,24 +189,20 @@
                         $(this).dialog('close');
                     }
     };
-    var data=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>;
-    var data_dirs=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','direction_id'));?>;
-    var features_by_direction=function(dir_id){
-            var ret_array=[];
-            $.each(data,function(i,v){
-                    if(data_dirs[i].direction_id==dir_id)
-                        ret_array.push(v);
-            });
-            return ret_array;
-    }
-    
+
+    var feature_data=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>;
+    var feature_data_dirs=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','direction_id'));?>;
+
     var opts_features={
-        data:features_by_direction(2),
+    	tag:'f',
+    	data:[],
         multiselect:true,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},
         { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
         ],
+        loadComplete: function() {},
+
         gridComplete: function() {
             
          idsOfSelectedRows.length=0;
@@ -243,8 +240,13 @@
                         $(this).dialog('close');
                     }
     };
+
+    var product_data=<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','name'));?>;
+    var product_data_dirs=<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','direction_id'));?>;
+
     var opts_products={
-        data:<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','name'));?>,
+    	tag:'p',
+        data:[],
         multiselect:true,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},
@@ -273,6 +275,7 @@
              
         
         },
+        loadComplete: function() {},
         onSelectRow: updateIdsOfSelectedRows,
         dialogOkHandler:function(){
 //                        seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
@@ -306,8 +309,9 @@
         gridview: true,
         rownumbers: false,
         onSelectRow: opts.onSelectRow,
-        emptyrecords: 'No data',
+        emptyrecords: opts.tag,
         gridComplete: opts.gridComplete,
+        loadComplete: opts.loadComplete,
         sortname : 'title',
         sortorder : 'asc',
         multiboxonly: false,
@@ -335,12 +339,32 @@ $("#create_multiple_dialog").dialog(
         );
     };
         
+function FilterDataByDirection(data,data_dirs)
+{
+      		var do_them_all=false;
+    		var dir_id = $("#claim_line_list").getCell(global_rowid,'template_direction_id');
+    		if (dir_id.length==0) do_them_all=true;
+            var ret_array=[];
+            $.each(data,function(i,v){
+                    if(data_dirs[i].direction_id==dir_id||do_them_all)
+                    {
+                        ret_array.push(v);
+                    }
+            });
+            return ret_array;
+}
+
 //Обрабатываем клик по кнопке "добавить" расположение
 function LoadGrid (grid_opts_param) {
 //alert(JSON.stringify(grid_opts));
 
         $("#create_multiple_dialog_table").jqGrid('GridUnload');
         $("#create_multiple_dialog_table").jqGrid('clearGridData');
+
+//        alert(grid_opts_param.emptyrecords);
+        if(grid_opts_param.emptyrecords=='f') grid_opts_param.data=FilterDataByDirection(feature_data,feature_data_dirs);
+        if(grid_opts_param.emptyrecords=='p') grid_opts_param.data=FilterDataByDirection(product_data,product_data_dirs);
+
         $("#create_multiple_dialog_table").jqGrid(grid_opts_param);
         $("#cb_create_multiple_dialog_table").hide();
     
@@ -409,7 +433,7 @@ function fill_pane(id)
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
             'Группа','Цель','Для кого','Для кого','Характеристики','','Продукты','','Расположение','','Примечание','ЦФО','Бизнес',
             'Статья бюджета','Статус',
-            'Информация', 'Добавлена'],
+            'Информация', 'Добавлена','template_direction_id'],
         colModel: [
 
             //TODO: formatter - numeric fields!
@@ -504,7 +528,9 @@ function fill_pane(id)
             {name: 'budget_item', width: 200, frozen:false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name: 'status', width: 50, frozen: false, editable:true, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Status::model(), array('key'=>'id','value'=>'short_name'))?>} },
             {name: 'asset_info', width: 300, frozen:false, hidden:true},
-            {name: 'created', width: 100, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} }
+            {name: 'created', width: 100, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(CreationMethods::model(), array('key'=>'id','value'=>'name'))?>} },
+            {name: 'template_direction_id', width: 30, frozen:false, hidden:true},
+
         ],
         pager: pager_selector,
         pgbuttons: false,     // disable page control like next, back button

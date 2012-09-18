@@ -487,7 +487,7 @@ class ClaimController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
-                    $row->purpose->id, //'цель?',//zel'
+                    $row->purpose_id, //'цель?',//zel'
 
                     //TODO: check if returns '' on view
 
@@ -514,6 +514,7 @@ class ClaimController extends Controller
                     $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
                     $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
+                    $row->asset->assettemplate->direction_id
                     );
             }
             echo CJSON::encode($responce);
