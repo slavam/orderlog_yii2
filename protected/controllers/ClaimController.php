@@ -2,7 +2,7 @@
 
 class ClaimController extends Controller
 {
-public $mimeTypes = array(
+    public $mimeTypes = array(
 	'Excel5' => array(
 		'Content-type'=>'application/vnd.ms-excel',
 		'extension'=>'xls',
@@ -23,10 +23,10 @@ public $mimeTypes = array(
 		'Content-type'=>'application/csv',			
 		'extension'=>'csv',
 	)
-);
+    );
 
-	public $exportType = "Excel2007";
-        public $filename   = "claim";
+    public $exportType = "Excel5";
+    public $filename   = "claim";
     
     
 	/**
@@ -902,20 +902,20 @@ public $mimeTypes = array(
             'H'=>array('index'=>'comment','title'=>'Комментарий','width'=>20),
             'I'=>array('index'=>'description','title'=>'Описание','width'=>30),
             'J'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20),
-            'K'=>array('index'=>'id','title'=>'Line-ID'),
-            'L'=>array('index'=>'count','title'=>'Кол-во'),
-            'M'=>array('index'=>'amount','title'=>'Сумма'),
-            'N'=>array('index'=>'description','title'=>'Описание','width'=>30),
-            'O'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
-            'P'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
-            'Q'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
-            'R'=>array('index'=>'cost','title'=>'Цена'),
-            'S'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
-            'T'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
-            'U'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
-            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>30),
-            'W'=>array('index'=>'complect_id','title'=>'Комплект'),
-            'X'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
+//            'K'=>array('index'=>'id','title'=>'Line-ID'),
+            'K'=>array('index'=>'count','title'=>'Кол-во'),
+            'L'=>array('index'=>'amount','title'=>'Сумма'),
+            'M'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'N'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
+            'O'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
+            'P'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
+            'Q'=>array('index'=>'cost','title'=>'Цена'),
+            'R'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
+            'S'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
+            'T'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
+            'U'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>30),
+            'V'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'W'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
 //            'Y'=>array('index'=>'id','title'=>'ID'),
 //            'Z'=>array('index'=>'id','title'=>'ID'),
 //            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
@@ -933,37 +933,8 @@ public $mimeTypes = array(
         $PHPExcel->setActiveSheetIndex(0);
         $aSheet = $PHPExcel->getActiveSheet();
         $aSheet->setTitle('Заявки');
-        
-//        $model = new Claim();
-//        $labels = $model->attributeNames();
-//        $i = 1;
-//        foreach($labels as $label){
-//            if ($label!='budgetary'){
-//                $aSheet->setCellValue($letters[$i].'1',$label);
-//                $i++;
-//            }
-//        }
-//        $model = new ClaimLine();
-//        $labels = $model->attributeNames();
-//        foreach($labels as $label){
-//            if ($label!='claim_id' and $label!='state_id' and $label!='change_date' 
-//                    and $label!='created_at' and $label!='how_created'){
-//                $aSheet->setCellValue($letters[$i].'1',$label);
-//                $i++;
-//            }
-//        }
 
-//Создадим заголовок таблицы
-        foreach($columns as $key => $column) {
-            $aSheet->setCellValue($key.'1',$column['title']);
-            $aSheet->getStyle($key.'1')->getFont()->setBold(true);
-            if (!empty($column['width']))
-                $aSheet->getColumnDimension($key)->setWidth($column['width']);
-        }
-        
-        $j=2;
-        $i=0;
-        foreach ($data as $record) {
+        function fill_claim_fields($letters, $aSheet, $record, $j){
             $i=1;
             foreach($record as $key=>$value){
                 switch ($key) {
@@ -994,10 +965,28 @@ public $mimeTypes = array(
                 };
                 $i++;
             }
-            $j++;
-            $claim_fields_num = $i;
+            
+        }
+        
+
+//Создадим заголовок таблицы
+        foreach($columns as $key => $column) {
+            $aSheet->setCellValue($key.'1',$column['title']);
+            $aSheet->getStyle($key.'1')->getFont()->setBold(true);
+            if (!empty($column['width']))
+                $aSheet->getColumnDimension($key)->setWidth($column['width']);
+        }
+        
+        $j=2;
+        $i=0;
+        
+        foreach ($data as $record) {
+            fill_claim_fields($letters, $aSheet, $record, $j);  // fill claim fields
+            $claim_fields_num = 11; //$i;
             $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
+            $i=0;
             foreach ($claim_lines as $line) {
+                fill_claim_fields($letters, $aSheet, $record, $j);  // fill claim fields
                 $i = $claim_fields_num;
                 foreach ($line as $key => $value) {
                     switch ($key) {
@@ -1025,6 +1014,9 @@ public $mimeTypes = array(
                         case 'purpose_id':
                             $aSheet->setCellValue($letters[$i].$j,$line->purpose->name);
                             break;
+                        case 'id':
+                            $i--;
+                            break;
                         case 'claim_id':
                             $i--;
                             break;
@@ -1048,7 +1040,8 @@ public $mimeTypes = array(
                 }
                 $j++;    
             }
-            
+            if ($i==0)
+                $j++;
         }
 
         $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, $this->exportType);
