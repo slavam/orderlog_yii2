@@ -234,7 +234,7 @@
             
          idsOfSelectedRows.length=0;
          var cell = $("#claim_line_list").getCell(global_rowid,'products_ids');
-         cell=cell.replace(/[^\d]+/g,"").trim();
+         cell=cell.replace(/[\{\}]+/g,"").trim();
          idsOfSelectedRows = cell.length>0? cell.split(","):[];
          if(idsOfSelectedRows.length>0)
              {
@@ -637,8 +637,11 @@ function fill_pane(id)
 						"for_whom":"",
 						"for_whom_div":"",
 						"features":"",
+                                                "features_ids":"",
 						"products":"",
+                                                "products_ids":"",
 						"position":"",
+                                                "position_ids":"",
 						"description":"",
 						"payer":"",
 						"business":"",
