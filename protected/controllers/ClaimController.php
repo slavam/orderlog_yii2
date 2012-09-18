@@ -487,7 +487,7 @@ class ClaimController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
-                    $row->purpose->id, //'цель?',//zel'
+                    $row->purpose_id, //'цель?',//zel'
 
                     //TODO: check if returns '' on view
 
