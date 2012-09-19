@@ -52,9 +52,9 @@ class Purpose extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id' ),
 		);
 	}
-
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */

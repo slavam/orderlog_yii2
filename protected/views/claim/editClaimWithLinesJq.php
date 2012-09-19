@@ -281,7 +281,6 @@
              }
            else 
                if(cell.length>0) {
-                   alert("here2");
                    $this.jqGrid('setSelection', cell, false);
                }
              
@@ -677,7 +676,7 @@ function fill_pane(id)
                         //Устанавливаем кнопки для выбора из справочников в ячейки
                     return;
         },
-       	loadError: function(xhr, status, error) {alert(status +error)}
+       	loadError: function(xhr, status, error) {alert('status: '+status+" error: "+error)}
     }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
 
    $grid.jqGrid('navButtonAdd',pager_selector,{

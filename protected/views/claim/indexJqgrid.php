@@ -187,7 +187,7 @@ $(function() {
 //            grid.setGridParam({datatype:'json'});
 //            alert('onPaging')
 //        },
-    	loadError: function(xhr, status, error) {alert(status +error)}
+    	loadError: function(xhr, status, error) {alert('status: '+status+" error: "+error)}
     }).navGrid('#pager',{view:false, del:false, add:false, edit:false, refresh:false},
     {}, // default settings for edit
     {}, // default settings for add
@@ -255,7 +255,7 @@ $(function() {
                                 'success':  function(data) {
                                         if (data.status == 'error')
                                             {
-                                                var message='';
+                                            var message='';
                                             $.each(data.message, function(i, field) {
                                                message += field+'\n';
                                             });
@@ -335,18 +335,36 @@ $(function() {
                                 'success':  function(data) {
 //                                    data=JSON.parse(data);
     
-                                        grid.setRowData(sel_,data.row); 
-                                        if (data.message)
-                                            {
-                                               alert("! "+data.message);
-                                            }
-                                        var col = $("#"+sel_+" td.sgexpanded");
-                                        if(col.length>0)
-                                            {
-                                               $("#list_"+sel_+"_t").trigger("reloadGrid");
-                                            }
-                                        $("#create_dialog_edit_whole_claim").dialog('close');
+                                        
+//                                        if (data.message)
+//                                            {
+//                                               var message='';
+//                                                $.each(data.message, function(i, field) {
+//                                                message += field+'\n';
+//                                                });
+//                                             alert(message);
+//                                            }
+//                                        var col = $("#"+sel_+" td.sgexpanded");
+//                                        if(col.length>0)
+//                                            {
+//                                               $("#list_"+sel_+"_t").trigger("reloadGrid");
+//                                            }
+//                                        $("#create_dialog_edit_whole_claim").dialog('close');
 //                                        $(this).dialog('close');
+                                        if (data.status == 'error')
+                                            {
+                                            var message='';
+                                            $.each(data.message, function(i, field) {
+                                               message += field+'\n';
+                                            });
+                                             alert(message);
+                                            }
+                                            else
+                                            {
+                                                grid.setRowData(sel_,data.row); 
+                                                grid.setSelection(sel_);
+                                                $("#create_dialog_edit_whole_claim").dialog('close');
+                                            }
 
                                     }
                             }); 
