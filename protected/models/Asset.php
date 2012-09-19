@@ -107,7 +107,7 @@ class Asset extends CActiveRecord
 			'info' => 'Info',
                         'comment' => 'Comment',
 			'unit_id' => 'Unit',
-			'asset_template_id' => 'Шаблоны товаров',
+			'asset_template_id' => 'Шаблон товара',
 			'place_id' => 'Расположение',
 			'manufacturer_id' => 'Производитель',
 			'product_id' => 'Продукты',
@@ -187,7 +187,7 @@ class Asset extends CActiveRecord
             }
             if (isset($this->feature_id)) {
                 $this->feature_id = trim($this->feature_id,"{}");
-                $this->feature_id = explode(',',$this->feature_id);
+                $this->sel_feat = explode(',',$this->feature_id);
             } else {
                 $this->sel_feat = NULL;
             }
@@ -230,7 +230,7 @@ class Asset extends CActiveRecord
        		$assets = Asset::model()->findAll(array('order' => 'name'));
 		return CHtml::listData($assets,'id','name');
 	}
-
+/*
         public function get_price()
          {
 //            $s = Yii::app()->createUrl("asset/updateGrid",array("id"=>$this->id));
@@ -240,7 +240,7 @@ class Asset extends CActiveRecord
                    @CActiveForm::hiddenField($this,"id",array("id"=>"id_".$this->id)).
                    '</form>';
          }
-
+*/
          public function findAssetsByTemplate($asset_template_id) {
 		$criteria=new CDbCriteria;
                 $criteria->condition="asset_template_id=".$asset_template_id;
