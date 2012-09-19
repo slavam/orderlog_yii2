@@ -58,6 +58,7 @@ class FeatureController extends Controller
 			'model'=>$this->loadModel($id),
 		));
 	}
+        
         public function actionGetDataForGrid()
 	{
             $dataProvider = new CActiveDataProvider('Feature', array(
