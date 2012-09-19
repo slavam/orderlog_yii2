@@ -137,10 +137,11 @@ $(function() {
             ondblClickRow: function(id) {
 //                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
                 var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
-                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
+
             }
             
         });
