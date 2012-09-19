@@ -66,11 +66,9 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
     var place_data = $("#Asset_place_id");
 
     var request = false;
-    var newmodel = <? echo ($model->isNewRecord ? 'true' : 'false' )?>;
     var grid=$("#create_multiple_dialog_table");
     var id_multiple=1;
     var id_direction=1;
-    
 //    var emptyMsgDiv = $('<div style="padding: 30px;" ><h3>Для этого напраления нет характеристик !</h3></div>');
     //var firstLoad = true;
     var idsOfSelectedRows = [],
@@ -86,17 +84,18 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
 //    alert(id_multiple);
 var grid_opts = {
 //        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
-        url : "getDataForMultipleChoice",
-        datatype : 'json',
+//        url : "getDataForMultipleChoice",
+        datatype : 'local',
         width : '750',
         height : '480',
-        mtype : 'POST',
-        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
+        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+//        mtype : 'POST',
+//        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
 //        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
         colNames : [ 'ID','Наименование'],
         colModel : [
         { name : 'id', index : 'id', width : 20, hidden:true },
-        { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
+        { name : 'title', index : 'title', width : 250, sortable:true }             /* Наименование */
 ],
         multiselect: true,
         pager : null,
@@ -121,7 +120,8 @@ var grid_opts = {
           
           if (arr_isset) {
 //             idsOfSelectedRows = $("#Asset_place_id").val().split(/[,]/);;
-             idsOfSelectedRows = place_data.val().split(/[,]/);;
+             idsOfSelectedRows = place_data.val().split(/[,]/);
+//             alert(idsOfSelectedRows);
           } 
                 
            var $this = $(this), i, count;
@@ -163,7 +163,7 @@ var grid_opts = {
     
   
 //        rowList : [ 50, 100, 500, 1000 ],
-        sortname : 'name',
+        sortname : 'title',
         sortorder : 'asc',
 //        recordtext: 'Товар(ы) {0} - {1}',
 //        viewrecords : true,
@@ -179,12 +179,11 @@ var grid_opts = {
         loadui: 'disable'
 
 };
-
-var LoadGrid = function () {
+ var LoadGrid = function () {
 
     $("#create_multiple_dialog_table").jqGrid( grid_opts );
     //$("#create_multiple_dialog_table").trigger("reloadGrid");
-    $("#cb_" + grid[0].id).hide();
+    //$("#cb_" + grid[0].id).hide();
     
     //emptyMsgDiv.insertAfter($("#create_multiple_dialog_table").parent());
 }
@@ -214,23 +213,17 @@ var LoadGrid = function () {
   $.ajax({
        'type': "POST",
         'url': 'GetTemplateByAsset',
-        data : {'template_id':template_id, 'newrecord': newmodel}     
+        data : {'template_id':template_id}     
         })
        .done(function(data) { 
-
-         var response = JSON.parse(data);
-         
+             var response = JSON.parse(data);
          $("#asset_group_id").html('');
          $("#asset_group_id").val(response['asset_group_id']);
-         $("#Asset_asset_group_id").val(response['asset_group_id_val']);
          $("#budget_item_id").val(response['budget_item_id']);
-         $("#Asset_budget_item_id").val(response['budget_item_id_val']);
          $("#direction_id").val(response['direction_id']);
-         $("#Asset_direction_id").val(response['direction_id_val']);
+         $("#Asset_direction_id_val").val(response['direction_id_val']);
          $("#ware_type_id").val(response['ware_type_id']);
-         $("#Asset_ware_type_id").val(response['ware_type_id_val']);
          $("#info").val(response['info']);
-         $("#Asset_part_number").val(response['part_number']);
              
             });
 
@@ -266,7 +259,7 @@ function send(id_multiple_param){
     
 //    if(sel_) id_ = $("#create_multiple_dialog_table").getCell(sel_, 'id');
 
-      id_direction = $("#Asset_direction_id").val();
+      id_direction = $("#Asset_direction_id_val").val();
       if(id_direction) {
 
     var strtitle;
@@ -303,8 +296,7 @@ switch (id_multiple_param) {
 //    $("#create_multiple_dialog_table").jqGrid('setGridParam', {url: 'ggetDataForMultipleChoice?id='+id_multiple_param}).trigger('reloadGrid');
     //$("#create_multiple_dialog_table").jqGrid('GridUnload');
     
-      $("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});     
-      $("#create_multiple_dialog_table").trigger("reloadGrid");
+      //$("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});     
       //alert(grid);
       //if (!firstLoad) {
           //$("#create_multiple_dialog_table").trigger("reloadGrid");
@@ -314,16 +306,16 @@ switch (id_multiple_param) {
 //var _first = $("#firstLoad").data("firstLoad");
 //alert("child "+_first);
                 //$("#create_multiple_dialog_table").jqGrid('clearGridData');
-//                $("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});
-//                $("#create_multiple_dialog_table").jqGrid('GridUnload');
-//                grid_opts['datatype']="json";
-//                grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
+                //$("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});
+                $("#create_multiple_dialog_table").jqGrid('GridUnload');
+                //grid_opts['datatype']="json";
+                //grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
                 //$("#create_multiple_dialog_table").jqGrid(grid_opts);
-//                var arr = new String(grid_opts);
+                //var arr = new String(grid_opts);
                 
                 //alert(arr);
-      //          LoadGrid();
-//                $("#create_multiple_dialog_table").trigger("reloadGrid");
+                LoadGrid();
+                $("#create_multiple_dialog_table").trigger("reloadGrid");
         //if(!_first){
                 //selId = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
                 //alert(selId);
@@ -438,7 +430,7 @@ switch (id_multiple_param) {
 
 }
 
-    LoadGrid();
+    //LoadGrid();
 
 </script>
 <?php 
@@ -451,11 +443,11 @@ switch (id_multiple_param) {
 	'action'=>'editAsset',
 	'id'=>'asset-form',
 //	'enableAjaxValidation'=>true,
-        'enableClientValidation' => true,
-//      'clientOptions' => array(
-//                'validateOnSubmit' => true,
-//                'validateOnChange' => false,
-//       ),
+                               'enableClientValidation' => true,
+//                               'clientOptions' => array(
+//                                    'validateOnSubmit' => true,
+//                                    'validateOnChange' => false,
+//                                ),
 
 
 //,array('readonly'=>true)
@@ -467,7 +459,7 @@ switch (id_multiple_param) {
 
 <!-- <table width="100%" cellpadding="2" cellspacing="0" border="0">  -->
 
-<table style="padding: 7px !important;">
+<table style="padding: 0px !important;">
 	<tr>
 		<td>
 <table class="table_edit">
@@ -478,13 +470,11 @@ switch (id_multiple_param) {
 	</tr>
 	<tr>
                 <td><b>Группа</b></td>
-		<td align="left"><?php echo CHtml::textField('asset_group_id',$model->assettemplate->asset_group_id > 0 ? $model->assettemplate->assetgroup->block->name.' => '.$model->assettemplate->assetgroup->name:"" , array('size'=>120,'disabled'=>true)); 
-                                       echo $form->hiddenField($model,'asset_group_id', array('value'=>$model->assettemplate->asset_group_id, 'style'=>'display: none;')); ?></td>
+		<td align="left"><?php echo CHtml::textField('asset_group_id',$model->assettemplate->asset_group_id > 0 ? $model->assettemplate->assetgroup->block->name.' => '.$model->assettemplate->assetgroup->name:"" , array('size'=>120,'disabled'=>true)); ?></td>
                 <td><b>Направление</b></td>
 		<td align="left"><?php echo CHtml::textField('direction_id', $model->assettemplate->direction_id > 0 ? $model->assettemplate->direction->short_name: "" , array('size'=>8,'disabled'=>true)); 
                                       // if ($model->asset_template_id) 
-                                       echo $form->hiddenField($model,'direction_id', array('value'=>$model->assettemplate->direction_id, 'style'=>'display: none;')); 
-//                                      $form->hiddenField($model,'direction_id_val', array('value'=>$model->asset_template_id  > 0 ? $model->assettemplate->direction_id:'', 'style'=>'display: none;')); 
+                                      echo $form->hiddenField($model,'direction_id_val', array('value'=>$model->asset_template_id  > 0 ? $model->assettemplate->direction_id:'', 'style'=>'display: none;')); 
 //                                       else echo $form->hiddenField($model,'direction_id_val', array('value'=>$model->assettemplate->direction_id, 'style'=>'display: none;'));
                                        ?></td>
 	</tr>
@@ -496,9 +486,7 @@ switch (id_multiple_param) {
                        $article_code = $article->CODE;
                        echo CHtml::textField('budget_item_id', $model->assettemplate->budget_item_id > 0 ? $article->get2LevelNameBudgetItem($model->assettemplate->budget_item_id)." => ".$article_code:"", array('size'=>120,'disabled'=>true)); ?></td>
 		<td><b>Тип</b></td>
-		<td align="left"><?php 
-                        echo CHtml::textField('ware_type_id',$model->assettemplate->waretype->short_name, array('size'=>8,'disabled'=>true));
-                        echo $form->hiddenField($model,'ware_type_id', array('value'=>$model->assettemplate->ware_type_id, 'style'=>'display: none;')); ?></td>
+		<td align="left"><?php echo CHtml::textField('ware_type_id',$model->assettemplate->waretype->short_name, array('size'=>8,'disabled'=>true)); ?></td>
 	</tr>
 	<tr>
 		<td><b>Дополнительная информация</b></td>
@@ -536,7 +524,7 @@ switch (id_multiple_param) {
 		<td><?php echo $form->textField($model,'cost',array('size'=>10)); ?>
 		<?php echo $form->error($model,'cost'); ?></td>
 		<td><b>Тип цены</b></td>
-		<td><?php echo $form->dropDownList($model,'price_type_id', PriceType::model()->findPriceTypes());?> 
+		<td><?php echo $form->dropDownList($model,'price_type_id', PriceType::model()->findPriceTypes(), array('empty' => '<Выбор типа>'));?> 
 		<?php echo $form->error($model,'price_type_id'); ?></td>
 	</tr>
 	<tr>
@@ -544,7 +532,7 @@ switch (id_multiple_param) {
 		<td><b>Кол-во</b></td>
 		<td><?php echo $form->textField($model,'quantity',array('size'=>10)); ?>
 		<?php echo $form->error($model,'cost'); ?></td>
-		<td><b>Тип кол-ва</b></td>
+		<td><b>Тип Кол-ва</b></td>
 		<td><?php echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All());?> 
 		<td><?php // echo $form->dropDownList($model,'quantity_type_id', QuantityTypes::All(), array('empty' => '<Выбор типа>'));?> 
 		<?php echo $form->error($model,'quantity_type_id'); ?></td>

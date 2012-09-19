@@ -281,7 +281,7 @@ class ClaimController extends Controller
                     'quantity_type_id' => $model->quantity_type_id,
                     'cost' => $model->cost,
                     'quantity' => $model->quantity,
-                    'info' => $model->assettemplate->info? $model->assettemplate->info:'',
+                    'info' => $model->assettemplate->info ? $model->assettemplate->info: '',
                     'direction_id' => $model->assettemplate->direction_id
                 ));
   
@@ -928,6 +928,9 @@ class ClaimController extends Controller
                     'order'=>'period_id, division_id, id',
                 ));
 
+        $divisions = Division::model()->All();
+        $directions = Direction::model()->findDirectionsWithShortNames();
+//        $states = State::model()->findAllStates();
         $PHPExcel = new PHPExcel();
         $PHPExcel->setActiveSheetIndex(0);
         $aSheet = $PHPExcel->getActiveSheet();
@@ -945,12 +948,12 @@ class ClaimController extends Controller
         $i=0;
         
         foreach ($data as $record) {
-            $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
+            $this->fill_claim_fields($directions,$divisions,$aSheet, $record, $j);  // fill claim fields
             $claim_fields_num = 11; //$i;
             $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
             $i=0;
             foreach ($claim_lines as $line) {
-               $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
+               $this->fill_claim_fields($directions,$divisions,$aSheet, $record, $j);  // fill claim fields
                 $i = $claim_fields_num;
                 foreach ($line as $key => $value) {
                     switch ($key) {
@@ -973,7 +976,8 @@ class ClaimController extends Controller
                             $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): '');
                             break;
                         case 'payer_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->payer->NAME);
+                            $aSheet->setCellValue($this->letters[$i].$j,$divisions[$line->payer_id]);
+//                            $aSheet->setCellValue($this->letters[$i].$j,$line->payer->NAME);
                             break;
                         case 'purpose_id':
                             $aSheet->setCellValue($this->letters[$i].$j,$line->purpose->name);
@@ -1028,18 +1032,18 @@ class ClaimController extends Controller
 
     }
     
-    private function fill_claim_fields($aSheet, $record, $j){
+    private function fill_claim_fields($directions,$divisions,$aSheet, $record, $j){
             $i=1;
             foreach($record as $key=>$value){
                 switch ($key) {
                     case 'division_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$record->division->NAME);
+                        $aSheet->setCellValue($this->letters[$i].$j,$divisions[$record->division_id]);
                         break;
                     case 'create_date':
                         $aSheet->setCellValue($this->letters[$i].$j,substr($value, 0, 10));
                         break;
                     case 'direction_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$record->direction->short_name);
+                        $aSheet->setCellValue($this->letters[$i].$j,$directions[$record->direction_id]);
                         break;
                     case 'state_id':
                         $aSheet->setCellValue($this->letters[$i].$j,$record->state->stateName->name);
