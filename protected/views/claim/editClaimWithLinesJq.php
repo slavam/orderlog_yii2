@@ -136,7 +136,7 @@
 <div id="pager_"></div> 
 
 <div id="create_multiple_dialog" style="display: none;">
-<p><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>      
+
 <table id="create_multiple_dialog_table"></table>
 
 </div>
@@ -154,6 +154,7 @@
     function deselect()
             {
                     $('#create_multiple_dialog_table').jqGrid('resetSelection');
+                    selected=null;
             }
         updateIdsOfSelectedRows = function (id, isSelected) {
            var index = $.inArray(id, idsOfSelectedRows);
@@ -175,7 +176,9 @@
         onSelectRow: function(rowid){
             selected=rowid;
         },
-        loadComplete: function() {},
+        loadComplete: function() {
+            $('#create_multiple_dialog').prepend('<p class="unselect"><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>');
+        },
         gridComplete: function() {
             var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
             $('#create_multiple_dialog_table').jqGrid('setSelection', cell, true);
@@ -184,8 +187,16 @@
         },
         dialogOkHandler:function(){
                         seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
-                        $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id);
-                        $("#claim_line_list").setCell(global_rowid,'position',seldata.title);
+                        if(!selected)
+                            {
+                                seldata.id='';
+                                seldata.title='';
+                            }
+                        $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id,null,null,true);
+                        $("#claim_line_list").setCell(global_rowid,'position',seldata.title,null,null,true);
+                        
+                        $('.unselect').remove();
+                        //alert($('.unselect'));
                         $(this).dialog('close');
                     }
     };
