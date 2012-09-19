@@ -231,3 +231,8 @@ div.search-form
 {
 	background: #80CFFF;
 }
+.checklimits-descripition p
+{
+    margin:0;
+    font-weight: bold;
+}
