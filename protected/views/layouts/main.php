@@ -89,7 +89,7 @@
 //                                                                            array('label'=>'ЦФО', 'url'=>array('#')),
 //                                                                            array('label'=>'Статьи бюджета', 'url'=>array('#')),
 //                                                                            array('label'=>'Товары', 'url'=>array('#')),
-                                                                            array('label'=>'Комплекты', 'url'=>array('/complect/index')),
+                                                                            array('label'=>'Комплекты', 'url'=>array('/complect/indexJqgrid')),
                                                                             
                                                                             
                                                                             )

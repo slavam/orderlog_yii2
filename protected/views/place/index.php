@@ -1,15 +1,4 @@
-<?php
-$this->breadcrumbs=array(
-	'Places',
-);
-
-$this->menu=array(
-	array('label'=>'Create Place', 'url'=>array('create')),
-	array('label'=>'Manage Place', 'url'=>array('admin')),
-);
-?>
-
-<h1>Адреса</h1>
+<h1>Расположение</h1>
 
 <?php 
 //var_dump($dataProvider);
