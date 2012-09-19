@@ -66,12 +66,12 @@ class ClaimLine extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('claim_id', 'required'),
-			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id, position_id, payer_id', 'numerical', 'integerOnly'=>true),
+			array('claim_id, count, for_whom, state_id, budget_item_id, asset_id, business_id, position_id, payer_id, purpose_id', 'numerical', 'integerOnly'=>true),
 			array('amount, cost', 'numerical'),
 			array('description, change_date', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id, position_id, payer_id', 'safe', 'on'=>'search'),
+			array('id, claim_id, count, amount, description, for_whom, state_id, change_date, budget_item_id, asset_id, cost, business_id, position_id, payer_id, purpose_id', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -94,6 +94,7 @@ class ClaimLine extends CActiveRecord
                     'status' => array(self::BELONGS_TO, 'Status', 'status_id'),
                     'complect' => array(self::BELONGS_TO, 'Complect', 'complect_id'),
                     'payer' => array(self::BELONGS_TO, 'Division', 'payer_id'),
+                    'purpose' => array(self::BELONGS_TO, 'Purpose', 'purpose_id')
 //                    'claim_sum'=>array(self::HAS_MANY,'Claim','claime_id',)
 		);
 	}
@@ -118,6 +119,7 @@ class ClaimLine extends CActiveRecord
 			'business_id' => 'Business',
                         'position_id' => 'Position',
                         'payer_id' => 'Payer',
+                        'purpose_id' => 'Purpose',
 		);
 	}
 
@@ -146,6 +148,7 @@ class ClaimLine extends CActiveRecord
 		$criteria->compare('business_id',$this->business_id);
                 $criteria->compare('position_id',$this->position_id);
                 $criteria->compare('payer_id', $this->payer_id);
+                $criteria->compare('purpose_id', $this->purpose_id);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -172,37 +175,63 @@ class ClaimLine extends CActiveRecord
             return CHtml::encode($position[0]->title); 
 	}
 
-        public function findProductsAsString($claim_line_id)
+        public function findProductsAsString($claim_line_id,$type='string')
         {
             if ($claim_line_id>'')
             {
                 $criteria=new CDbCriteria;
                 $criteria->condition="claim_line_id=".$claim_line_id;
                 $claim_line_products = ClaimLineProduct::model()->findAll($criteria);
-                $s = '';
-                foreach ($claim_line_products as $e) {
-                    $s .= $e->product->name.'; ';
+                 switch ($type)
+                {
+                    case 'string':
+                    $res = '';
+                    foreach ($claim_line_products as $e) {
+                        $ress .= $e->product->name.'; ';
+                    }
+                    break;
+                    case 'id':
+                        $res=array();
+                        foreach ($claim_line_products as $f)
+                        {
+                            $res[]=$f->id;
+                        }
+                        break;
                 }
-                return $s;
             } else {
-                return '';
+                $res='';
             }
+            return $res;
         }
-        public function findFeaturesAsString($claim_line_id)
+        public function findFeaturesAsString($claim_line_id,$type='string')
         {
             if ($claim_line_id>'')
             {
                 $criteria=new CDbCriteria;
                 $criteria->condition="claim_line_id=".$claim_line_id;
                 $claim_line_features = ClaimLineFeature::model()->findAll($criteria);
-                $s = '';
-                foreach ($claim_line_features as $e) {
-                    $s .= $e->feature->name.'; ';
+                
+                switch ($type)
+                {
+                    case 'string':
+                    $res = '';
+                    foreach ($claim_line_features as $e) {
+                        $res .= $e->feature->name.'; ';
+                    }
+                    break;
+                    
+                    case 'id':
+                        $res=array();
+                        foreach ($claim_line_features as $f)
+                        {
+                            $res[]=$f->id;
+                        }
+                        break;
                 }
-                return $s;
-            } else {
-                return '';
-            }
+            } 
+            else {$res='';}
+            
+            return $res;
         }
 
         public function getBusinessName($business_id)
@@ -213,8 +242,14 @@ class ClaimLine extends CActiveRecord
             return $business->NAME;
         }
         
-        
-        
+        public function getProductsNamesFromArray($product_ids){
+            return Product::model()->getNamesFromArray($product_ids);
+        }
+
+        public function getFeaturesNamesFromArray($feature_ids){
+            return Feature::model()->getNamesFromArray($feature_ids);
+        }
+
 //        public function $this.findConsolidatedClaimLines($period_id, $direction_id)
 //        {
 //            return nil;

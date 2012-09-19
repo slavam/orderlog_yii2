@@ -67,6 +67,25 @@ class Product extends CActiveRecord
 		);
 	}
 
+        public function getNamesFromArray($in_array)
+        {
+            $tmp;
+            $tmp = trim($in_array,"{}");
+            if($tmp) $tmp = explode(',',$tmp);
+            if(is_array($tmp)){
+                $crit= new CDbCriteria;
+                $crit->addInCondition('id', $tmp);
+                $mod=$this->findAll($crit);
+                $str="";
+                foreach($mod as $k=>$v)
+                {
+                    $str.=$v->name."; ";
+                }
+                return $str;
+            }
+            else return "";
+        }
+        
 	/**
 	 * Retrieves a list of models based on the current search/filter conditions.
 	 * @return CActiveDataProvider the data provider that can return the models based on the search/filter conditions.

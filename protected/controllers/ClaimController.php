@@ -2,6 +2,37 @@
 
 class ClaimController extends Controller
 {
+    private $letters = array(' ','A','B','C','D','E','F','G','H','I','J','K','L','M',
+            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
+            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ');
+    public $mimeTypes = array(
+	'Excel5' => array(
+		'Content-type'=>'application/vnd.ms-excel',
+		'extension'=>'xls',
+	),
+	'Excel2007'	=> array(
+		'Content-type'=>'application/vnd.ms-excel',
+		'extension'=>'xlsx',
+	),
+	'PDF' =>array(
+		'Content-type' => 'application/pdf',
+		'extension'=>'pdf',
+	),
+	'HTML' =>array(
+		'Content-type'=>'text/html',
+		'extension'=>'html',
+	),
+	'CSV' =>array(
+		'Content-type'=>'application/csv',			
+		'extension'=>'csv',
+	)
+    );
+
+    public $exportType = "Excel5";
+    public $filename   = "claim";
+    
+    
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
 	 * using two-column layout. See 'protected/views/layouts/column2.php'.
@@ -31,7 +62,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -39,7 +70,7 @@ class ClaimController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -244,13 +275,14 @@ class ClaimController extends Controller
 
                 echo CJSON::encode(array(
                     'unit_id' => $model->unit_id,
-                    'ware_type_id' => $model->ware_type_id,
-                    'asset_group_id' => $model->asset_group_id,
+                    'ware_type_id' => $model->assettemplate->ware_type_id,
+                    'asset_group_id' => $model->assettemplate->asset_group_id,
                     'price_type_id' => $model->price_type_id,
                     'quantity_type_id' => $model->quantity_type_id,
                     'cost' => $model->cost,
                     'quantity' => $model->quantity,
-                    'info' => $model->info? $model->info:''
+                    'info' => $model->assettemplate->info? $model->assettemplate->info:'',
+                    'direction_id' => $model->assettemplate->direction_id
                 ));
   
         Yii::app()->end();
@@ -417,7 +449,7 @@ class ClaimController extends Controller
             else $complects=array();
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
-                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
                     $row->asset->waretype->short_name, 
@@ -460,18 +492,21 @@ class ClaimController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->asset->assettemplate->asset_group_id, //$row->asset->assetgroup->block->name." => ".$row->asset->assetgroup->name,//gruppa
-                    'цель?',//zel'
+                    $row->purpose_id, //'цель?',//zel'
 
                     //TODO: check if returns '' on view
 
                     $row->for_whom>0? $row->for_whom: '',//>0? $row->findWorker($row->for_whom): '',                  //for_whom
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
-                    $row->findFeaturesAsString($row->id),
-                    $row->findProductsAsString($row->id),
+                    Feature::model()->getNamesFromArray($row->feature_id),
+                    $row->feature_id, //features_ids
+                    Product::model()->getNamesFromArray($row->product_id),
+                    $row->product_id,
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
                     //TODO: check if returns '' on view
-                    $row->position_id>0? $row->position_id: '', //? $row->findAddress($row->position_id): '',
+                    $row->position_id>0? $row->findAddress($row->position_id): '', //? $row->findAddress($row->position_id): '',
+                    $row->position_id,
                     $row->description,
                     //TODO: check if returns '' on view
                     $row->payer_id>0? $row->payer_id: '',//Division::model()->findDivisionById($row->payer_id): '',//ZFO
@@ -484,6 +519,7 @@ class ClaimController extends Controller
                     $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
                     $row->complect_id,//==null ? 'Вручную' : ($row->complect_id==2 ? 'Из набора' : 'Из шаблона')
+                    $row->asset->assettemplate->direction_id
                     );
             }
             echo CJSON::encode($responce);
@@ -782,6 +818,9 @@ class ClaimController extends Controller
                                 $model_line->description=$value['description'];
                                 $model_line->for_whom=$value['for_whom'];
                                 $model_line->budget_item_id=$value['budget_item'];
+                                $model_line->position_id=$value['position_ids']!=''?$value['position_ids']:null;
+                                $model_line->feature_id=$value['features_ids']!=''?$value['features_ids']:null;
+                                $model_line->product_id=$value['products_ids']!=''?$value['products_ids']:null;
                                 $model_line->business_id=$value['business'];
                                 $model_line->payer_id=$value['payer'];
                                 $model_line->status_id=$value['status'];
@@ -840,8 +879,7 @@ class ClaimController extends Controller
 //            Yii::app()->end();
 //        } 
         
-}
-
+    }
     
     public function actionReportGroup()
     {
@@ -852,4 +890,181 @@ class ClaimController extends Controller
         }
         $this->render('reports/reportgroup',array('result'=>$result));
     }
+    
+    public function actionToExcel(){
+        
+        $columns = array(
+            'A'=>array('index'=>'id','title'=>'ID','width'=>5),
+            'B'=>array('index'=>'claim_num','title'=>'Номер заявки','width'=>12),
+            'C'=>array('index'=>'division_id','title'=>'Отделение','width'=>30),
+            'D'=>array('index'=>'create_date','title'=>'Создана','width'=>12),
+            'E'=>array('index'=>'direction_id','title'=>'Направление'),
+            'F'=>array('index'=>'state_id','title'=>'Состояние','width'=>12),
+            'G'=>array('index'=>'period_id','title'=>'Период','width'=>14),
+            'H'=>array('index'=>'comment','title'=>'Комментарий','width'=>20),
+            'I'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'J'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20),
+//            'K'=>array('index'=>'id','title'=>'Line-ID'),
+            'K'=>array('index'=>'count','title'=>'Кол-во'),
+            'L'=>array('index'=>'amount','title'=>'Сумма'),
+            'M'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'N'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
+            'O'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
+            'P'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
+            'Q'=>array('index'=>'cost','title'=>'Цена'),
+            'R'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
+            'S'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
+            'T'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
+            'U'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
+            'W'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
+            'X'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
+            'Y'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
+//            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
+//            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
+);
+ 
+        $data = Claim::model()->findAll(array(
+                    'order'=>'period_id, division_id, id',
+                ));
+
+        $PHPExcel = new PHPExcel();
+        $PHPExcel->setActiveSheetIndex(0);
+        $aSheet = $PHPExcel->getActiveSheet();
+        $aSheet->setTitle('Заявки');
+        
+//Создадим заголовок таблицы
+        foreach($columns as $key => $column) {
+            $aSheet->setCellValue($key.'1',$column['title']);
+            $aSheet->getStyle($key.'1')->getFont()->setBold(true);
+            if (!empty($column['width']))
+                $aSheet->getColumnDimension($key)->setWidth($column['width']);
+        }
+        
+        $j=2;
+        $i=0;
+        
+        foreach ($data as $record) {
+            $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
+            $claim_fields_num = 11; //$i;
+            $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
+            $i=0;
+            foreach ($claim_lines as $line) {
+               $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
+                $i = $claim_fields_num;
+                foreach ($line as $key => $value) {
+                    switch ($key) {
+                        case 'for_whom':
+                            $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $line->findWorker($value): '');
+                            break;
+                        case 'budget_item_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $line->budgetItem->get2LevelNameBudgetItem($value):'');
+                            break;
+                        case 'asset_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->asset->name);
+                            break;
+                        case 'business_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getBusinessName($value));
+                            break;
+                        case 'status_id';
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->status->short_name);
+                            break;
+                        case 'position_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): '');
+                            break;
+                        case 'payer_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->payer->NAME);
+                            break;
+                        case 'purpose_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->purpose->name);
+                            break;
+                        case 'product_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getProductsNamesFromArray($value));
+                            break;
+                        case 'feature_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getFeaturesNamesFromArray($value));
+                            break;
+                        case 'id':
+                            $i--;
+                            break;
+                        case 'claim_id':
+                            $i--;
+                            break;
+                        case 'state_id':
+                            $i--;
+                            break;
+                        case 'change_date';
+                            $i--;
+                            break;
+                        case 'created_at':
+                            $i--;
+                            break;
+                        case 'how_created':
+                            $i--;
+                            break;
+                        default:
+                            $aSheet->setCellValue($this->letters[$i].$j,$value);
+                            break;
+                    };
+                    $i++;
+                }
+                $j++;    
+            }
+            if ($i==0)
+                $j++;
+        }
+
+        $objWriter = PHPExcel_IOFactory::createWriter($PHPExcel, $this->exportType);
+
+        ob_end_clean();
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Pragma: public');
+        header('Content-type: '.$this->mimeTypes[$this->exportType]['Content-type']);
+        header('Content-Disposition: attachment; filename="'.$this->filename.'.'.$this->mimeTypes[$this->exportType]['extension'].'"');
+        header('Cache-Control: max-age=0');				
+
+        $objWriter->save('php://output');			
+        Yii::app()->end();
+
+    }
+    
+    private function fill_claim_fields($aSheet, $record, $j){
+            $i=1;
+            foreach($record as $key=>$value){
+                switch ($key) {
+                    case 'division_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->division->NAME);
+                        break;
+                    case 'create_date':
+                        $aSheet->setCellValue($this->letters[$i].$j,substr($value, 0, 10));
+                        break;
+                    case 'direction_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->direction->short_name);
+                        break;
+                    case 'state_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->state->stateName->name);
+                        break;
+                    case 'period_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->period->NAME);
+                        break;
+                    case 'department_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->findDepartment($record->department_id));
+                        break;
+                    case 'budgetary':
+                        $i--;
+                        break;
+                    default:
+                        $tt = $this->letters[$i];
+                        $aSheet->setCellValue($this->letters[$i].$j,$value);
+                        
+                        break;
+                };
+                $i++;
+            }
+            
+        }
+
+        public function actionClaimsExportToExcel(){
+                $this->render('claimsExportToExcel');
+        }
 }

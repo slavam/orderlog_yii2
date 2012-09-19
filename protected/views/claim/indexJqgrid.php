@@ -131,10 +131,18 @@ $(function() {
             pgbuttons: false,     // disable page control like next, back button
             pgtext: null,  
             viewrecords: false,
-            gridComplete: function () {
-                
+            gridComplete: function () { //subgrid gridComplete
+                var claimline_id;
 //                $(".subgrid-data").css('background','#ddd');
-
+                <?if ($_GET['claimline_id']):?>
+                    claimline_id = <? echo $_GET['claimline_id'];?>;
+                <? else: ?>
+                    claimline_id=0;
+                <?endif;?>
+                    if(claimline_id !=0)
+                        {
+                            $("#" + subgridTableId).setSelection(claimline_id);
+                        }
             }
             });
 //            jQuery("#"+subgridTableId).jqGrid("navGrid","#"+pager_id,{edit:false,add:false,del:false,search:false});
@@ -153,6 +161,7 @@ $(function() {
                 <? else: ?>
                     claim_id=0;
                 <?endif;?>
+               
                 if (claim_id != 0)
                     {
                         var i;
@@ -167,8 +176,9 @@ $(function() {
 //                        grid.expandSubGridRow(rowIds[i]); 
                         
                         if (i+1<rowIds.length)
-                            grid.setSelection(rowIds[i+1]);
+                        grid.setSelection(rowIds[i+1]);
                         grid.setSelection(rowIds[i]);
+                        
 //                        $.each(rowIds, function (index, rowId) {
 //                            if (grid.getCell(rowId, 'id') == claim_id) {
 //                                grid.expandSubGridRow(rowId); 
@@ -177,6 +187,7 @@ $(function() {
 //                            }
 //                        }); 
                     }
+                    
         },
 //        onPaging : function(which_button) {
 //            grid.setGridParam({datatype:'json'});

@@ -1,6 +1,8 @@
-<h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
-<h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
-<h4>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></h4>
+<div class="checklimits-descripition">
+<p>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></p>
+<p>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></p>
+<p>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></p>
+</div>
 <?php
 $cs = Yii::app()->clientScript;
  
@@ -45,6 +47,7 @@ $(function() {
             {name:'limit',index:'limit', width:70, sortable:true},
             {name:'sum',index:'sum', width:70},
             {name:'delta',index:'delta', width:70},
+           
         ],
         caption : 'Контроль лимитов',
         rowNum : 300000,
@@ -72,7 +75,7 @@ $(function() {
                 height : 'auto',
                 width : '1000',
                 loadonce:true,
-                colNames: ['claim_id','Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание'],
+                colNames: ['claim_id','Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание','Просмотр'],
                 colModel: [
                     {name: 'claim_id', width: 50, hidden:true },
                     {name: 'claim_num', width: 50 },
@@ -82,7 +85,15 @@ $(function() {
                     {name: 'quantity', width: 70 },
                     {name: 'cost', width: 60 },
                     {name: 'amount', width: 60 },
-                    {name: 'description', width: 200 }
+                    {name: 'description', width: 200 },
+                    {name:'link',index:'link', width:70,sortable:false,editable:false,
+                        formatter:function(cellvalue,options,rowObject){
+                            
+                            var clid = rowObject[0];
+                            
+                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
+                        }
+                    },
                 ],
             pager: null, //pager_id,
             pgbuttons: false,     // disable page control like next, back button

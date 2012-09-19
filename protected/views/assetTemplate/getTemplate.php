@@ -14,7 +14,7 @@ $this->breadcrumbs=array(
 	<div class="row">
 		<b>Шаблон</b>
                 <br>
-		<?php echo CHtml::dropDownList('asset_template_id',$asset_template_id, AssetTemplate::findAssetTemplates());?> 
+		<?php echo CHtml::dropDownList('asset_template_id',$asset_template_id, AssetTemplate::model()->findAssetTemplates());?> 
 		<?php //echo $form->error($complect_id,'complect_id'); ?>
 	</div>
         <div class="row buttons">
