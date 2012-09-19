@@ -35,6 +35,8 @@ class Helpers extends CApplicationComponent{
         }
         else return false;
     }
+    
+    
     public static function BuildEditOptionsWithModel($model,$attributes=array('key'=>'id','value'=>null),$order='id',$empty=false)
     {
         if ($empty !=false AND is_string($empty))
