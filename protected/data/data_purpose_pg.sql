@@ -22,7 +22,7 @@ SET default_with_oids = false;
 -- Name: advplace; Type: TABLE; Schema: public; Owner: postgres; Tablespace: 
 --
 
-DROP TABLE IF EXISTS quantity_types;
+DROP TABLE IF EXISTS purposes;
 
 -- --------------------------------------------------------
 
@@ -30,20 +30,18 @@ DROP TABLE IF EXISTS quantity_types;
 -- Table structure for table menu_adjacency
 --
 
-CREATE TABLE IF NOT EXISTS quantity_types (
+CREATE TABLE IF NOT EXISTS purposes (
     id serial NOT NULL PRIMARY KEY,
+    direction_id integer,
     name character varying NOT NULL
 );
 
-COMMENT ON TABLE quantity_types IS 'Тип количества в справочнике товаров.';
-
-COMMENT ON COLUMN quantity_types.id  IS 'Первичный ключ таблицы.';
-COMMENT ON COLUMN quantity_types.name  IS 'Наименование. Свободное или фиксированное.';
+COMMENT ON TABLE purposes IS 'Справочник целей с которой создаются строки заявок.';
 
 --
 -- Dumping data for table menu_adjacency
 --
 
-INSERT INTO quantity_types (name) VALUES
-('Свободное'),
-('Фиксированное');
+INSERT INTO quantity_types (direction_id, name) VALUES
+(1,'Открытие вакансии'),
+(1, 'Организация рабочего места');

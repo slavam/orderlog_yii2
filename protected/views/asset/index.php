@@ -158,10 +158,90 @@ grid.setGridParam({datatype:'json'});
         grid.jqGrid('navButtonAdd',pager_selector,options);
         grid.jqGrid('navButtonAdd','#'+grid[0].id+"_toppager",options);
     };
+    
+    top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Добавить объект заявки (товар)',
+        buttonicon: 'ui-icon-plus',
+        onClickButton: function()
+        {
+          var id_ = '';
 
+          $("#create_dialog").load('editAssetDialog?id='+id_);
+                     
+          $("#create_dialog").dialog({
+             title: 'Добавить объект заявки (товар)',
+             modal:true,
+             width:1100,
+             height:390,
+             buttons: {
+               'OK': function(){                  
+                     var values = {};
+
+                     $.each($('#asset-form').serializeArray(), function(i, field) {
+                              values[field.name.substr(6,field.name.length-7)] = field.value;
+                     });
+                     $.ajax({
+                             'data': {'Asset[]':values}, 
+                             'url': "editAsset?id="+id_,
+                             'type': "POST",
+                             'dataType': "json",
+                             'error': function(res, status, exeption) {
+                                    alert("error:"+res.responseText);
+                             },
+                             'success':  function(data) {
+                              if (data.status == 'error')
+                                 {
+                                   var message='';
+                                   $.each(data.message, function(i, field) {
+                                          message += field+'\n';
+                                    });
+                                         alert(message);                                            
+                                    }
+                                    else
+                                    {
+                                        var sel_id = data['id_add'];
+                                        var sel_row = data['row_add'];
+                                        var rt = data['rows'][sel_row]['cell'];
+
+//                                        alert(sel_id);
+                                        
+                                        var row = {'id':rt[0],
+                                                   'type':rt[1],
+                                                   'supergroup':rt[2],
+                                                   'group':rt[3],
+                                                   'name':rt[4],
+                                                   'part_number':rt[5],
+                                                   'cost':rt[6],
+                                                   'comment':rt[7],
+                                                   'article':rt[8],
+                                                   'article_code':rt[9],
+                                                   'cell_red':rt[10]};
+                                               
+                                       grid.addRowData(sel_id,row,"last");
+                                       grid.setSelection(sel_id, true);
+                                        
+//                                        alert(last_row_id + '    ' + rt);
+//                                       grid.addRowData(sel_row,data['rows'][sel_row]['cell'],"last");
+//                                          alert('close');
+                                         $("#create_dialog").dialog('close');
+                                         
+                                     }
+                                    }
+                            }); 
+
+               },
+               'Close': function(){
+               $(this).dialog('close');
+                }
+             }
+          })
+        }
+     });
+        
     top_bottom_pager_ButtonAdd ({
             caption: '',//'Подгруппа',
-            title: 'Редактировать',
+            title: 'Редактировать объект заявки (товар)',
             buttonicon: 'ui-icon-pencil',
             onClickButton: function()
             {
@@ -191,10 +271,10 @@ grid.setGridParam({datatype:'json'});
                 $("#create_dialog").data('parent_id', id_);
 
                         $("#create_dialog").dialog({
-             			title: 'Редактировать товар',
+             	        title: 'Редактировать товар',
                         modal:true,
                         width:1160,
-                        height:540,
+                        height:390,
                         //stack: false,
                         buttons:{
                             'OK': function(){
