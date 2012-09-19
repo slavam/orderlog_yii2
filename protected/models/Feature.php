@@ -99,7 +99,7 @@ class Feature extends CActiveRecord
                 $str="";
                 foreach($mod as $k=>$v)
                 {
-                    $str.=$v->name.";";
+                    $str.=$v->name."; ";
                 }
                 return $str;
             }

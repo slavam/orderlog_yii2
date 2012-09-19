@@ -48,8 +48,8 @@
                                     ),
                                 array('label'=>'Отчеты', 'url'=>array('/claimLine/getClaimParams'),'linkOptions'=>array('class'=>'dir'),
                                         'items'=>array(
-//                                                        array('label'=>'Контроль лимитов', 'url'=>array('#')),
-//                                                        array('label'=>'Заказы по отделениям', 'url'=>array('#')),
+                                                        array('label'=>'Контроль лимитов', 'url'=>array('/claimLine/getClaimParams')),
+                                                        array('label'=>'Экспорт заявок в Excel-формат', 'url'=>array('/claim/claimsExportToExcel')),
 //                                                        array('label'=>''),
 //                                                        array('label'=>'Исполнение договоров', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
 //                                                            'items'=>array(

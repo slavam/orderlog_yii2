@@ -2,6 +2,10 @@
 
 class ClaimController extends Controller
 {
+    private $letters = array(' ','A','B','C','D','E','F','G','H','I','J','K','L','M',
+            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
+            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
+            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ');
     public $mimeTypes = array(
 	'Excel5' => array(
 		'Content-type'=>'application/vnd.ms-excel',
@@ -58,7 +62,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg','toExcel'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -66,7 +70,7 @@ class ClaimController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
+				'actions'=>array('admin'),
 				'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
@@ -887,10 +891,6 @@ class ClaimController extends Controller
     }
     
     public function actionToExcel(){
-        $letters = array(' ','A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','W','V','X','Y','Z',
-            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
-            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ',);
         
         $columns = array(
             'A'=>array('index'=>'id','title'=>'ID','width'=>5),
@@ -914,18 +914,15 @@ class ClaimController extends Controller
             'R'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
             'S'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
             'T'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
-            'U'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>30),
-            'V'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'U'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
             'W'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
-//            'Y'=>array('index'=>'id','title'=>'ID'),
-//            'Z'=>array('index'=>'id','title'=>'ID'),
+            'X'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
+            'Y'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
 //            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
 //            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
 );
  
-        
-        
-        
         $data = Claim::model()->findAll(array(
                     'order'=>'period_id, division_id, id',
                 ));
@@ -934,42 +931,7 @@ class ClaimController extends Controller
         $PHPExcel->setActiveSheetIndex(0);
         $aSheet = $PHPExcel->getActiveSheet();
         $aSheet->setTitle('Заявки');
-
-        function fill_claim_fields($letters, $aSheet, $record, $j){
-            $i=1;
-            foreach($record as $key=>$value){
-                switch ($key) {
-                    case 'division_id':
-                        $aSheet->setCellValue($letters[$i].$j,$record->division->NAME);
-                        break;
-                    case 'create_date':
-                        $aSheet->setCellValue($letters[$i].$j,substr($value, 0, 10));
-                        break;
-                    case 'direction_id':
-                        $aSheet->setCellValue($letters[$i].$j,$record->direction->short_name);
-                        break;
-                    case 'state_id':
-                        $aSheet->setCellValue($letters[$i].$j,$record->state->stateName->name);
-                        break;
-                    case 'period_id':
-                        $aSheet->setCellValue($letters[$i].$j,$record->period->NAME);
-                        break;
-                    case 'department_id':
-                        $aSheet->setCellValue($letters[$i].$j,$record->findDepartment($record->department_id));
-                        break;
-                    case 'budgetary':
-                        $i--;
-                        break;
-                    default:
-                        $aSheet->setCellValue($letters[$i].$j,$value);
-                        break;
-                };
-                $i++;
-            }
-            
-        }
         
-
 //Создадим заголовок таблицы
         foreach($columns as $key => $column) {
             $aSheet->setCellValue($key.'1',$column['title']);
@@ -982,38 +944,44 @@ class ClaimController extends Controller
         $i=0;
         
         foreach ($data as $record) {
-            fill_claim_fields($letters, $aSheet, $record, $j);  // fill claim fields
+            $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
             $claim_fields_num = 11; //$i;
             $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
             $i=0;
             foreach ($claim_lines as $line) {
-                fill_claim_fields($letters, $aSheet, $record, $j);  // fill claim fields
+               $this->fill_claim_fields($aSheet, $record, $j);  // fill claim fields
                 $i = $claim_fields_num;
                 foreach ($line as $key => $value) {
                     switch ($key) {
                         case 'for_whom':
-                            $aSheet->setCellValue($letters[$i].$j,$value>0 ? $line->findWorker($value): '');
+                            $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $line->findWorker($value): '');
                             break;
                         case 'budget_item_id':
-                            $aSheet->setCellValue($letters[$i].$j,$value>0 ? $line->budgetItem->get2LevelNameBudgetItem($value):'');
+                            $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $line->budgetItem->get2LevelNameBudgetItem($value):'');
                             break;
                         case 'asset_id':
-                            $aSheet->setCellValue($letters[$i].$j,$line->asset->name);
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->asset->name);
                             break;
                         case 'business_id':
-                            $aSheet->setCellValue($letters[$i].$j,$line->getBusinessName($value));
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getBusinessName($value));
                             break;
                         case 'status_id';
-                            $aSheet->setCellValue($letters[$i].$j,$line->status->short_name);
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->status->short_name);
                             break;
                         case 'position_id':
-                            $aSheet->setCellValue($letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): '');
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): '');
                             break;
                         case 'payer_id':
-                            $aSheet->setCellValue($letters[$i].$j,$line->payer->NAME);
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->payer->NAME);
                             break;
                         case 'purpose_id':
-                            $aSheet->setCellValue($letters[$i].$j,$line->purpose->name);
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->purpose->name);
+                            break;
+                        case 'product_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getProductsNamesFromArray($value));
+                            break;
+                        case 'feature_id':
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->getFeaturesNamesFromArray($value));
                             break;
                         case 'id':
                             $i--;
@@ -1034,7 +1002,7 @@ class ClaimController extends Controller
                             $i--;
                             break;
                         default:
-                            $aSheet->setCellValue($letters[$i].$j,$value);
+                            $aSheet->setCellValue($this->letters[$i].$j,$value);
                             break;
                     };
                     $i++;
@@ -1058,4 +1026,44 @@ class ClaimController extends Controller
         Yii::app()->end();
 
     }
+    
+    private function fill_claim_fields($aSheet, $record, $j){
+            $i=1;
+            foreach($record as $key=>$value){
+                switch ($key) {
+                    case 'division_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->division->NAME);
+                        break;
+                    case 'create_date':
+                        $aSheet->setCellValue($this->letters[$i].$j,substr($value, 0, 10));
+                        break;
+                    case 'direction_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->direction->short_name);
+                        break;
+                    case 'state_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->state->stateName->name);
+                        break;
+                    case 'period_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->period->NAME);
+                        break;
+                    case 'department_id':
+                        $aSheet->setCellValue($this->letters[$i].$j,$record->findDepartment($record->department_id));
+                        break;
+                    case 'budgetary':
+                        $i--;
+                        break;
+                    default:
+                        $tt = $this->letters[$i];
+                        $aSheet->setCellValue($this->letters[$i].$j,$value);
+                        
+                        break;
+                };
+                $i++;
+            }
+            
+        }
+
+        public function actionClaimsExportToExcel(){
+                $this->render('claimsExportToExcel');
+        }
 }

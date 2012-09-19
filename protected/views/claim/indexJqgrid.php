@@ -415,4 +415,3 @@ $(function() {
 });
 
 </script>
-<?php echo CHtml::link('Экспорт в Excel-формат', Yii::app()->createUrl("claim/toExcel"))?>
