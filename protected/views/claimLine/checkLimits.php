@@ -125,33 +125,26 @@ $(function() {
                     {name: 'description', width: 200 },
                     {name: 'for_whom', width: 150, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>}},
                     {name: 'for_whom_div', width: 150, frozen:false },
-//                    {name: 'for_whom', width: 100 },
                     {name:'link',index:'link', width:70,sortable:false,editable:false,
                         formatter:function(cellvalue,options,rowObject){
-                            
                             var clid = rowObject[0];
-                            
-                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
+                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';                           
                         }
                     },
                 ],
-            pager: null, //pager_id,
-            pgbuttons: false,     // disable page control like next, back button
-            pgtext: null,  
-            viewrecords: false,
+//              pager: null, //pager_id,
+//            viewrecords: false,
             ondblClickRow: function(id) {
 //                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
                 var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
-                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
-                    
-//                window.location.href = "<?//echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
-//                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
-            });
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
+            }
+            
+        });
         },
-        
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
             var rows = grid.jqGrid('getDataIDs');
