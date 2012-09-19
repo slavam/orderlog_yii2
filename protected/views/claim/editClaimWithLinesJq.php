@@ -418,8 +418,12 @@ function fill_pane(id)
         function delclaimlinerow(rowid)
         {
           var x=$grid.getCell(rowid,'iddb');
-          deletedrows.push(x);
-          $('#claim_line_list').data('deletedrows',deletedrows);
+          if (x.trim())
+              {
+                deletedrows.push(x);
+                $('#claim_line_list').data('deletedrows',deletedrows);
+              }
+          
           $grid.delRowData(rowid);
         };
 
