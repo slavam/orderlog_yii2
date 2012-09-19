@@ -281,7 +281,7 @@ class ClaimController extends Controller
                     'quantity_type_id' => $model->quantity_type_id,
                     'cost' => $model->cost,
                     'quantity' => $model->quantity,
-                    'info' => $model->assettemplate->info? $model->assettemplate->info:'',
+                    'info' => $model->assettemplate->info ? $model->assettemplate->info: '',
                     'direction_id' => $model->assettemplate->direction_id
                 ));
   
