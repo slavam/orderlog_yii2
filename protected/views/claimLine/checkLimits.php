@@ -1,6 +1,8 @@
-<h4>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></h4>
-<h4>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></h4>
-<h4>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></h4>
+<div class="checklimits-descripition">
+<p>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></p>
+<p>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></p>
+<p>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></p>
+</div>
 <?php
 $cs = Yii::app()->clientScript;
  
@@ -81,6 +83,7 @@ $(function() {
             {name:'limit',index:'limit', width:70, sortable:true},
             {name:'sum',index:'sum', width:70},
             {name:'delta',index:'delta', width:70},
+           
         ],
         caption : 'Контроль лимитов',
         rowNum : 300000,
@@ -108,7 +111,7 @@ $(function() {
                 height : 'auto',
                 width : '1100',
                 loadonce:true,
-                colNames: ['claim_id','Подразделение','Заявка','Тип','Название','Ед. изм.','Кол-во','Цена','Сумма','Примечание','Для кого','Для кого'],
+                colNames: ['claim_id','Подразделение','Заявка','Тип','Название','Ед. изм.','Кол-во','Цена','Сумма','Примечание','Для кого','Для кого','Просмотр'],
                 colModel: [
                     {name: 'claim_id', width: 50, hidden:true },
                     {name: 'department', width: 150 },
@@ -123,6 +126,14 @@ $(function() {
                     {name: 'for_whom', width: 150, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>}},
                     {name: 'for_whom_div', width: 150, frozen:false },
 //                    {name: 'for_whom', width: 100 },
+                    {name:'link',index:'link', width:70,sortable:false,editable:false,
+                        formatter:function(cellvalue,options,rowObject){
+                            
+                            var clid = rowObject[0];
+                            
+                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
+                        }
+                    },
                 ],
             pager: null, //pager_id,
             pgbuttons: false,     // disable page control like next, back button
@@ -138,7 +149,6 @@ $(function() {
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
-            }
             });
         },
         

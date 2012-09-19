@@ -46,7 +46,7 @@
 //                                                    array('label'=>'Доверенности', 'url'=>array('#')),
                                                   )
                                     ),
-                                array('label'=>'Отчеты', 'url'=>array('/claimLine/getClaimParams'),'linkOptions'=>array('class'=>'dir'),
+                                array('label'=>'Отчеты','linkOptions'=>array('class'=>'dir'),
                                         'items'=>array(
                                                         array('label'=>'Контроль лимитов', 'url'=>array('/claimLine/getClaimParams')),
                                                         array('label'=>'Экспорт заявок в Excel-формат', 'url'=>array('/claim/claimsExportToExcel')),
@@ -89,7 +89,7 @@
 //                                                                            array('label'=>'ЦФО', 'url'=>array('#')),
 //                                                                            array('label'=>'Статьи бюджета', 'url'=>array('#')),
 //                                                                            array('label'=>'Товары', 'url'=>array('#')),
-                                                                            array('label'=>'Комплекты', 'url'=>array('/complect/index')),
+                                                                            array('label'=>'Комплекты', 'url'=>array('/complect/indexJqgrid')),
                                                                             
                                                                             
                                                                             )

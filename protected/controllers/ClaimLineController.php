@@ -351,7 +351,7 @@ class ClaimLineController extends Controller
             $lines = ClaimLine::model()->findAllBySql($sql);
             $responce['rows']=array();
             foreach ($lines as $i=>$row) {
-                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->claim_id,
                     $row->claim->findDepartment($row->claim->department_id),

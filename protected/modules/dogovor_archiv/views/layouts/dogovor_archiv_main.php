@@ -19,7 +19,7 @@
         <div class="logo-container">
                         <img src="<?php echo Yii::app()->request->baseUrl; ?>/images/logo.gif"  class="site-logo"/>
                         <h1 class="site-slogan colored"><?php echo CHtml::encode(Yii::app()->modules['dogovor_archiv']['modulename']); ?></h1>
-                        <div class="menu">
+                       <div class="menu">
 		<?php $this->widget('zii.widgets.CMenu',array(
                     'htmlOptions'=>array('class'=>'dropdown'),
 			'items'=>array(
@@ -37,10 +37,10 @@
 //                                                    array('label'=>'Доверенности', 'url'=>array('#')),
                                                   )
                                     ),
-                                array('label'=>'Отчеты', 'url'=>array('/claimLine/getClaimParams'),'linkOptions'=>array('class'=>'dir'),
+                                array('label'=>'Отчеты','linkOptions'=>array('class'=>'dir'),
                                         'items'=>array(
-//                                                        array('label'=>'Контроль лимитов', 'url'=>array('#')),
-//                                                        array('label'=>'Заказы по отделениям', 'url'=>array('#')),
+                                                        array('label'=>'Контроль лимитов', 'url'=>array('/claimLine/getClaimParams')),
+                                                        array('label'=>'Экспорт заявок в Excel-формат', 'url'=>array('/claim/claimsExportToExcel')),
 //                                                        array('label'=>''),
 //                                                        array('label'=>'Исполнение договоров', 'url'=>array('#'),'linkOptions'=>array('class'=>'dir'),
 //                                                            'items'=>array(

@@ -275,13 +275,14 @@ class ClaimController extends Controller
 
                 echo CJSON::encode(array(
                     'unit_id' => $model->unit_id,
-                    'ware_type_id' => $model->ware_type_id,
-                    'asset_group_id' => $model->asset_group_id,
+                    'ware_type_id' => $model->assettemplate->ware_type_id,
+                    'asset_group_id' => $model->assettemplate->asset_group_id,
                     'price_type_id' => $model->price_type_id,
                     'quantity_type_id' => $model->quantity_type_id,
                     'cost' => $model->cost,
                     'quantity' => $model->quantity,
-                    'info' => $model->info? $model->info:''
+                    'info' => $model->assettemplate->info ? $model->assettemplate->info: '',
+                    'direction_id' => $model->assettemplate->direction_id
                 ));
   
         Yii::app()->end();
@@ -448,7 +449,7 @@ class ClaimController extends Controller
             else $complects=array();
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
-                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
                     $row->asset->waretype->short_name, 

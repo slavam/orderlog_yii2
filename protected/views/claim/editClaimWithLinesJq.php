@@ -194,11 +194,11 @@
                             }
                         $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id,null,null,true);
                         $("#claim_line_list").setCell(global_rowid,'position',seldata.title,null,null,true);
-                        
-                        $('.unselect').remove();
-                        //alert($('.unselect'));
+                       
                         $(this).dialog('close');
-                    }
+                    },
+        dialogtitle:'Выбор расположения'
+                    
     };
 
     var feature_data=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>;
@@ -249,7 +249,8 @@
                         $("#claim_line_list").setCell(global_rowid,'features_ids','{'+idsOfSelectedRows+'}'); 
                         $("#claim_line_list").setCell(global_rowid,'features',  new_str,null,null,true); 
                         $(this).dialog('close');
-                    }
+                    },
+            dialogtitle:'Выбор характеристик'
     };
 
     var product_data=<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','name'));?>;
@@ -301,7 +302,8 @@
                         $("#claim_line_list").setCell(global_rowid,'products_ids','{'+idsOfSelectedRows+'}'); 
                         $("#claim_line_list").setCell(global_rowid,'products',  new_str,null,null,true); 
                         $(this).dialog('close');
-                    }
+                    },
+        dialogtitle:'Выбор продуктов'
     };
     
     var plsel= function place_selector_grid_clk(rowid,opts)
@@ -338,13 +340,18 @@ LoadGrid(grid_opts);
 
 $("#create_multiple_dialog").dialog(
             {
-                title: 'Выбор расположения',
+                title: opts.dialogtitle,
                 modal:true,
                 width:800,
                 height:600,
                 zIndex: $.maxZIndex()+ 1,
                 buttons:{
                     'OK': opts.dialogOkHandler
+                },
+                close: function(event, ui) { 
+                 
+                        $('.unselect').remove();
+                
                 }
             }
         );
@@ -418,8 +425,12 @@ function fill_pane(id)
         function delclaimlinerow(rowid)
         {
           var x=$grid.getCell(rowid,'iddb');
-          deletedrows.push(x);
-          $('#claim_line_list').data('deletedrows',deletedrows);
+          if (x.trim())
+              {
+                deletedrows.push(x);
+                $('#claim_line_list').data('deletedrows',deletedrows);
+              }
+          
           $grid.delRowData(rowid);
         };
 
@@ -615,19 +626,29 @@ function fill_pane(id)
             })
             .done(function(data) { 
             	var xdata = $.parseJSON(data);
-				$grid.setCell(rowid,'unit',xdata["unit_id"]);
-				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
-				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
-				$grid.setCell(rowid,'asset_info',xdata["info"]);
+				$grid.setCell(rowid,'unit',xdata["unit_id"],null,null,true);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
+				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				var new_dir_id = xdata["direction_id"];
+				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
+				$grid.setCell(rowid,'template_direction_id',new_dir_id,null,null,true);
+				if (old_dir_id!=new_dir_id)
+				{
+					$grid.setCell(rowid,"features",'',null,null,true);
+					$grid.setCell(rowid,"features_ids",'',null,null,true);
+					$grid.setCell(rowid,"products",'',null,null,true);
+					$grid.setCell(rowid,"products_ids",'',null,null,true);
+				}
 
 				if(xdata["quantity_type_id"]!=2)
 				{
-					$grid.setCell(rowid,'count',xdata["quantity"]);
+					$grid.setCell(rowid,'count',xdata["quantity"],null,null,true);
 					_msg+="К";
 				}
 				if(xdata["price_type_id"]!=2)
 				{
-					$grid.setCell(rowid,'cost',xdata["cost"]);
+					$grid.setCell(rowid,'cost',xdata["cost"],null,null,true);
 					_msg+="Ц";
 				}
 				_msg+="]";
@@ -743,13 +764,23 @@ function fill_pane(id)
             .done(function(data) { 
             	var xdata = $.parseJSON(data);
             	var _msg="";
-				$grid.setCell(rowid,'unit',xdata["unit_id"]);
-				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
-				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
-				$grid.setCell(rowid,'asset_info',xdata["info"]);
-
-				$grid.setCell(rowid,'cost',xdata["cost"]);
-				$grid.setCell(rowid,'count',xdata["quantity"]);
+				$grid.setCell(rowid,'unit',xdata["unit_id"],null,null,true);
+				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
+				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
+				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				var new_dir_id = xdata["direction_id"];
+				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
+				$grid.setCell(rowid,'template_direction_id',new_dir_id);
+				if (old_dir_id!=new_dir_id)
+				{
+					$grid.setCell(rowid,"features",'',null,null,true);
+					$grid.setCell(rowid,"features_ids",'',null,null,true);
+					$grid.setCell(rowid,"products",'',null,null,true);
+					$grid.setCell(rowid,"products_ids",'',null,null,true);
+				}
+			
+				$grid.setCell(rowid,'cost',xdata["cost"],null,null,true);
+				$grid.setCell(rowid,'count',xdata["quantity"],null,null,true);
 				if(xdata["quantity_type_id"]!=2)
 					_msg+="К";
 				if(xdata["price_type_id"]!=2)
