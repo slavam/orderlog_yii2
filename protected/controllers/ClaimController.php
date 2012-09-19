@@ -448,7 +448,7 @@ class ClaimController extends Controller
             else $complects=array();
             $responce['rows']=array();
             foreach ($complects as $i=>$row) {
-                $responce['rows'][$i]['id'] = $i+1;
+                $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->id,
                     $row->asset->waretype->short_name, 

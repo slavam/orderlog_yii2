@@ -90,7 +90,8 @@ $(function() {
                         formatter:function(cellvalue,options,rowObject){
                             
                             var clid = rowObject[0];
-                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'" target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
+                            
+                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
                         }
                     },
                 ],
