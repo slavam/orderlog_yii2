@@ -194,11 +194,11 @@
                             }
                         $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id,null,null,true);
                         $("#claim_line_list").setCell(global_rowid,'position',seldata.title,null,null,true);
-                        
-                        $('.unselect').remove();
-                        //alert($('.unselect'));
+                       
                         $(this).dialog('close');
-                    }
+                    },
+        dialogtitle:'Выбор расположения'
+                    
     };
 
     var feature_data=<?echo Helpers::BuildSpecificationsGridList(Feature::model()->findAll(), array('id','name'));?>;
@@ -249,7 +249,8 @@
                         $("#claim_line_list").setCell(global_rowid,'features_ids','{'+idsOfSelectedRows+'}'); 
                         $("#claim_line_list").setCell(global_rowid,'features',  new_str,null,null,true); 
                         $(this).dialog('close');
-                    }
+                    },
+            dialogtitle:'Выбор характеристик'
     };
 
     var product_data=<?echo Helpers::BuildSpecificationsGridList(Product::model()->findAll(), array('id','name'));?>;
@@ -301,7 +302,8 @@
                         $("#claim_line_list").setCell(global_rowid,'products_ids','{'+idsOfSelectedRows+'}'); 
                         $("#claim_line_list").setCell(global_rowid,'products',  new_str,null,null,true); 
                         $(this).dialog('close');
-                    }
+                    },
+        dialogtitle:'Выбор продуктов'
     };
     
     var plsel= function place_selector_grid_clk(rowid,opts)
@@ -338,13 +340,18 @@ LoadGrid(grid_opts);
 
 $("#create_multiple_dialog").dialog(
             {
-                title: 'Выбор расположения',
+                title: opts.dialogtitle,
                 modal:true,
                 width:800,
                 height:600,
                 zIndex: $.maxZIndex()+ 1,
                 buttons:{
                     'OK': opts.dialogOkHandler
+                },
+                close: function(event, ui) { 
+                 
+                        $('.unselect').remove();
+                
                 }
             }
         );
