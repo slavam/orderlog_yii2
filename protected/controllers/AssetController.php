@@ -372,7 +372,11 @@ class AssetController extends Controller {
         
         switch ($multiple_id) {
         case 1:
-            $to_index = Place::model()->findAllTowns();
+            $mans = Place::model()->findAllTowns();
+            foreach ($mans as $item) {
+                $to_index[$item->id] = $item->title;
+            }
+
         break;
         case 2:
    	    $mans = Manufacturer::model()->findAll(array('order' => 'name'));
