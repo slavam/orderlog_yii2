@@ -630,6 +630,7 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
 				$grid.setCell(rowid,'asset_info',xdata["info"]);
+				$grid.setCell(rowid,'template_direction_id',xdata["direction_id"]);
 
 				if(xdata["quantity_type_id"]!=2)
 				{
@@ -758,6 +759,7 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"]);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"]);
 				$grid.setCell(rowid,'asset_info',xdata["info"]);
+				$grid.setCell(rowid,'template_direction_id',xdata["direction_id"]);
 
 				$grid.setCell(rowid,'cost',xdata["cost"]);
 				$grid.setCell(rowid,'count',xdata["quantity"]);
