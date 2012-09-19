@@ -62,7 +62,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -1063,4 +1063,7 @@ class ClaimController extends Controller
             
         }
 
+        public function actionClaimsExportToExcel(){
+                $this->render('claimsExportToExcel');
+        }
 }
