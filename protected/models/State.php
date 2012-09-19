@@ -93,8 +93,10 @@ class State extends CActiveRecord
 	}
        	public function findStates($document_type_id)
 	{
-            
             $states = State::model()->findAll('document_type_id='.$document_type_id.' order by id');
             return $states;
         }
+//        public function findAllStates(){
+//            return CHtml::listData(State::model()->findAll(),'id','name');
+//        }
 }
