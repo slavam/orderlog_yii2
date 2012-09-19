@@ -398,5 +398,5 @@ $.ajax({
 </script>
 
 <?php //echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
-<br>
-<?php echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>
+<!-- <br>  -->
+<?php // echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>
