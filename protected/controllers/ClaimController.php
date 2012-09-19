@@ -815,6 +815,7 @@ class ClaimController extends Controller
                                 $model_line->count = $value['count'];
                                 $model_line->amount=$value['amount'];
                                 $model_line->cost=$value['cost'];
+                                $model_line->purpose_id=$value['goal'];
                                 $model_line->description=$value['description'];
                                 $model_line->for_whom=$value['for_whom'];
                                 $model_line->budget_item_id=$value['budget_item'];
