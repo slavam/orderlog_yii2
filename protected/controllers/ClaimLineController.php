@@ -354,6 +354,7 @@ class ClaimLineController extends Controller
                 $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->claim_id,
+                    $row->claim->findDepartment($row->claim->department_id),
                     $row->claim->claim_number,
                     $row->asset->waretype->short_name, 
                     $row->asset->name, 
@@ -362,6 +363,8 @@ class ClaimLineController extends Controller
                     $row->cost,
                     $row->amount,
                     $row->description,
+                    $row->for_whom>0? $row->for_whom: '',
+                    $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',
                     );
             }
             echo CJSON::encode($responce);

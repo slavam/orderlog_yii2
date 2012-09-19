@@ -15,6 +15,42 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.m
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 ?>
+<style type="text/css">
+      th.ui-th-column div {
+            /* see http://stackoverflow.com/a/7256972/315935 for details */
+            word-wrap: break-word;      /* IE 5.5+ and CSS3 */
+            white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+            white-space: -pre-wrap;     /* Opera 4-6 */
+            white-space: -o-pre-wrap;   /* Opera 7 */
+            white-space: pre-wrap;      /* CSS3 */
+            overflow: hidden;
+            height: auto !important;
+            vertical-align: middle;
+        }
+        .ui-jqgrid tr.jqgrow td {
+            white-space: normal !important;
+            height: auto;
+            vertical-align: middle;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .ui-jqgrid-htable th.ui-th-column {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+        .ui-jqgrid .frozen-bdiv, .ui-jqgrid .frozen-div {
+            overflow: hidden;
+        }
+
+     #whole-claim-form table {
+     	margin-bottom: 0; /*0.2em;*/
+     	font-size: 11px !important;
+     }
+     #whole-claim-form table th, #whole-claim-form table td {
+     	padding: 0px 10px 0px 5px;
+     }
+</style>
+
 <script type="text/javascript">
    $.jgrid.no_legacy_api = true;
    $.jgrid.useJSON = true;
@@ -73,46 +109,43 @@ $(function() {
                 url : "getClaimLinesByArticle?article_id="+article_id+'&period_id='+period_id+'&division_id='+division_id+'&direction_id='+direction_id,
                 datatype : 'json',
                 height : 'auto',
-                width : '1000',
+                width : '1100',
                 loadonce:true,
-                colNames: ['claim_id','Заявка','Тип','Название','Ед. изм.','Количество','Цена','Сумма','Примечание','Просмотр'],
+                colNames: ['claim_id','Подразделение','Заявка','Тип','Название','Ед. изм.','Кол-во','Цена','Сумма','Примечание','Для кого','Для кого','Просмотр'],
                 colModel: [
                     {name: 'claim_id', width: 50, hidden:true },
+                    {name: 'department', width: 150 },
                     {name: 'claim_num', width: 50 },
-                    {name: 'type', width: 50 },
-                    {name:'name',index:'name', width:300},
+                    {name: 'type', width: 40 },
+                    {name: 'name',index:'name', width:150},
                     {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
-                    {name: 'quantity', width: 70 },
+                    {name: 'quantity', width: 60 },
                     {name: 'cost', width: 60 },
                     {name: 'amount', width: 60 },
                     {name: 'description', width: 200 },
+                    {name: 'for_whom', width: 150, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(Worker::model()->findWorkersWithStaff(), array('key'=>'ID_EMP','value'=>'LASTNAME'))?>}},
+                    {name: 'for_whom_div', width: 150, frozen:false },
                     {name:'link',index:'link', width:70,sortable:false,editable:false,
                         formatter:function(cellvalue,options,rowObject){
-                            
                             var clid = rowObject[0];
-                            
-                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';
+                            return '<a href="<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>?claim_id='+clid+'&claimline_id='+options.rowId+'"target="_blank" title="Перейти к заявке"><?echo CHtml::image(Yii::app()->request->baseUrl.'/images/link.png');?></a>';                           
                         }
                     },
                 ],
-            pager: null, //pager_id,
-            pgbuttons: false,     // disable page control like next, back button
-            pgtext: null,  
-            viewrecords: false,
+//              pager: null, //pager_id,
+//            viewrecords: false,
             ondblClickRow: function(id) {
 //                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
                 var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
                 window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
-                    
-//                window.location.href = "<?//echo Yii::app()->createUrl('/claim/show');?>"+"?id="+
-//                    $("#" + subgridTableId).getCell(id, 'claim_id'); //claim_id;
             },
             gridComplete: function () {
 //                $(".subgrid-data").css('background','#ddd');
+
             }
-            });
+            
+        });
         },
-        
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
             var rows = grid.jqGrid('getDataIDs');
