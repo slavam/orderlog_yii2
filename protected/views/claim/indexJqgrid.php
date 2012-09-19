@@ -403,6 +403,7 @@ $(function() {
                                    
                                     if (data.state =="ok")
                                      {   
+                                        grid.collapseSubGridRow(sel_)
                                         grid.jqGrid('delRowData',sel_);
                                      }
 
