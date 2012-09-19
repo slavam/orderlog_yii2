@@ -72,7 +72,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 
 <script type="text/javascript">
 $(function() {
-    
+    var allready_expand=false;
     var grid=$("#list");
     var pager_selector = "#pager";
     grid.jqGrid( {
@@ -156,36 +156,30 @@ $(function() {
             $(".subgrid-data").css('background','#ddd');
                 var rowIds = grid.getDataIDs();
                 var claim_id;
-                <?if ($_GET['claim_id']):?>
-                    claim_id = <? echo $_GET['claim_id'];?>;
-                <? else: ?>
-                    claim_id=0;
-                <?endif;?>
-               
-                if (claim_id != 0)
-                    {
-                        var i;
-                        for (i = 0; i < rowIds.length ; i++) {
-                            if (grid.getCell(rowIds[i], 'id') == claim_id) {
-                                grid.expandSubGridRow(rowIds[i]); 
-                                
-                                break;
+                if (!allready_expand)
+                {
+                   
+                    <?if ($_GET['claim_id']):?>
+                        claim_id = <? echo $_GET['claim_id'];?>;
+                    <? else: ?>
+                        claim_id=0;
+                    <?endif;?>
+                    if (claim_id != 0)
+                        {
+                            var i;
+                            for (i = 0; i < rowIds.length ; i++) {
+                                if (grid.getCell(rowIds[i], 'id') == claim_id) {
+                                    grid.expandSubGridRow(rowIds[i]); 
+                                    allready_expand=true;
+                                    break;
+                                }
+
                             }
-                            
+
+                            if (i+1<rowIds.length)
+                            grid.setSelection(rowIds[i+1]);
+                            grid.setSelection(rowIds[i]);
                         }
-//                        grid.expandSubGridRow(rowIds[i]); 
-                        
-                        if (i+1<rowIds.length)
-                        grid.setSelection(rowIds[i+1]);
-                        grid.setSelection(rowIds[i]);
-                        
-//                        $.each(rowIds, function (index, rowId) {
-//                            if (grid.getCell(rowId, 'id') == claim_id) {
-//                                grid.expandSubGridRow(rowId); 
-//                                grid.setSelection(rowId);
-////                                exit;
-//                            }
-//                        }); 
                     }
                     
         },
