@@ -28,7 +28,7 @@ class AssetTemplateController extends Controller
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
 				'actions'=>array('index','view','show','getTemplate','createTemplateDlg','updateTemplateDlg',
-                                    'indexJqgrid','getDataForGrid','getDataForDetails','create','update'),
+                                    'indexJqgrid','getDataForGrid','getDataForDetails','create','update','CreateAssetByTemplate'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
