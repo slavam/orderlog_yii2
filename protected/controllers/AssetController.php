@@ -7,6 +7,7 @@ class AssetController extends Controller {
      * using two-column layout. See 'protected/views/layouts/column2.php'.
      */
     public $layout = '//layouts/column2';
+    private $add_id;
 
     /**
      * @return array action filters
@@ -67,22 +68,38 @@ class AssetController extends Controller {
      */
     public function actionEditAsset($id) {
 
-    $model = $this->loadModel($id);
+     if ($id) {
+        $model = $this->loadModel($id);
+     } else  {
+            $model=new Asset;
+            $is_new_asset=true;            
+     }   
 //    $this->performAjaxValidation($model);
 
+
     if (isset($_POST['Asset'])) {
-        $model->attributes = $_POST['Asset'];
+        
+     if ($is_new_asset) {       
+         foreach ($_POST['Asset'] as $key => $value) {
+                  $model[key($value)] = current($value);
+         }
+     } else {
+         $model->attributes = $_POST['Asset'];
+     }
+        
         if($model->validate()){
             if ($model->save()) { 
             	//$_POST['id_return'] = $model->id;
                 if (Yii::app()->request->isAjaxRequest) {
+                    $this->add_id = $model->id;
                     $this->actionGetDataForGrid(); //encode json only one asset by id
                     Yii::app()->end();
                 } else echo 'get out!';
             }//model->save
-        }//validate
-        else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
-/*       else {
+        } //validate
+        else {   // echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end();}
+        echo CJSON::encode(array('status'=>'error','message'=>$model->errors)); }
+  /*       else {
             $y=CActiveForm::validate($model);
             $x=CJSON::encode(CActiveForm::validate($model)); 
             echo $x;
@@ -318,10 +335,13 @@ class AssetController extends Controller {
     {
     	if(Yii::app()->request->isAjaxRequest)
         {
+           if ($id) {$model = $this->loadModel($id);} 
+           else     {$model = new Asset;}
+  
             //$this->layout='//layouts/ajax';
 
             //$model = new Asset;
-            $model = $this->loadModel($id);
+//            $model = $this->loadModel($id);
 
             // For jQuery core, Yii switches between the human-readable and minified
 			// versions based on DEBUG status; so make sure to catch both of them
@@ -356,7 +376,6 @@ class AssetController extends Controller {
             foreach ($mans as $item) {
                 $to_index[$item->id] = $item->title;
             }
-
         break;
         case 2:
    	    $mans = Manufacturer::model()->findAll(array('order' => 'name'));
@@ -497,11 +516,13 @@ class AssetController extends Controller {
 //            $responce['total'] = "2";//ceil($responce['records'] / $_GET['rows']); 
 
 			$responce['status']='ok';
+                        if ($this->add_id) {$responce['id_add']=$this->add_id;}
 			$responce['rows']=array();
 
             foreach ($assets_ as $i=>$row) {
                         $cell_red = FALSE;
                         $responce['rows'][$i]['id'] = $row['id'];
+                        if ($row->id == $this->add_id) {$responce['row_add']=$i;};
 //	                $tmp = $row->assetGroup->block->name;
 					if($row->budget_item_id) {
 						$articles_=BudgetItem::model()->findByPk($row->budget_item_id);
@@ -571,8 +592,9 @@ class AssetController extends Controller {
   }
      public function actionGetTemplateByAsset()
     {
-         $template_id = $_POST['template_id'];
-
+         $template_id = $_POST['template_id'];        
+         $newrecord =  $_POST['newrecord'];
+             
          $template = array();
         
         if ($template_id) {
@@ -580,7 +602,9 @@ class AssetController extends Controller {
             $templ_model = AssetTemplate::model()->findByPk($template_id);
             
             $template[asset_group_id] = $templ_model->assetgroup->block->name.' => '.$templ_model->assetgroup->name;
+            $template[asset_group_id_val] = $templ_model->asset_group_id;
             $template[ware_type_id] = $templ_model->waretype->short_name;
+            $template[ware_type_id_val] = $templ_model->ware_type_id;
         
             if ($templ_model->budget_item_id) {
                 $article=BudgetItem::model()->findByPk($templ_model->budget_item_id);
@@ -589,9 +613,17 @@ class AssetController extends Controller {
             } else {
                 $template[budget_item_id] = "Н/Д";            
             }
+
             $template[direction_id_val] = $templ_model->direction_id;
             $template[direction_id] = $templ_model->direction->short_name;
             $template[ware_type_id] = $templ_model->waretype->short_name;
+            if ($newrecord) {
+                $template[part_number] = $templ_model->part_number;
+                
+                if ($templ_model->budget_item_id) {
+                    $template[budget_item_id_val] = $templ_model->budget_item_id;
+                }
+            }
         }
         
         echo CJSON::encode($template);

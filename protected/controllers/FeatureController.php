@@ -38,9 +38,11 @@ class FeatureController extends Controller
 				'actions'=>array('admin','delete'),
 				'users'=>array('admin'),
 			),
+/*
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
+*/
 		);
 	}
 
@@ -56,6 +58,7 @@ class FeatureController extends Controller
 			'model'=>$this->loadModel($id),
 		));
 	}
+        
         public function actionGetDataForGrid()
 	{
             $dataProvider = new CActiveDataProvider('Feature', array(
