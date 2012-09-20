@@ -177,4 +177,21 @@ class Worker extends CActiveRecord
                 return $workers;
 	}
 
+        public function getAllWorkersStaffsDepartmens(){
+            $sql= "WITH    q AS 
+        (
+        SELECT  d.*, cast(division as nvarchar(1024)) as whole_division
+        FROM    div2doc d
+        WHERE   Parent_ID IS NULL
+        UNION ALL
+        SELECT  d.*, cast(q.whole_division+', '+d.division as nvarchar(1024))
+        FROM    div2doc d
+        JOIN    q
+        ON      d.parent_ID = q.ID_division
+        )
+        select ID_EMP, LASTNAME+' '+FIRSTNAME+' '+SONAME+'; '+STAFFNAME+'; '+d.whole_division AS LASTNAME
+        FROM emp2doc e       
+        join q d on d.id_division=e.id_division";
+            return CHtml::listData(Worker::model()->findAllBySql($sql),'ID_EMP', 'LASTNAME');
+        }
 }

@@ -93,4 +93,7 @@ class Purpose extends CActiveRecord
        		$goals = Purpose::model()->findAll($criteria);
 		return CHtml::listData($goals,'id','name');
          }
+         public function getAllGoals(){
+             return CHtml::listData(Purpose::model()->findAll(),'id','name');
+         }
 }
