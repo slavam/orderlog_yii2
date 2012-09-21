@@ -26,7 +26,7 @@ class AssetController extends Controller {
     public function accessRules() {
         return array(
             array('allow', // allow all users to perform 'index' and 'view' actions
-                'actions' => array('index', 'view', 'show', 'updateGrid', 'getDataForGrid','getDirectionsForSelect','updateRow','editAssetDialog','editAsset'),
+                'actions' => array('index', 'view', 'show', 'updateGrid', 'getDataForGrid','getDirectionsForSelect','updateRow','editAssetDialog','editAsset', 'delete'),
                 'users' => array('*'),
             ),
             array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -34,7 +34,7 @@ class AssetController extends Controller {
                 'users' => array('@'),
             ),
             array('allow', // allow admin user to perform 'admin' and 'delete' actions
-                'actions' => array('admin', 'delete'),
+                'actions' => array('admin'),
                 'users' => array('admin'),
             ),
             /*
@@ -145,29 +145,36 @@ class AssetController extends Controller {
     if (isset($_POST['id'])) {
         
         $id = $_POST['id'];
-        
         $model = $this->loadModel($id);
-        
+       
         if (isset($_POST['type_data']) && isset($_POST['multiple_arr'])) {
             
             $save_type = $_POST['type_data'];
-            $save_arr  = $_POST['multiple_arr'];               
+            $save_arr  = implode(',',$_POST['multiple_arr']);      
         
             switch ($save_type) {
             case 1:           
-                $model->selection = $save_arr;
+                $model->place_id = $save_arr;
             break;
             case 2:           
-                $model->sel_man = $save_arr;
+                $model->manufacturer_id = $save_arr;
             break;
             case 3:           
-                $model->sel_prod = $save_arr;
+                $model->product_id = $save_arr;
             break;
             case 4:           
-                $model->sel_feat = $save_arr;
+                $model->feature_id = $save_arr;
             break;
             }    
         }
+    }   
+ 
+        echo CJSON::encode(array(  
+            'text_place'=>$this->replacementPlace($save_arr,$save_type),
+            'data_place'=>$save_arr));                          
+        Yii::app()->end();
+
+/*        
         if($model->validate()){
             if ($model->save()) { 
             //  $_POST['id_return'] = $model->id;
@@ -182,7 +189,8 @@ class AssetController extends Controller {
             } //model->save
         } //validate
         else {echo CJSON::encode(CActiveForm::validate($model)); Yii::app()->end(); }
-
+*/
+        
 /*       else {
             $y=CActiveForm::validate($model);
             $x=CJSON::encode(CActiveForm::validate($model)); 
@@ -190,6 +198,7 @@ class AssetController extends Controller {
             Yii::app()->end();}
  * 
  */
+/*        
     }
     else 
      if (Yii::app()->request->isAjaxRequest) {
@@ -201,7 +210,7 @@ class AssetController extends Controller {
     }  else {
         echo 'get out!';
      }
-
+*/
      
     }
     /**
@@ -210,7 +219,8 @@ class AssetController extends Controller {
      * @param integer $id the ID of the model to be updated
      */
     public function actionUpdate($id) {
-
+//      public function actionUpdate() {
+          
         $model = $this->loadModel($id);
 
         // Uncomment the following line if AJAX validation is needed
@@ -233,15 +243,29 @@ class AssetController extends Controller {
      * @param integer $id the ID of the model to be deleted
      */
     public function actionDelete($id) {
+        
         if (Yii::app()->request->isPostRequest) {
             // we only allow deletion via POST request
-            $this->loadModel($id)->delete();
+            $model=$this->loadModel($id);
+            
+            if (($model->delete())) {
+                 echo CJSON::encode(array('state'=>'ok','responce'=>'Удален объект заявки (товар): '.$model->name));
+            } else echo CJSON::encode(array('state'=>'error','responce'=>'Ошибка удаления'));
+
 
             // if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
+/*            
             if (!isset($_GET['ajax']))
                 $this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
         }
-        else
+ * 
+ */
+            if (!Yii::app()->request->isAjaxRequest) 
+                $this->render('index',array(
+                              'dataProvider'=>null, //$dataProvider,
+        		));
+ 
+         } else
             throw new CHttpException(400, 'Invalid request. Please do not repeat this request again.');
     }
 

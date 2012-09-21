@@ -12,11 +12,6 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custo
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
 $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.locale-ru.js');
 
-/*
-$this->breadcrumbs=array(
-	'Товары',
-);
-*/
 ?>
 <style type="text/css">
       th.ui-th-column div {
@@ -56,6 +51,10 @@ $this->breadcrumbs=array(
 <table id="create_dialog_table"></table>
 </div>
 
+<div id="create_del_dialog" style="display:none;">
+</div>
+
+
 <div id="firstLoad"></div>
 
 <table id="list"></table> 
@@ -93,34 +92,14 @@ $(function() {
         ],
         pager : '#pager',
         rowNum : 1000000,
-//        rowList : [ 50, 100, 500, 1000 ],
         sortname : 'name',
         sortorder : 'asc',
-//        recordtext: 'Товар(ы) {0} - {1}',
-//        viewrecords : true,
         caption : 'Товары',
         toppager:true,
-
-//        rowList: [],        // disable page size dropdown
-    pgbuttons: false,     // disable page control like next, back button
-    pgtext: null,         // disable pager text like 'Page 0 of 10'
-    viewrecords: false,    // disable current view record text like 'View 1-10 of 100'
-
-/*
-  grouping:true, 
-  groupingView : { 
-     groupField : ['supergroup','group'],
-     groupOrder : ['asc','asc'],
-     groupText : ['<b>{0}</b>','<b>{0}</b>'],
-     groupColumnShow : [false,false],
-     groupCollapse : true,
-     groupSummary: [false,false]
-  },
-*/  
-  
-
-    
-    loadonce: true, // to enable sorting on client side
+        pgbuttons: false,     // disable page control like next, back button
+        pgtext: null,         // disable pager text like 'Page 0 of 10'
+        viewrecords: false,   // disable current view record text like 'View 1-10 of 100'    
+        loadonce: true,       // to enable sorting on client side
     
 afterInsertRow: function(row_id, row_data){
     if (row_data.cell_red) {
@@ -128,47 +107,49 @@ afterInsertRow: function(row_id, row_data){
     }
 },
 
-//	sortable: true, //to enable sorting
-//
-
 gridComplete: function () {
     grid.setGridParam({datatype:'local'});
     $("#firstLoad").data('firstLoad', firstLoad);
 },
-//
+
 onPaging : function(which_button) {
-grid.setGridParam({datatype:'json'});
+    grid.setGridParam({datatype:'json'});
 },
 
-        ondblClickRow: function(id) {                                                                                  
-            if (id && id != lastSel) { 
-                grid.restoreRow(lastSel);
-            	grid.setGridParam({editurl:'updateRow'});
-        	grid.setGridParam({datatype:'json'});
-                grid.editRow(id, true);
-                lastSel = id;
-            }
-        },
+ondblClickRow: function(id) {                                                                                  
+   if (id && id != lastSel) { 
+       grid.restoreRow(lastSel);
+       grid.setGridParam({editurl:'updateRow'});
+       grid.setGridParam({datatype:'json'});
+       grid.editRow(id, true);
+       lastSel = id;
+   }
+},
 
+}).navGrid('#pager',{refresh:false,view:false,del:false,add:false,edit:false,cloneToTop:true},
+    {}, // default settings for edit
+    {}, // default settings for add
+    {}, // delete
+    {closeOnEscape: true, multipleSearch: true, 
+       sopt:['cn','eq','ne','bw','bn'],
+         closeAfterSearch: true },          // search options
+    {}
+);                   // end grid
 
-
-    }).navGrid('#pager',{refresh:false,search:false,view:false,del:false,add:false,edit:false,cloneToTop:true}); 
-
-	top_bottom_pager_ButtonAdd = function(options) {
-        grid.jqGrid('navButtonAdd',pager_selector,options);
-        grid.jqGrid('navButtonAdd','#'+grid[0].id+"_toppager",options);
-    };
+top_bottom_pager_ButtonAdd = function(options) {
+    grid.jqGrid('navButtonAdd',pager_selector,options);
+    grid.jqGrid('navButtonAdd','#'+grid[0].id+"_toppager",options);
+};
     
-    top_bottom_pager_ButtonAdd ({
-        caption: '',
-        title: 'Добавить объект заявки (товар)',
-        buttonicon: 'ui-icon-plus',
-        onClickButton: function()
-        {
+top_bottom_pager_ButtonAdd ({
+    caption: '',
+    title: 'Добавить объект заявки (товар)',
+    buttonicon: 'ui-icon-plus',
+    onClickButton: function()
+    {
           var id_ = '';
-
+          
           $("#create_dialog").load('editAssetDialog?id='+id_);
-                     
           $("#create_dialog").dialog({
              title: 'Добавить объект заявки (товар)',
              modal:true,
@@ -203,9 +184,6 @@ grid.setGridParam({datatype:'json'});
                                         var sel_id = data['id_add'];
                                         var sel_row = data['row_add'];
                                         var rt = data['rows'][sel_row]['cell'];
-
-//                                        alert(sel_id);
-                                        
                                         var row = {'id':rt[0],
                                                    'type':rt[1],
                                                    'supergroup':rt[2],
@@ -221,17 +199,14 @@ grid.setGridParam({datatype:'json'});
                                        grid.addRowData(sel_id,row,"last");
                                        grid.setSelection(sel_id, true);
                                         
-//                                        alert(last_row_id + '    ' + rt);
-//                                       grid.addRowData(sel_row,data['rows'][sel_row]['cell'],"last");
-//                                          alert('close');
-                                         $("#create_dialog").dialog('close');
+                                       $("#create_dialog").dialog('close');
                                          
                                      }
                                     }
                             }); 
 
                },
-               'Close': function(){
+               'Отмена': function(){
                $(this).dialog('close');
                 }
              }
@@ -239,50 +214,27 @@ grid.setGridParam({datatype:'json'});
         }
      });
         
-    top_bottom_pager_ButtonAdd ({
-            caption: '',//'Подгруппа',
+top_bottom_pager_ButtonAdd ({
+            caption: '', 
             title: 'Редактировать объект заявки (товар)',
             buttonicon: 'ui-icon-pencil',
             onClickButton: function()
             {
-             	//alert("!");
-//             	$("#create_dialog").load('create');
             	var sel_ = grid.getGridParam('selrow');
             	if(sel_) id_ = grid.getCell(sel_, 'id');
 
 	           	if(id_) {
-
-                
-        //        var firstLoad = $("#firstLoad").data("firstLoad");
-                //if(!firstLoad) {
-//                    alert('resurect!');
-                    //$("#create_multiple_dialog_table").jqGrid('clearGridData');
-                    
-                    //$("#create_multiple_dialog_table").jqGrid('GridUnload');
-                    //$("#create_multiple_dialog_table").empty();
-                    //$("#create_multiple_dialog_table").remove();
-                    //$('#resurection').append("<table id='create_multiple_dialog_table'></table>");
-  //                  firstLoad=true;
-    //                $("#firstLoad").data("firstLoad",firstLoad);
-                    
-      //          }
-                
                 $("#create_dialog").load('editAssetDialog?id='+id_);
                 $("#create_dialog").data('parent_id', id_);
 
                         $("#create_dialog").dialog({
-             	        title: 'Редактировать товар',
+             	        title: 'Редактировать объект заявки (товар)',
                         modal:true,
                         width:1160,
                         height:390,
-                        //stack: false,
                         buttons:{
                             'OK': function(){
-                                //alert($("#supergroups-list").val());
-//                                $response = $("#asset-form").submit();
-
-var options = {
-//                success: function(data){alert(data);},
+       var options = {
                 url: 'editAsset/?id='+id_,
                 type: 'post',
                 dataType: 'json',
@@ -291,91 +243,118 @@ var options = {
                                     },
                 success:  function(data) {
 
-                            var status=data['status'];
+                          var status=data['status'];
                 			
-                			if(status=="ok"){
-	                	 			grid.setGridParam({datatype:'json'});
-//	                	 			grid.setGridParam({url:'getDataForGrid'}); //?id='+id_}); 
-							rd = data['rows'][0]['cell']; //row data
-									//!!! OMG, why it uses only associated array!?
-									//TODO: try to make for cycle...
-//									grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
-									grid.jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
-	                			  $("#create_dialog").dialog('close');
+          		  if(status=="ok"){
+          	 	     grid.setGridParam({datatype:'json'});
+			     rd = data['rows'][0]['cell'];    //row data
+ 			     //!!! OMG, why it uses only associated array!?
+			     //TODO: try to make for cycle...
+//  			     grid.jqGrid('setRowData',sel_,{'rtype':rd[1],'type':rd[2],'supergroup':rd[3],'group':rd[4],'name':rd[5],'part_number':rd[6],'cost':rd[7],'comment':rd[8],'article':rd[9],'article_code':rd[10]});
+			     grid.jqGrid('setRowData',sel_,{
+                                 'type':rd[1],
+                                 'supergroup':rd[2],
+                                 'group':rd[3],
+                                 'name':rd[4],
+                                 'part_number':rd[5],
+                                 'cost':rd[6],
+                                 'comment':rd[7],
+                                 'article':rd[8],
+                                 'article_code':rd[9],
+                                 'cell_red':rd[10]});
+              		     $("#create_dialog").dialog('close');
 
-//								    grid.trigger("reloadGrid");
-
-                			}
-                			else if(status=="err"){
-	                				alert("error:"+data['message']);
-	                			}
-                			else
-                                        {
-                                            var response= jQuery.parseJSON (data);
-
-                                            $.each(response, function(key, value) { 
-                                            $("#"+key+"_em_").show();
-                                            $("#"+key+"_em_").html(value[0]);
-                                            });
+                	    }
+                	    else if(status=="err"){
+	                	alert("error:"+data['message']);
+	                    }
+                	    else
+                            {
+                                var response= jQuery.parseJSON (data);
+                                $.each(response, function(key, value) { 
+                                      $("#"+key+"_em_").show();
+                                      $("#"+key+"_em_").html(value[0]);
+                                });
                                         }
                     },
 
             }; 
 
             // Manually trigger validation
-//            if ($("#asset-form").validate().form() == true) {
-                $('#asset-form').ajaxSubmit(options); 
-//            }
+            $('#asset-form').ajaxSubmit(options); 
+            },
 
-//                                $(this).dialog('close');
+            'Отмена': function(){
+                      $(this).dialog('close');
+             }
+           },
+
+        });
+                  
+     } else alert('Выберите товар!');
+
+   },
+ });             // end edit button
+        
+top_bottom_pager_ButtonAdd ({
+        caption: '',
+        title: 'Удалить объект заявки (товар)!',
+        buttonicon: 'ui-icon-trash',
+        onClickButton: function()
+        {
+            var sel_ = grid.getGridParam('selrow');
+            if(sel_) {
+                var id_ = grid.getCell(sel_, 'id');
+                var name_ = grid.getCell(sel_, 'name');
+
+            if(id_) {
+                $("#create_del_dialog").dialog({
+                    title: 'Удалить объект заявки (товар): '+name_+'?',
+                    modal:true,
+                    width:300,
+                    height:100,
+                    buttons:{
+                        'Да': function(){
+                        
+                            var options = { 
+                                url: '<?php  echo Yii::app()->createUrl('asset/delete',array('id'=>''))?>'+id_,
+                                type: 'post',
+                                dataType: 'json',
+                                error: function(res, status, exeption) {
+                                    alert("error:"+exeption+' status:'+status);
                                 },
+                                success:  function(data) {
+                                   
+                                    if (data.state =="ok")
+                                     {   
+                                        grid.collapseSubGridRow(sel_)
+                                        grid.jqGrid('delRowData',sel_);
+                                     }
 
-
-                 'Отмена': function(){
-//                               $("#create_multiple_dialog_table").empty();
-//                                $("#create_multiple_dialog_table").jqGrid('GridUnload');
-//                                $("#create_multiple_dialog_table").jqGrid('clearGridData');
-//   alert('From index:' + parseInt($("#create_multiple_dialog_table").getGridParam("records"),10));
-
-                                $(this).dialog('close');
-                            }
+                                    alert(data.responce);
+                                    
+                                }
+                            };
+                            $.ajax(options);
+                            $(this).dialog('close');
                         },
+                        'Нет': function(){
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+
+                };          // if id
+            } else  alert('Выберите товар!');              // if sel
+       }                   // onclick
+ }); // end delete
 
 
-                    });
-			    } else alert('Выберите товар!');
-/*
-$.ajax({
-          url: 'addAssetDialog', // вообще, не люблю такой мешанины js и php, надобно конечно url получать из тега, так универсальнее
-          context: $('#create_dialog'),
-          success: function(data){
-            $(this).html(data); // тут важно обратить внимание на то, что вставляется полностью ответ. Если брать только какой-то див из ответа, не будут срабатывать скрипты формы.
-          }
-        });
+ $("#list_toppager_right").append ( 
+   '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_top"></select></div>');
 
-        return false;*/
-
-            },
-        });
-
-    /*
-       grid.jqGrid('navButtonAdd','#pager',{
-            caption: '',//'Подгруппа',
-            title: 'Добавить подгруппу',
-            buttonicon: 'ui-icon-plus',
-            onClickButton: function()
-            {
-             	alert("!");
-            },
-        });
-        */
-
-
-	  $("#list_toppager_right").append ( 
-                '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_top"></select></div>');
-
-   	  $("#pager_right").append ( // here 'pager' part or #pager_left is the id of the pager
-                '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_bottom"></select></div>');
+  $("#pager_right").append ( // here 'pager' part or #pager_left is the id of the pager
+   '<div align="right"><lable>Направление: </lable><select class="dir_selector" id="dir_selector_bottom"></select></div>');
 
 
       $(".dir_selector").load('getDirectionsForSelect');
@@ -396,7 +375,3 @@ $.ajax({
 //-------------------------------------------------------------------------------------------------      
 
 </script>
-
-<?php //echo CHtml::link('Добавить товар', Yii::app()->createUrl("asset/create"))?>
-<!-- <br>  -->
-<?php // echo CHtml::link('Добавить товар по шаблону', Yii::app()->createUrl("assetTemplate/getTemplate"))?>
