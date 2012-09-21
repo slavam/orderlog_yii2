@@ -40,7 +40,17 @@ class SiteController extends Controller
 	    if($error=Yii::app()->errorHandler->error)
 	    {
 	    	if(Yii::app()->request->isAjaxRequest)
-	    		echo $error['message'];
+                {
+                    switch ($error['errorCode'])
+                    {
+                        case '23503':
+                               echo 'Нельзя удалить строку, так как она используется в строках заявки';
+                            break;
+                        default:
+                            echo $error['message'];
+                            break;
+                    }
+                }
 	    	else
 	        	$this->render('error', $error);
 	    }

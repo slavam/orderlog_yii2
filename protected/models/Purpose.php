@@ -86,6 +86,7 @@ class Purpose extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
+        
         public function findGoalsByDirection($direction_id) {
 		$criteria=new CDbCriteria;
                 $criteria->condition="direction_id=".$direction_id;

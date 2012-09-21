@@ -93,6 +93,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
                 sel_=grid.getGridParam('selrow');
                 iddb=grid.getCell(sel_, 'iddb');
                 return {"iddb":iddb};
+            },
+            errorTextFormat : function(response)
+            {
+              return 'Ошибка удаления строки. '+response.responseText;
             }
         },
         {
