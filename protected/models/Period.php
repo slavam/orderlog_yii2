@@ -103,14 +103,13 @@ class Period extends CActiveRecord
 	}
 
         
-               	public function findPeriods()
+        public function findPeriods()
 	{
-                $criteria=new CDbCriteria;
-                $criteria->condition="type_period = 'M' and date_from > to_date('2011-12-31', 'yyyy-mm-dd')";
-       		$periods = Period::model()->findAll($criteria);
-		return CHtml::listData($periods,'ID','NAME');
+            $criteria=new CDbCriteria;
+            $criteria->condition="type_period = 'M' and date_from > to_date('2011-12-31', 'yyyy-mm-dd')";
+            $periods = Period::model()->findAll($criteria);
+            return CHtml::listData($periods,'ID','NAME');
 	}
-
         
 	public function searchPeriod()
 	{
