@@ -629,6 +629,8 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
 				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				$grid.setCell(rowid,'budget_item',xdata["budget_item_id"],null,null,true);
+				
 				var new_dir_id = xdata["direction_id"];
 				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
 				$grid.setCell(rowid,'template_direction_id',new_dir_id,null,null,true);
@@ -767,6 +769,8 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
 				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				$grid.setCell(rowid,'budget_item',xdata["budget_item_id"],null,null,true);
+
 				var new_dir_id = xdata["direction_id"];
 				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
 				$grid.setCell(rowid,'template_direction_id',new_dir_id);

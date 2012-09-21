@@ -282,7 +282,8 @@ class ClaimController extends Controller
                     'cost' => $model->cost,
                     'quantity' => $model->quantity,
                     'info' => $model->assettemplate->info ? $model->assettemplate->info: '',
-                    'direction_id' => $model->assettemplate->direction_id
+                    'direction_id' => $model->assettemplate->direction_id,
+                    'budget_item_id' => $model->budget_item_id
                 ));
   
         Yii::app()->end();
@@ -514,7 +515,7 @@ class ClaimController extends Controller
                     //TODO: check if returns '' on view
                     $row->business_id,//$row->getBusinessName($row->business_id),
                     //TODO: check if returns '' on view
-                    $row->budget_item_id>0 ? $row->budget_item_id:'', //CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
+                    $row->asset->budget_item_id>0 ? $row->asset->budget_item_id:'', //CHtml::encode($row->budgetItem->get2LevelNameBudgetItem($row->budget_item_id).' ('.$row->budgetItem->CODE.')'): '',
                     $row->status_id,//->short_name,
                     $row->asset->assettemplate->info,
                     //TODO: should be creation_method!!!
