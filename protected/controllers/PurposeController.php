@@ -90,8 +90,9 @@ public function actionUpdate() {
                 }
                         break;
                     case 'del':
-                           $model->delete();
+                        $model->delete();
                         break;
+                       
                 }
                 Yii::app()->end();
           }        

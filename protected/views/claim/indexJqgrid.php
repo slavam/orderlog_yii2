@@ -224,6 +224,7 @@ $(function() {
                     modal:true,
                     width:1100,
                     height:600,
+                    zIndex:800,
                     buttons:{
                         'OK': function(){
 
@@ -305,6 +306,7 @@ $(function() {
                     modal:true,
                     width:1100,
                     height:600,
+                    zIndex:800,
                     buttons:{
                         'OK': function(){
                             var rows= jQuery("#claim_line_list").jqGrid('getRowData');

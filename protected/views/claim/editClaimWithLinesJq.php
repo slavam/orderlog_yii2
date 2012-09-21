@@ -433,6 +433,18 @@ function fill_pane(id)
           $grid.delRowData(rowid);
         };
 
+//function numFormat( cellvalue, options, rowObject ){
+//        if (cellvalue){
+//            var ret_val = cellvalue.replace(/\d*,\d*/ig,".");
+//            //ret_val.replace.replace(/[\D\.]*/,"");
+//            return ret_val;
+//        }
+//        else return '0';
+//    }
+//
+//function numUnformat( cellvalue, options, rowObject ){
+//    return cellvalue.replace(",",".");
+//}
 
         
     var pager_selector = "#pager_";
@@ -475,6 +487,7 @@ function fill_pane(id)
                        fn: function(e) {
                        		//var v = parseInt($(e.target).val(), 10);
                        		asset_id = $(e.target).val();
+                                
                        }
                    }
             ],            
@@ -484,7 +497,20 @@ function fill_pane(id)
             },//column
             {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
-            {name: 'cost', width: 40, frozen:false, editable:true},
+            {name: 'cost', width: 40, frozen:false, editable:true, format:"number", formatoptions:{decimalSeparator:"."}, editrules:{custom:true, 
+                    custom_func:function (val, nm) { 
+//                        if (isNaN(val.replace(decimalsep, '.'))) 
+//                        { 
+//                            return [false, nm + ": " + $.jgrid.edit.msg.number] }
+//                        }
+                        if(!val.match(/^[0-9]*\.?[0-9]*$/)) 
+                            {
+                                return [false, nm + ": " + $.jgrid.edit.msg.number];
+                            }
+                            else return [true,''];
+                    }
+                }
+            },
             {name: 'amount', width: 60, frozen:false }, //calculated!
             {name: 'assetgroup', width: 120, frozen:false,/* editable:true,*/ edittype:'select',formatter:"select",editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(AssetGroup::model()->getGroupSubgroupStrings(), array('key'=>'id','value'=>'name'))?> } },
             //{name: 'goal', width: 60, frozen:false },              //findWorkersWithStaff
@@ -601,19 +627,17 @@ function fill_pane(id)
         },       
                 
         ondblClickRow: function (rowid, iRow, iCol, e) {
-
             	$grid.setGridParam({editurl:'#'});
                 $(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () 
                         {
-                            $('#'+rowid+'_name').focus(); //
+                            //$('#'+rowid+'_name').focus(); //
                     	},
                     	null,
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-	
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
             })
@@ -629,10 +653,13 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
 				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				$grid.setCell(rowid,'budget_item',xdata["budget_item_id"],null,null,true);
+				
 				var new_dir_id = xdata["direction_id"];
 				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
 				$grid.setCell(rowid,'template_direction_id',new_dir_id,null,null,true);
-				if (old_dir_id!=new_dir_id)
+				
+                                if (old_dir_id!=new_dir_id)
 				{
 					$grid.setCell(rowid,"features",'',null,null,true);
 					$grid.setCell(rowid,"features_ids",'',null,null,true);
@@ -647,12 +674,16 @@ function fill_pane(id)
 				}
 				if(xdata["price_type_id"]!=2)
 				{
-					$grid.setCell(rowid,'cost',xdata["cost"],null,null,true);
+                                        $grid.setCell(rowid,'cost',xdata["cost"],null,null,true);
 					_msg+="Ц";
 				}
+                                
 				_msg+="]";
-
+                                
+//                                var count =$grid.getCell(rowid,'cost');
+                                
                     		calc_amount(rowid);
+                                
                     		fill_pane(rowid);
                     		new_line_added=false;
 					
@@ -677,7 +708,7 @@ function fill_pane(id)
                     return;
         },
        	loadError: function(xhr, status, error) {alert('status: '+status+" error: "+error)}
-    }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{},{},{},{});
+    }).navGrid('#pager_',{view:false, add:false, del:false,  edit:false, refresh:false,search:false},{zIndex:1234},{zIndex:1234},{zIndex:1234,overlay:true},{zIndex:1234});
 
    $grid.jqGrid('navButtonAdd',pager_selector,{
             caption: '',//'Группа',
@@ -748,7 +779,7 @@ function fill_pane(id)
                     	'',
                     	null, 
                     	function(){/*aftersave*/
-
+                                
                     		
          $.ajax({
         url: "findWorkerDepForList?id="+worker_id
@@ -767,6 +798,8 @@ function fill_pane(id)
 				$grid.setCell(rowid,'type',xdata["ware_type_id"],null,null,true);
 				$grid.setCell(rowid,'assetgroup',xdata["asset_group_id"],null,null,true);
 				$grid.setCell(rowid,'asset_info',xdata["info"],null,null,true);
+				$grid.setCell(rowid,'budget_item',xdata["budget_item_id"],null,null,true);
+
 				var new_dir_id = xdata["direction_id"];
 				var old_dir_id = $grid.getCell(rowid,'template_direction_id');
 				$grid.setCell(rowid,'template_direction_id',new_dir_id);
