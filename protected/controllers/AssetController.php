@@ -145,9 +145,8 @@ class AssetController extends Controller {
     if (isset($_POST['id'])) {
         
         $id = $_POST['id'];
-        
         $model = $this->loadModel($id);
-        
+       
         if (isset($_POST['type_data']) && isset($_POST['multiple_arr'])) {
             
             $save_type = $_POST['type_data'];
@@ -168,6 +167,8 @@ class AssetController extends Controller {
             break;
             }    
         }
+    }   
+ 
         echo CJSON::encode(array(  
             'text_place'=>$this->replacementPlace($save_arr,$save_type),
             'data_place'=>$save_arr));                          
@@ -197,6 +198,7 @@ class AssetController extends Controller {
             Yii::app()->end();}
  * 
  */
+/*        
     }
     else 
      if (Yii::app()->request->isAjaxRequest) {
@@ -208,7 +210,7 @@ class AssetController extends Controller {
     }  else {
         echo 'get out!';
      }
-
+*/
      
     }
     /**
