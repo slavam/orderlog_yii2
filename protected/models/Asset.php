@@ -151,7 +151,7 @@ class Asset extends CActiveRecord
 			'criteria'=>$criteria,
 		));
 	}
-        
+/*        
         private function CheckSave($arr_for_check) {
                                 
                 $tmpcount = count($arr_for_check);
@@ -164,32 +164,32 @@ class Asset extends CActiveRecord
        		$tmp_str = "{".$tmp_str."}";
            return $tmp_str;           
         }
+*/
         
 	public function afterFind() {
-            
+/*            
             if (isset($this->place_id)) {
                 $this->place_id = trim($this->place_id,"{}");
 		$this->selection = explode(',',$this->place_id);
             } else {
                 $this->selection = NULL;
             }
+ * 
+ */
+            if (isset($this->place_id)) {
+                $this->place_id = trim($this->place_id,"{}");
+            }
+
             if (isset($this->manufacturer_id)) {
                 $this->manufacturer_id = trim($this->manufacturer_id,"{}");
-                $this->sel_man = explode(',',$this->manufacturer_id);
-            } else {
-                $this->sel_man = NULL;
             }
+            
             if (isset($this->product_id)) {
                 $this->product_id = trim($this->product_id,"{}");
-                $this->sel_prod = explode(',',$this->product_id);
-            } else {
-                $this->sel_prod = NULL;
             }
+
             if (isset($this->feature_id)) {
                 $this->feature_id = trim($this->feature_id,"{}");
-                $this->sel_feat = explode(',',$this->feature_id);
-            } else {
-                $this->sel_feat = NULL;
             }
 
 	}
@@ -199,23 +199,26 @@ class Asset extends CActiveRecord
 	 */
 	protected function beforeSave()
 	{
-        if (isset($this->selection)) {
-                $this->place_id = $this->CheckSave($this->selection);
+            
+        if (isset($this->place_id)) {
+           $this->place_id = "{".$this->place_id."}";
         } else {
-                $this->place_id = NULL;
+           $this->place_id = NULL;            
         }     
-        if (isset($this->sel_man)) {
-                $this->manufacturer_id = $this->CheckSave($this->sel_man);
+  
+        if (isset($this->manufacturer_id)) {
+                $this->manufacturer_id = "{".$this->manufacturer_id."}";
         } else {
                 $this->manufacturer_id = NULL;
         }
-        if (isset($this->sel_prod)) {
-                $this->product_id = $this->CheckSave($this->sel_prod);
+        
+        if (isset($this->product_id)) {
+                $this->product_id = "{".$this->product_id."}";
         } else {
                 $this->product_id = NULL;
         }
-        if (isset($this->sel_feat)) {
-                $this->feature_id = $this->CheckSave($this->sel_feat);
+        if (isset($this->feature_id)) {
+                $this->feature_id = "{".$this->feature_id."}";
         } else {
                 $this->feature_id = NULL;
         }
