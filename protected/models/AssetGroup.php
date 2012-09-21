@@ -124,4 +124,8 @@ class AssetGroup extends CActiveRecord
                 }
         return $model;   
 	}
+        public function getGroupSubgroupName($asset_group_id){
+            $group = $model = AssetGroup::model()->findByPk($asset_group_id);
+            return $group->block->name.' => '.$group->name;
+        }
 }

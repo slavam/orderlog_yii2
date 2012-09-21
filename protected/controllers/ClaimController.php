@@ -906,22 +906,24 @@ class ClaimController extends Controller
             'H'=>array('index'=>'comment','title'=>'Комментарий','width'=>20),
             'I'=>array('index'=>'description','title'=>'Описание','width'=>30),
             'J'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20),
-//            'K'=>array('index'=>'id','title'=>'Line-ID'),
-            'K'=>array('index'=>'count','title'=>'Кол-во'),
-            'L'=>array('index'=>'amount','title'=>'Сумма'),
-            'M'=>array('index'=>'description','title'=>'Описание','width'=>30),
-            'N'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
-            'O'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
-            'P'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
-            'Q'=>array('index'=>'cost','title'=>'Цена'),
-            'R'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
-            'S'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
-            'T'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
-            'U'=>array('index'=>'complect_id','title'=>'Комплект'),
-            'V'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
-            'W'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
-            'X'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
-            'Y'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
+            'K'=>array('index'=>'unit_id','title'=>'Ед.изм'), /////////////
+            'L'=>array('index'=>'count','title'=>'Кол-во'),
+            'M'=>array('index'=>'amount','title'=>'Сумма'),
+            'N'=>array('index'=>'description','title'=>'Описание','width'=>30),
+            'O'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
+            'P'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
+            'Q'=>array('index'=>'type','title'=>'Тип'), ////////////
+            'R'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
+            'S'=>array('index'=>'asset_group','title'=>'Группа'), ///////////////
+            'T'=>array('index'=>'cost','title'=>'Цена'),
+            'U'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
+            'V'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
+            'W'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
+            'X'=>array('index'=>'complect_id','title'=>'Комплект'),
+            'Y'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
+            'Z'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
+            'AA'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
+            'AB'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
 //            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
 //            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
 );
@@ -939,8 +941,10 @@ class ClaimController extends Controller
         $assets = Asset::model()->findAssets();
         $budgetItems = CHtml::listData(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(),'ID','NAME');
         $workersStaffsDepartments = Worker::model()->getAllWorkersStaffsDepartmens();
+//        $units = Unit::model()->findUnits();
 //        $addresses = CHtml::listData(Place::model()->findAllAddresses(),'id', 'title');
 //        $states = State::model()->findAllStates();
+        $assetGroups = AssetGroup::model()->getGroupSubgroupStrings();
         $PHPExcel = new PHPExcel();
         $PHPExcel->setActiveSheetIndex(0);
         $aSheet = $PHPExcel->getActiveSheet();
@@ -964,7 +968,7 @@ class ClaimController extends Controller
             $i=0;
             foreach ($claim_lines as $line) {
                $this->fill_claim_fields($periods,$directions,$divisions,$aSheet, $record, $j);  // fill claim fields
-                $i = $claim_fields_num;
+                $i = $claim_fields_num+1;
                 foreach ($line as $key => $value) {
                     switch ($key) {
                         case 'for_whom':
@@ -974,7 +978,11 @@ class ClaimController extends Controller
                             $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $budgetItems[$value]:''); //$line->budgetItem->get2LevelNameBudgetItem($value):'');
                             break;
                         case 'asset_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$assets[$value]);
+                            $aSheet->setCellValue($this->letters[$i+1].$j,$assets[$value]);
+                            $aSheet->setCellValue($this->letters[$i-6].$j,$line->asset->unit->sign);
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->asset->waretype->short_name);
+                            $aSheet->setCellValue($this->letters[$i+2].$j,$line->asset->asset_group_id>0 ? $line->asset->assetgroup->getGroupSubgroupName($line->asset->asset_group_id):'');
+                            $i = $i+2;
                             break;
                         case 'business_id':
                             $aSheet->setCellValue($this->letters[$i].$j,$businesses[$value]);
