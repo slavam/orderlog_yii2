@@ -63,7 +63,7 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
 <script type="text/javascript">
     var lastSel;
     var place_text = $("#place_id_selector");
-    var place_data = $("#Asset_place_id");
+    var place_data = $("#Asset_selection");
 
     var request = false;
     var newmodel = <? echo ($model->isNewRecord ? 'true' : 'false' )?>;
@@ -266,8 +266,10 @@ function send(id_multiple_param){
     
 //    if(sel_) id_ = $("#create_multiple_dialog_table").getCell(sel_, 'id');
 
+      id_temlate = $("#Asset_asset_template_id").val();
+      if(id_temlate) {
+          
       id_direction = $("#Asset_direction_id").val();
-      if(id_direction) {
 
     var strtitle;
         
@@ -569,7 +571,9 @@ switch (id_multiple_param) {
                                       echo CHtml::link(
                                                     CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать расположение', 
                                                     array( 'class'=>$class,'onClick'=>'send(1)',)), array('#'));
-                                      echo $form->hiddenField($model,'place_id', array('value'=>$model->place_id, 'style'=>'display: none;')); ?></td>
+//                                                    echo $model->place_id;
+                                                    echo $form->hiddenField($model,'place_id', array('value'=>$model->place_id, 'style'=>'display: none;')); 
+                                                    //echo CHtml::hiddenField('selection', array('value'=>$model->selection)); ?></td>
 	</tr>
 <!-- Zabil do lychih vremen  -->
 <!--         <tr>  -->
@@ -588,7 +592,7 @@ switch (id_multiple_param) {
                                       echo CHtml::link(
                                                     CHtml::image(Yii::app()->request->baseUrl.'/images/edit.png','Редактировать продукты', 
                                                     array( 'class'=>$class,'onClick'=>'send(3)',)), array('#'));
-                                      echo $form->hiddenField($model,'product_id', array('value'=>$model->product_id, 'style'=>'display: none;')); ?></td>
+                                      echo $form->hiddenField($model,'product_id', array('value'=>($model->product_id > 0 ? $model->product_id: NULL), 'style'=>'display: none;')); ?></td>
 	</tr>
 	<tr>
 		<td><b>Характеристики</b></td>
