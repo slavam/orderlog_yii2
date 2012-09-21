@@ -158,13 +158,13 @@ class AssetController extends Controller {
                 $model->place_id = $save_arr;
             break;
             case 2:           
-                $model->sel_man = $save_arr;
+                $model->manufacturer_id = $save_arr;
             break;
             case 3:           
-                $model->sel_prod = $save_arr;
+                $model->product_id = $save_arr;
             break;
             case 4:           
-                $model->sel_feat = $save_arr;
+                $model->feature_id = $save_arr;
             break;
             }    
         }
