@@ -607,7 +607,7 @@ function fill_pane(id)
 
                     $(this).jqGrid('editRow', rowid, true, function () 
                         {
-                            $('#'+rowid+'_name').focus(); //
+                            //$('#'+rowid+'_name').focus(); //
                     	},
                     	null,
                     	'',
