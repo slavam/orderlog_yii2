@@ -506,7 +506,11 @@ class ClaimController extends Controller
                     $row->product_id,
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
                     //TODO: check if returns '' on view
-                    $row->position_id>0? $row->position->findAddress($row->position_id): '', //? $row->findAddress($row->position_id): '',
+
+//                    $row->position_id>0? $row->position->findAddress($row->position_id): '', //? $row->findAddress($row->position_id): '',
+
+                    $row->position_id>0? Place::model()->findAllPlaces($row->position_id)->title: '', //? $row->findAddress($row->position_id): '',
+
                     $row->position_id,
                     $row->description,
                     //TODO: check if returns '' on view

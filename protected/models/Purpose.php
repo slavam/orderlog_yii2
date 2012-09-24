@@ -36,11 +36,6 @@ class Purpose extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-//			array('direction_id', 'numerical', 'integerOnly'=>true),
-			array('name', 'safe'),
-			// The following rule is used by search().
-			// Please remove those attributes that should not be searched.
-//			array('id, direction_id, name', 'safe', 'on'=>'search'),
 			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
@@ -48,14 +43,14 @@ class Purpose extends CActiveRecord
 	/**
 	 * @return array relational rules.
 	 */
-	public function relations()
-	{
-		// NOTE: you may need to adjust the relation name and the related
-		// class name for the relations automatically generated below.
-		return array(
-//                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id' ),
-		);
-	}
+//	public function relations()
+//	{
+//		// NOTE: you may need to adjust the relation name and the related
+//		// class name for the relations automatically generated below.
+////		return array(
+////                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id' ),
+////		);
+//	}
 	/**
 	 * @return array customized attribute labels (name=>label)
 	 */
@@ -63,7 +58,6 @@ class Purpose extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-//			'direction_id' => 'Direction',
 			'name' => 'Name',
 		);
 	}

@@ -78,12 +78,20 @@
         zmax += def.inc;
         $(this).css("z-index", zmax);
     });
+
+    Array.max = function( array ){
+        return Math.max.apply( Math, array );
+    };
+
 }
 </script>
 
-<h1>Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
+<div>
+<h1 style="float:left;">Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
+<h1 style="float:right;">Общая сумма заявки: <span id="total_by_claim" style="color:#2E6E9E;"></span></h1>
+</div>
 
-<div class="form">
+<div class="form" style="clear:both;">
 
 
 
@@ -150,7 +158,7 @@
     var global_rowid;
     var idsOfSelectedRows = [];
     var sltd=true;
-    
+
     function deselect()
             {
                     $('#create_multiple_dialog_table').jqGrid('resetSelection');
@@ -167,7 +175,7 @@
            
         }; 
     var opts_position={
-        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+        data:<?echo Helpers::BuildSpecificationsGridList(Helpers::Merge2Models(Place::model()->findAllTowns(), Place::model()->findAllAddresses()),array('key'=>'id','value'=>'title'));?>,
         multiselect:false,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},
@@ -177,7 +185,10 @@
             selected=rowid;
         },
         loadComplete: function() {
-            $('#create_multiple_dialog').prepend('<p class="unselect"><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>');
+            if(!$(".unselect").html())
+                {
+                    $('#create_multiple_dialog').prepend('<p class="unselect"><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>');
+                }
         },
         gridComplete: function() {
             var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
@@ -319,7 +330,7 @@
         pager : null,
         rowNum : 1000000,
         gridview: true,
-        rownumbers: false,
+        rownumbers: true,
         onSelectRow: opts.onSelectRow,
         emptyrecords: opts.tag,
         gridComplete: opts.gridComplete,
@@ -330,7 +341,7 @@
         caption : false,
         pgbuttons: false,      // disable page control like next, back button
         pgtext: null,          // disable pager text like 'Page 0 of 10'
-        viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
+        viewrecords: true,    // disable current view record text like 'View 1-10 of 100'    
         loadonce: true,         // to enable sorting on client side
         loadui: 'disable'
 };
@@ -342,7 +353,7 @@ $("#create_multiple_dialog").dialog(
                 title: opts.dialogtitle,
                 modal:true,
                 width:800,
-                height:600,
+                height:650,
                 zIndex: $.maxZIndex()+ 1,
                 buttons:{
                     'OK': opts.dialogOkHandler
@@ -393,6 +404,15 @@ $(function() {
     //var grid_opts;
     var $grid=$("#claim_line_list");
 
+	function calc_total_by_claim()
+	{
+		//alert("write!");
+		var sum = $grid.jqGrid('getCol','amount', false, 'sum');
+		if( isNaN(sum) ) sum = 0;
+		$("#total_by_claim").html(sum);
+	};
+
+
 function fill_pane(id)
 {
                 $(".hint").html("");
@@ -402,12 +422,16 @@ function fill_pane(id)
     var name = $grid.getCell(id, 'name');
     $grid.setColProp('name',{formatter:"select"});
     var count = $grid.getCell(id, 'count');
+    $grid.setColProp('unit',{formatter:null});
     var unit = $grid.getCell(id, 'unit');
+    $grid.setColProp('unit',{formatter:"select"});
     var amount = $grid.getCell(id, 'amount');
     if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
-    $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+    $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:#2E6E9E;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:#2E6E9E;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
     _msg="[";
 };
+
+
 	function calc_amount(id)
 	{
             var count = $grid.getCell(id, 'count');
@@ -495,7 +519,7 @@ function fill_pane(id)
             
             }//editoptions
             },//column
-            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true, format:"number", formatoptions:{decimalSeparator:"."}, editrules:{custom:true, 
                     custom_func:function (val, nm) { 
@@ -624,6 +648,9 @@ function fill_pane(id)
               //  this.parentNode.click();
               place_selector_grid_clk(rowid);
             });
+              //total here 1
+              calc_total_by_claim();
+
         },       
                 
         ondblClickRow: function (rowid, iRow, iCol, e) {
@@ -683,7 +710,7 @@ function fill_pane(id)
 //                                var count =$grid.getCell(rowid,'cost');
                                 
                     		calc_amount(rowid);
-                                
+                            calc_total_by_claim();    
                     		fill_pane(rowid);
                     		new_line_added=false;
 					
@@ -732,8 +759,13 @@ function fill_pane(id)
 				}
 	
 
-               var last_row_id = $grid.getGridParam("reccount");
+//               var last_row_id = $grid.getGridParam("reccount");
+
+               var ids_ = $grid.jqGrid("getDataIDs");
+               last_row_id=Math.max.apply(Math, ids_);
+
                lastSel=rowid=last_row_id+1;
+
                var row = {                      "iddb":null,
 						"type":"",
 						"name":"",
@@ -820,6 +852,7 @@ function fill_pane(id)
 
 				_msg+="]";
                     		calc_amount(rowid);
+                            calc_total_by_claim();
                     		fill_pane(rowid);
                     		new_line_added=false;
 				
@@ -905,7 +938,28 @@ function fill_pane(id)
                     else alert('Выберите запись');
                 }
     });
+//Кнопка удаления
+    $grid.jqGrid('navButtonAdd',pager_selector,{
+                caption: '',//'Группа',
+                title: 'Клонировать строку',
+                buttonicon: 'ui-icon-transferthick-e-w',
+                onClickButton:function()
+                {
+                    var rowid = $grid.getGridParam('selrow');
+                    if(rowid)
+                    {
+                        var rowdata = $grid.getRowData(rowid);
+//                        alert (JSON.stringify(rowdata));
+                        rowdata.iddb=null;
+//                        var last_row_id = $grid.getGridParam("reccount");
+               var ids_ = $grid.jqGrid("getDataIDs");
+               last_row_id=Math.max.apply(Math, ids_);
 
+                        $grid.addRowData(last_row_id+1,rowdata,"last");
+                    }
+                    else alert('Выберите запись');
+                }
+    });
 		function after_save(rowID, response ) 
 		{
 //			  var ret_iddb = $.parseJSON(response.responseText);

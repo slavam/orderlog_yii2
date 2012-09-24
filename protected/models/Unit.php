@@ -88,7 +88,7 @@ class Unit extends CActiveRecord
 	}
         public function findUnits()
 	{
-		return CHtml::listData(Unit::model()->findAll(array('order' => 'name')),'id','name');
+		return CHtml::listData(Unit::model()->findAll(array('order' => 'id')),'id','name');
 	}
         
 }
