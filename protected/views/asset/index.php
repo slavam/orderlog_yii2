@@ -53,7 +53,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 
 <div id="create_del_dialog" style="display:none">
 </div>
-<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар), так как он используется в строках заявки!
+<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар):, так как он используется в строках заявки!
 </div>
 
 
@@ -317,7 +317,12 @@ top_bottom_pager_ButtonAdd ({
                     height:100,
                     buttons:{
                         'Да': function(){
-                        
+                            
+                            var error_str = document.getElementById("error_del_dialog").innerHTML;
+                            var tagList = error_str.split(',');
+                            document.getElementById("error_del_dialog").innerHTML = tagList[0]+" "+
+                                                                                    name_+","+
+                                                                                    tagList[1];
                             var options = { 
                                 url: '<?php  echo Yii::app()->createUrl('asset/delete',array('id'=>''))?>'+id_,
                                 type: 'post',
