@@ -167,7 +167,7 @@
            
         }; 
     var opts_position={
-        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllTowns(), array('id','title'));?>,
+        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllAddresses(), array('id','title'));?>,
         multiselect:false,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},

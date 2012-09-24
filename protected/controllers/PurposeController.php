@@ -17,7 +17,7 @@ class PurposeController extends Controller{
             $dataProvider = new CActiveDataProvider('Purpose', array(
                 'pagination' => false,
                 'criteria' => array(
-                    'order' => 'direction_id, name',
+                    'order' => 'name',
                 ),
             ));
             
@@ -29,7 +29,6 @@ class PurposeController extends Controller{
 	                $responce['rows'][$i]['cell'] = array(
 	                			$row->id, 
 	                			$row->name,
-	                			$row->direction->name
                             );
                 }
 
@@ -47,7 +46,7 @@ class PurposeController extends Controller{
                 if(isset($_POST['id']))
                 {
                     $model->name=$_POST['name'];
-                    $model->direction_id = $_POST['direction_id'];
+                    
                     if ($model->save()) {
                         if (Yii::app()->request->isAjaxRequest) {
                             echo CJSON::encode(array(
@@ -63,9 +62,9 @@ class PurposeController extends Controller{
             'model' => $model,
         ));
         }
-public function loadModel($id)
+public function loadModel($iddb)
 {
-$model=Purpose::model()->findByPk($id);
+$model=Purpose::model()->findByPk($iddb);
 if($model===null)
         throw new CHttpException(404,'The requested page does not exist.');
 
@@ -80,7 +79,7 @@ public function actionUpdate() {
         switch ($_POST['oper']) {
             case 'edit':
                 $model->name = $_POST['name'];
-                $model->direction_id = $_POST['direction_id'];
+                
                 if ($model->save()) {
                     if (Yii::app()->request->isAjaxRequest) {
                         echo "Запись отредактирована";

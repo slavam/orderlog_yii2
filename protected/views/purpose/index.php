@@ -56,11 +56,10 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
             sortable:true,
             autowidth:true,
             ignoreCase:true,
-            colNames : ['iddb','Цель','Направление'],
+            colNames : ['iddb','Цель'],
             colModel : [
                 {name:'iddb',index:'id', width:20, hidden:true},
                 {name:'name', index:'name', width:70,editable:true},
-                {name:'direction_id',index:'direction_id', width:100,editable:true,edittype: 'select', editoptions: {value:<?echo Helpers::BuildEditOptions(Direction::model(), array('key'=>'id','value'=>'name'))?>}}
                 ],
             pager : '#purpose-grid-table',
             rowNum : 0,
@@ -113,7 +112,7 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
             {
                
                var last_row_id = grid.getGridParam("reccount");
-               var row = {"iddb":last_row_id+1,"name":"","direction_id":""};
+               var row = {"iddb":last_row_id+1,"name":""};
                if (lastSel) grid.restoreRow(lastSel);
                
                grid.addRowData(last_row_id+1,row,"last");
