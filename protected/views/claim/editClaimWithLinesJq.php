@@ -88,7 +88,7 @@
 
 <div>
 <h1 style="float:left;">Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
-<h1 style="float:right;">Обшчая сумма заявки: <span id="total_by_claim" style="color:#2E6E9E;"></span></h1>
+<h1 style="float:right;">Общая сумма заявки: <span id="total_by_claim" style="color:#2E6E9E;"></span></h1>
 </div>
 
 <div class="form" style="clear:both;">
