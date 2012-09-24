@@ -162,18 +162,18 @@ class ClaimLine extends CActiveRecord
             return $lines;
         }
         
-        public function findAddress($address_id)
-	{
-            $position = Place::model()->findAllBySql("
-                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
-                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
-                    FROM places T1 WHERE T1.parent_id IS NULL
-                  union
-                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
-                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
-                  select path as title from temp1 where id=".$address_id);
-            return CHtml::encode($position[0]->title); 
-	}
+//        public function findAddress($address_id)
+//	{
+//            $position = Place::model()->findAllBySql("
+//                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
+//                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
+//                    FROM places T1 WHERE T1.parent_id IS NULL
+//                  union
+//                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
+//                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
+//                  select path as title from temp1 where id=".$address_id);
+//            return CHtml::encode($position[0]->title); 
+//	}
 
         public function findProductsAsString($claim_line_id,$type='string')
         {
@@ -234,13 +234,13 @@ class ClaimLine extends CActiveRecord
             return $res;
         }
 
-        public function getBusinessName($business_id)
-        {
-            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
-                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
-            $business = Business::model()->findBySql($sql);
-            return $business->NAME;
-        }
+//        public function getBusinessName($business_id)
+//        {
+//            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+//                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
+//            $business = Business::model()->findBySql($sql);
+//            return $business->NAME;
+//        }
         
         public function getProductsNamesFromArray($product_ids){
             return Product::model()->getNamesFromArray($product_ids);
