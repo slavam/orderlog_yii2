@@ -36,11 +36,12 @@ class Purpose extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('direction_id', 'numerical', 'integerOnly'=>true),
+//			array('direction_id', 'numerical', 'integerOnly'=>true),
 			array('name', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id, direction_id, name', 'safe', 'on'=>'search'),
+//			array('id, direction_id, name', 'safe', 'on'=>'search'),
+			array('id, name', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,7 +53,7 @@ class Purpose extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id' ),
+//                    'direction' => array(self::BELONGS_TO, 'Direction', 'direction_id' ),
 		);
 	}
 	/**
@@ -62,7 +63,7 @@ class Purpose extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'direction_id' => 'Direction',
+//			'direction_id' => 'Direction',
 			'name' => 'Name',
 		);
 	}
@@ -79,7 +80,7 @@ class Purpose extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('direction_id',$this->direction_id);
+//		$criteria->compare('direction_id',$this->direction_id);
 		$criteria->compare('name',$this->name,true);
 
 		return new CActiveDataProvider($this, array(
@@ -89,7 +90,7 @@ class Purpose extends CActiveRecord
         
         public function findGoalsByDirection($direction_id) {
 		$criteria=new CDbCriteria;
-                $criteria->condition="direction_id=".$direction_id;
+//                $criteria->condition="direction_id=".$direction_id;
                 $criteria->order='name';
        		$goals = Purpose::model()->findAll($criteria);
 		return CHtml::listData($goals,'id','name');
