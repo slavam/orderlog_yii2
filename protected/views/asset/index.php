@@ -51,7 +51,9 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 <table id="create_dialog_table"></table>
 </div>
 
-<div id="create_del_dialog" style="display:none;">
+<div id="create_del_dialog" style="display:none">
+</div>
+<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар), так как он используется в строках заявки!
 </div>
 
 
@@ -321,7 +323,18 @@ top_bottom_pager_ButtonAdd ({
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
-                                    alert("error:"+exeption+' status:'+status);
+                                $("#error_del_dialog").dialog({
+                                    title: 'Ошибка удаления!',
+                                    modal:true,
+                                    width:300,
+                                    height:150,
+                                    buttons:{
+                                        'Ok': function(){
+                                             $(this).dialog('close')
+                                        }
+                                       }
+                                })
+//                                    alert("error from index:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
                                    
