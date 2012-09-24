@@ -1,7 +1,7 @@
 <div class="checklimits-descripition">
 <p>Период: <?php echo Period::model()->findByPk($period_id)->NAME ?></p>
 <p>Направление: <?php echo Direction::model()->findByPk($direction_id)->name ?></p>
-<p>Отделение: <?php echo Division::model()->findByPk($division_id)->NAME ?></p>
+<p>Отделение: <?php echo ($division_id!='0' ? Division::model()->findByPk($division_id)->NAME: 'Весь банк')?></p>
 </div>
 <?php
 $cs = Yii::app()->clientScript;
@@ -79,7 +79,7 @@ $(function() {
             {name:'direction_id',index:'direction_id', width:20, hidden:true},
             {name:'division',index:'division', width:200, sortable:false, hidden:true},
 //            {name:'article',index:'article', width:300, sortable:false},
-            {name: 'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name:'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
             {name:'limit',index:'limit', width:70, sortable:true},
             {name:'sum',index:'sum', width:70},
             {name:'delta',index:'delta', width:70},
@@ -111,9 +111,10 @@ $(function() {
                 height : 'auto',
                 width : '1100',
                 loadonce:true,
-                colNames: ['claim_id','Подразделение','Заявка','Тип','Название','Ед. изм.','Кол-во','Цена','Сумма','Примечание','Для кого','Для кого','Просмотр'],
+                colNames: ['claim_id','Отделение','Подразделение','Заявка','Тип','Название','Ед. изм.','Кол-во','Цена','Сумма','Примечание','Для кого','Для кого','Просмотр'],
                 colModel: [
                     {name: 'claim_id', width: 50, hidden:true },
+                    {name: 'division', width: 100, hidden:false },
                     {name: 'department', width: 150 },
                     {name: 'claim_num', width: 50 },
                     {name: 'type', width: 40 },

@@ -117,20 +117,36 @@ public $PATH;
 			'criteria'=>$criteria,
 		));
 	}
-        public function findAllPlaces()
+        public function findAllPlaces($place_id=null)
         {
-            $positions = Place::model()->findAllBySql("
+            if (!$place_id)
+            {
+                $place_id_where="";  
+            }
+            else $place_id_where = " and id=".$place_id;
+            $sql="
                 WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
                   SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
                     FROM places T1 WHERE T1.parent_id IS NULL
                   union
                     select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
                       FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
-                  select id, path as title from temp1 where level=3 ORDER BY PATH");
-//            $data = array(''=>'Задайте расположение');
-            foreach($positions as $position){
+                  select id, path as title from temp1 where level=3".$place_id_where." ORDER BY PATH";
+            
+            
+            if (!$place_id)
+            {
+                $positions = Place::model()->findAllBySql($sql);
+                foreach($positions as $position){
                     $data[$position->id] = $position->title;
-            }			
+                }
+            }
+            else{
+                $data = $positions = Place::model ()->findBySql($sql);
+            }
+            
+//            $data = array(''=>'Задайте расположение');
+            
             return $data;
         }
         

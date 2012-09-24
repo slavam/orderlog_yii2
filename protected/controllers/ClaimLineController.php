@@ -309,6 +309,8 @@ class ClaimLineController extends Controller
         }
         
         public function actionGetLimits($direction_id, $period_id, $division_id){
+            $s = '';
+            if ($division_id != '0'){
             $sql = '
                 select c.division_id  as id, budget_item_id, sum(amount) as amount
                 from claim_lines c_l
@@ -317,6 +319,15 @@ class ClaimLineController extends Controller
                     and c.period_id='.$period_id.'
                 group by c.division_id, budget_item_id
                 order by c.division_id, budget_item_id';
+            }else { $sql = '
+                select 0 as id, budget_item_id, sum(amount) as amount
+                from claim_lines c_l
+                join claims c on c.id=c_l.claim_id 
+                where budget_item_id > 0 and c.direction_id='.$direction_id.'
+                    and c.period_id='.$period_id.'
+                group by budget_item_id
+                order by budget_item_id';
+            }
             $lines = ClaimLine::model()->findAllBySql($sql);
             $responce['rows']=array();
             
@@ -328,8 +339,7 @@ class ClaimLineController extends Controller
                     $period_id,
                     $row->id,  // division_id
                     $direction_id,
-                    Division::model()->findByPk($row->id)->NAME, //->findDivisionById($row->id), 
-//                    $row->budgetItem->NAME,
+                    Division::model()->findByPk($row->id)->NAME, 
                     $row->budget_item_id,
                     $l, //$limits[$row->id][$row->budget_item_id], 
                     $row->amount,
@@ -341,19 +351,24 @@ class ClaimLineController extends Controller
         
         public function actionGetClaimLinesByArticle()
         {
-            $sql = 'select c_l.*
+            $s = '';
+            if ($_GET['division_id']!='0') 
+                $s = 'c.division_id='.$_GET['division_id'].' and ';
+            $sql = '
+                select c_l.*
                 from claim_lines c_l
                 join claims c on c.id=c_l.claim_id
                 where budget_item_id='.$_GET['article_id'].' and 
-                    c.direction_id='.$_GET['direction_id'].' and 
-                    c.division_id='.$_GET['division_id'].' and 
-                    c.period_id='.$_GET['period_id'];
+                    c.direction_id='.$_GET['direction_id'].' and '.$s.'
+                    c.period_id='.$_GET['period_id'].' 
+                order by c.division_id, c_l.id';
             $lines = ClaimLine::model()->findAllBySql($sql);
             $responce['rows']=array();
             foreach ($lines as $i=>$row) {
                 $responce['rows'][$i]['id'] = $row->id;
                 $responce['rows'][$i]['cell'] = array(
                     $row->claim_id,
+                    $row->claim->division->NAME,
                     $row->claim->findDepartment($row->claim->department_id),
                     $row->claim->claim_number,
                     $row->asset->waretype->short_name, 
@@ -380,48 +395,6 @@ class ClaimLineController extends Controller
             ));
         }
 
-//    public function actionEditClaimLineDialog($id)
-//    {
-//    	if(Yii::app()->request->isAjaxRequest)
-//        {
-//            $model = $this->loadModel($id);
-//
-//            // For jQuery core, Yii switches between the human-readable and minified
-//			// versions based on DEBUG status; so make sure to catch both of them
-//            Yii::app()->clientScript->scriptMap['jquery.js'] = false;
-//            Yii::app()->clientScript->scriptMap['jquery.min.js'] = false;
-//
-//            $this->renderPartial('_form',array('model'=>$model),false,true);
-//            Yii::app()->end();
-//        } 
-//    }
-//    public function actionEditClaimLine($id) {
-//        $model = $this->loadModel($id);
-//        if (isset($_POST['ClaimLine'])) {
-//            $model->attributes = $_POST['ClaimLine'];
-//            if($model->validate()){
-//                if ($model->save()) { 
-//                    if (Yii::app()->request->isAjaxRequest) {
-//                        $this->actionGetDataForGrid(); //encode json only one asset by id
-//                        Yii::app()->end();
-//                    } else 
-//                        echo 'get out!';
-//                }//model->save
-//            } else {
-//                echo CJSON::encode(CActiveForm::validate($model)); 
-//                Yii::app()->end();
-//            }
-//        } else
-//            if (Yii::app()->request->isAjaxRequest) {
-//                echo CJSON::encode(array(
-//                    'status' => 'err',
-//                    'message' => 'no ClaimLine form passed!',
-//                ));
-//                Yii::app()->end();
-//            } else {
-//                echo 'get out!';
-//            }
-//    }
 
 
 //WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (

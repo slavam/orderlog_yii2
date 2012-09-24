@@ -130,8 +130,16 @@ class DIVISION extends CActiveRecord
 
 	public static function findDivisionById($id)
 	{
-//		$model = Division::model()->findByPk($id); 
                 return Division::model()->findByPk($id)->NAME;
+	}
+        public static function findDivisionsWithPrompt()
+	{
+		$models = Division::model()->findAll(array('order' => 'CODE'));
+                $data = array('0'=>'Весь банк');
+                foreach($models as $div){
+                        $data[$div->ID] = $div->NAME;
+                }			
+                return $data;
 	}
 
 }

@@ -21,7 +21,7 @@ $form=$this->beginWidget('CActiveForm', array(
 	<div class="row">
             <b>Отделение</b>
             <br>
-            <?php echo $form->dropDownList($model,'division_id', Division::model()->All());?> 
+            <?php echo $form->dropDownList($model,'division_id', Division::model()->findDivisionsWithPrompt());?> 
             <?php echo $form->error($model,'division_id'); ?>
 	</div>
     	<div class="row buttons">
