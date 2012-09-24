@@ -82,7 +82,6 @@
                                                                 array('label'=>'Расположения', 'url'=>array('/place/tree')),
                                                                 array('label'=>'Характеристики', 'url'=>array('/feature/index')),
                                                                 array('label'=>'Продукты', 'url'=>array('/product/index')),
-                                                                array('label'=>'Цели', 'url'=>array('/purpose/index')),
                                                                 )
                                                             ),
                                                         array('label'=>'Фин. контур', 'linkOptions'=>array('class'=>'dir'),
@@ -91,6 +90,7 @@
 //                                                                            array('label'=>'Статьи бюджета', 'url'=>array('#')),
 //                                                                            array('label'=>'Товары', 'url'=>array('#')),
                                                                             array('label'=>'Комплекты', 'url'=>array('/complect/indexJqgrid')),
+			                                                                array('label'=>'Цели', 'url'=>array('/purpose/index')),
                                                                             
                                                                             
                                                                             )
