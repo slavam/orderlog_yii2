@@ -342,7 +342,7 @@ $("#create_multiple_dialog").dialog(
                 title: opts.dialogtitle,
                 modal:true,
                 width:800,
-                height:600,
+                height:650,
                 zIndex: $.maxZIndex()+ 1,
                 buttons:{
                     'OK': opts.dialogOkHandler
