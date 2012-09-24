@@ -78,12 +78,20 @@
         zmax += def.inc;
         $(this).css("z-index", zmax);
     });
+
+    Array.max = function( array ){
+        return Math.max.apply( Math, array );
+    };
+
 }
 </script>
 
-<h1>Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
+<div>
+<h1 style="float:left;">Заявка #<?php echo $model->claim_number.' '.$model->state->stateName->name; ?></h1>
+<h1 style="float:right;">Обшчая сумма заявки: <span id="total_by_claim" style="color:#2E6E9E;"></span></h1>
+</div>
 
-<div class="form">
+<div class="form" style="clear:both;">
 
 
 
@@ -150,7 +158,7 @@
     var global_rowid;
     var idsOfSelectedRows = [];
     var sltd=true;
-    
+
     function deselect()
             {
                     $('#create_multiple_dialog_table').jqGrid('resetSelection');
@@ -396,6 +404,15 @@ $(function() {
     //var grid_opts;
     var $grid=$("#claim_line_list");
 
+	function calc_total_by_claim()
+	{
+		//alert("write!");
+		var sum = $grid.jqGrid('getCol','amount', false, 'sum');
+		if( isNaN(sum) ) sum = 0;
+		$("#total_by_claim").html(sum);
+	};
+
+
 function fill_pane(id)
 {
                 $(".hint").html("");
@@ -405,12 +422,16 @@ function fill_pane(id)
     var name = $grid.getCell(id, 'name');
     $grid.setColProp('name',{formatter:"select"});
     var count = $grid.getCell(id, 'count');
+    $grid.setColProp('unit',{formatter:null});
     var unit = $grid.getCell(id, 'unit');
+    $grid.setColProp('unit',{formatter:"select"});
     var amount = $grid.getCell(id, 'amount');
     if(_msg=="[]"||_msg=="[") _m=""; else _m=_msg;
-    $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:blue;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:blue;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
+    $(".hint").html('<div><b>'+name+_m+'&nbsp;&nbsp;&nbsp;<span style="color:#2E6E9E;">'+count+'</span>&nbsp;'+unit+'&nbsp;<span style="color:#2E6E9E;">'+amount+'</span></b>&nbsp;-&nbsp;<span style="color:red;">'+hint+'</span></div>');
     _msg="[";
 };
+
+
 	function calc_amount(id)
 	{
             var count = $grid.getCell(id, 'count');
@@ -627,6 +648,9 @@ function fill_pane(id)
               //  this.parentNode.click();
               place_selector_grid_clk(rowid);
             });
+              //total here 1
+              calc_total_by_claim();
+
         },       
                 
         ondblClickRow: function (rowid, iRow, iCol, e) {
@@ -686,7 +710,7 @@ function fill_pane(id)
 //                                var count =$grid.getCell(rowid,'cost');
                                 
                     		calc_amount(rowid);
-                                
+                            calc_total_by_claim();    
                     		fill_pane(rowid);
                     		new_line_added=false;
 					
@@ -735,8 +759,13 @@ function fill_pane(id)
 				}
 	
 
-               var last_row_id = $grid.getGridParam("reccount");
+//               var last_row_id = $grid.getGridParam("reccount");
+
+               var ids_ = $grid.jqGrid("getDataIDs");
+               last_row_id=Math.max.apply(Math, ids_);
+
                lastSel=rowid=last_row_id+1;
+
                var row = {                      "iddb":null,
 						"type":"",
 						"name":"",
@@ -823,6 +852,7 @@ function fill_pane(id)
 
 				_msg+="]";
                     		calc_amount(rowid);
+                            calc_total_by_claim();
                     		fill_pane(rowid);
                     		new_line_added=false;
 				
@@ -921,7 +951,10 @@ function fill_pane(id)
                         var rowdata = $grid.getRowData(rowid);
 //                        alert (JSON.stringify(rowdata));
                         rowdata.iddb=null;
-                        var last_row_id = $grid.getGridParam("reccount");
+//                        var last_row_id = $grid.getGridParam("reccount");
+               var ids_ = $grid.jqGrid("getDataIDs");
+               last_row_id=Math.max.apply(Math, ids_);
+
                         $grid.addRowData(last_row_id+1,rowdata,"last");
                     }
                     else alert('Выберите запись');
