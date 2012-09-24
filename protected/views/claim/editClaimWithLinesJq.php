@@ -498,7 +498,7 @@ function fill_pane(id)
             
             }//editoptions
             },//column
-            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", unformat:unformat_field, editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+            {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
             {name: 'count', width: 40, frozen:false, editable:true},
             {name: 'cost', width: 40, frozen:false, editable:true, format:"number", formatoptions:{decimalSeparator:"."}, editrules:{custom:true, 
                     custom_func:function (val, nm) { 
@@ -908,7 +908,25 @@ function fill_pane(id)
                     else alert('Выберите запись');
                 }
     });
-
+//Кнопка удаления
+    $grid.jqGrid('navButtonAdd',pager_selector,{
+                caption: '',//'Группа',
+                title: 'Клонировать строку',
+                buttonicon: 'ui-icon-transferthick-e-w',
+                onClickButton:function()
+                {
+                    var rowid = $grid.getGridParam('selrow');
+                    if(rowid)
+                    {
+                        var rowdata = $grid.getRowData(rowid);
+//                        alert (JSON.stringify(rowdata));
+                        rowdata.iddb=null;
+                        var last_row_id = $grid.getGridParam("reccount");
+                        $grid.addRowData(last_row_id+1,rowdata,"last");
+                    }
+                    else alert('Выберите запись');
+                }
+    });
 		function after_save(rowID, response ) 
 		{
 //			  var ret_iddb = $.parseJSON(response.responseText);
