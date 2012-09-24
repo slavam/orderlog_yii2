@@ -186,13 +186,15 @@ order by name
             $s = '';
             if ($division_id != '0')
                 $s = ' and bv.division_id='.$division_id;
-            $sql ='select sum(bv.value*bd.sign)*100 as PARENT_ID
-      from FIN.budget_value bv
-      join FIN.budget_factor bf on bf.id=bv.budget_factor_id
-      join FIN.budget_directory bd on bd.id=bf.budget_directory_id and bd.budget_groups_id in (7,9)       
-      where bv.budget_flag_correction_id=41 
-       and bv.periods_id='.$period_id.'
-       and bd.id='.$budget_item_id.$s;
-           return BudgetItem::model()->findBySql($sql)->PARENT_ID/100; 
+            $sql ='
+                select sum(bv.value*bd.sign) as PARENT_ID
+                from FIN.budget_value bv
+                join FIN.budget_factor bf on bf.id=bv.budget_factor_id
+                join FIN.budget_directory bd on bd.id=bf.budget_directory_id 
+                    and bd.budget_groups_id in (7,9)       
+                where bv.budget_flag_correction_id=41 
+                    and bv.periods_id='.$period_id.'
+                    and bd.id='.$budget_item_id.$s;
+           return BudgetItem::model()->findBySql($sql)->PARENT_ID; 
         }
 }

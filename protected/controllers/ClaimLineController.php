@@ -369,6 +369,7 @@ class ClaimLineController extends Controller
                 $responce['rows'][$i]['cell'] = array(
                     $row->claim_id,
                     $row->claim->division->NAME,
+//                    $row->claim->department->findDepartment($row->claim->department_id),
                     $row->claim->findDepartment($row->claim->department_id),
                     $row->claim->claim_number,
                     $row->asset->waretype->short_name, 

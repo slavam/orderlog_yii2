@@ -506,7 +506,11 @@ class ClaimController extends Controller
                     $row->product_id,
 //                    $row->position_id>0 ? CHtml::encode($row->findAddress($row->position_id)): '',   //o.lysenko 5.09.2012 18:52 - encoding &quot
                     //TODO: check if returns '' on view
+
+//                    $row->position_id>0? $row->position->findAddress($row->position_id): '', //? $row->findAddress($row->position_id): '',
+
                     $row->position_id>0? Place::model()->findAllPlaces($row->position_id)->title: '', //? $row->findAddress($row->position_id): '',
+
                     $row->position_id,
                     $row->description,
                     //TODO: check if returns '' on view
@@ -991,7 +995,7 @@ class ClaimController extends Controller
                             $aSheet->setCellValue($this->letters[$i].$j,$statuses[$value]);
                             break;
                         case 'position_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->findAddress($value): ''); //$value>0 ? $addresses[$value]:''); //
+                            $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->position->findAddress($value): ''); //$value>0 ? $addresses[$value]:''); //
                             break;
                         case 'payer_id':
                             $aSheet->setCellValue($this->letters[$i].$j,$divisions[$value]);
@@ -1069,7 +1073,8 @@ class ClaimController extends Controller
                         $aSheet->setCellValue($this->letters[$i].$j,$periods[$record->period_id]);
                         break;
                     case 'department_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$record->findDepartment($record->department_id));
+//                        $aSheet->setCellValue($this->letters[$i].$j,$record->department_id>0 ? $record->department->findDepartment($record->department_id):'');
+                        $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $record->findDepartment($value):'');
                         break;
                     case 'budgetary':
                         $i--;
