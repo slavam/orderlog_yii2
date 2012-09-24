@@ -167,7 +167,7 @@
            
         }; 
     var opts_position={
-        data:<?echo Helpers::BuildSpecificationsGridList(Place::model()->findAllAddresses(), array('id','title'));?>,
+        data:<?echo Helpers::BuildSpecificationsGridList(Helpers::Merge2Models(Place::model()->findAllTowns(), Place::model()->findAllAddresses()),array('key'=>'id','value'=>'title'));?>,
         multiselect:false,
         colModel:[
         { name : 'id', index : 'id', width : 20, hidden:true},
@@ -177,7 +177,10 @@
             selected=rowid;
         },
         loadComplete: function() {
-            $('#create_multiple_dialog').prepend('<p class="unselect"><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>');
+            if(!$(".unselect").html())
+                {
+                    $('#create_multiple_dialog').prepend('<p class="unselect"><a href="javascript:deselect();" style="text-align:left;">Очистить выбранные</a></p>');
+                }
         },
         gridComplete: function() {
             var cell = $("#claim_line_list").getCell(global_rowid,'position_ids');
@@ -319,7 +322,7 @@
         pager : null,
         rowNum : 1000000,
         gridview: true,
-        rownumbers: false,
+        rownumbers: true,
         onSelectRow: opts.onSelectRow,
         emptyrecords: opts.tag,
         gridComplete: opts.gridComplete,
@@ -330,7 +333,7 @@
         caption : false,
         pgbuttons: false,      // disable page control like next, back button
         pgtext: null,          // disable pager text like 'Page 0 of 10'
-        viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
+        viewrecords: true,    // disable current view record text like 'View 1-10 of 100'    
         loadonce: true,         // to enable sorting on client side
         loadui: 'disable'
 };

@@ -80,6 +80,17 @@ class Helpers extends CApplicationComponent{
             return CJSON::encode($result);
         }
     }
+    
+    public static function Merge2Models($model1,$model2){
+        if (!$model1 && !$model2)
+        {
+            return false;
+        }
+        else
+        {
+            return $new_array = array_merge($model1,$model2);
+        }
+    }
 }
 
 ?>
