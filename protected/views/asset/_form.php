@@ -1,3 +1,21 @@
+<? /*php
+$cs = Yii::app()->clientScript;
+ 
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jq$("#create_multiple_dialog_table").css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/redmond/jquery-ui-custom.css');
+$cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.multiselect.css');
+ 
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery.jqGrid.min.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqModal.js');
+//$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jqDnR.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/jquery-ui-custom.min.js');
+
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/js/jquery.form.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/ui.multiselect.js');
+$cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/$("#create_multiple_dialog_table").locale-ru.js');
+*/?>
+
 <style type="text/css">
 
     #asset-form table {
@@ -53,6 +71,8 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
     var id_multiple=1;
     var id_direction=1;
     
+//    var emptyMsgDiv = $('<div style="padding: 30px;" ><h3>Для этого напраления нет характеристик !</h3></div>');
+    //var firstLoad = true;
     var idsOfSelectedRows = [],
         updateIdsOfSelectedRows = function (id, isSelected) {
            var index = $.inArray(id, idsOfSelectedRows);
@@ -78,13 +98,23 @@ $.maxZIndex = $.fn.maxZIndex = function(opt) {
         { name : 'name', index : 'name', width : 250, sortable:true }             /* Наименование */
 		];
 
+//    alert(id_multiple);
 var grid_opts = {
+//        url : "getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction,
+//        url : "getDataForMultipleChoice",
         datatype : 'local',
         width : '750',
         height : '480',
         data: place_data,
+//        mtype : 'POST',
+//        postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction},
+//        colNames : [ 'ID','Тип Записи','Тип','Группа','Подгруппа','Наименование','Код','Прайс','Комментарий','Статья Затрат','Код Статьи' ],
         colNames : [ 'ID','Наименование'],
         colModel : name_colModel,
+        /* [
+        { name : 'id', index : 'id', width : 20, hidden:true },
+        { name : 'name', index : 'name', width : 250, sortable:true }
+]*/
         multiselect: true,
         pager : null,
         rowNum : 1000000,
@@ -94,11 +124,20 @@ var grid_opts = {
         emptyrecords: 'No URLs have been loaded for evaluation.',
         
         loadComplete: function () {
+//          var arr_isset = $("#Asset_place_id").val();
+//          var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"),10);          
+//          var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"));          
+          //firstLoad = false;
                 var _first=false;
                 $("#firstLoad").data('firstLoad', _first);
+          //request = true;
+          //alert('1' + firstLoad + '  ' + request);
+
+//          alert('load complete '+place_data.val());
           var arr_isset = place_data.val();
           
           if (arr_isset) {
+//             idsOfSelectedRows = $("#Asset_place_id").val().split(/[,]/);;
              idsOfSelectedRows = place_data.val().split(/[,]/);;
           } 
                 
@@ -110,12 +149,45 @@ var grid_opts = {
         
        gridComplete: function() {
           var recs = parseInt($("#create_multiple_dialog_table").getGridParam("records"),10);
+//          var selId    = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+//        var recs = parseInt( $("#create_multiple_dialog_table").getGridParam("records"),10);
+//          alert (selId+ ' ' + recs);
+//        alert ('gridComplete!  Записей: ' + recs);
+
+        /*
+        var count = $("#create_multiple_dialog_table").getGridParam();        
+        var ts = grid[0];
+        
+        if (ts.p.reccount === 0) {
+             $("#create_multiple_dialog_table").hide();
+             emptyMsgDiv.show();
+        } else {
+             $("#create_multiple_dialog_table").show();
+             emptyMsgDiv.hide();
+        }
+        */
+/*        
+        if (isNaN(recs) || recs == 0) {
+            $("#gridWrapper").hide();
+        }
+        else {
+            $('#gridWrapper').show();
+            alert('records > 0');
+        }
+*/
         
     },
     
+  
+//        rowList : [ 50, 100, 500, 1000 ],
         sortname : 'name',
         sortorder : 'asc',
+//        recordtext: 'Товар(ы) {0} - {1}',
+//        viewrecords : true,
         caption : false,
+//        toppager: false,
+
+//        rowList: [],         // disable page size dropdown
         pgbuttons: false,      // disable page control like next, back button
         pgtext: null,          // disable pager text like 'Page 0 of 10'
         viewrecords: false,    // disable current view record text like 'View 1-10 of 100'    
@@ -127,8 +199,8 @@ var grid_opts = {
 
 function FilterDataByDirection(data,data_dirs,dir_id)
 {
-	var do_them_all=false;
-	if (dir_id.length==0) do_them_all=true;
+      		var do_them_all=false;
+    		if (dir_id.length==0) do_them_all=true;
             var ret_array=[];
             $.each(data,function(i,v){
                     if(data_dirs[i].direction_id==dir_id||do_them_all)
@@ -145,6 +217,11 @@ function LoadGrid(id_multiple,id_direction) {
 
     $("#create_multiple_dialog_table").jqGrid('GridUnload');
     $("#create_multiple_dialog_table").jqGrid('clearGridData');
+
+//    grid_opts.postData['multiple_id']=id_multiple;
+//    grid_opts.postData['direction_id']=id_direction;
+
+//   alert('id_mult='+id_multiple);
 
 switch (id_multiple) {
   case 1:
@@ -170,6 +247,27 @@ switch (id_multiple) {
     $("#create_multiple_dialog_table").jqGrid( grid_opts );
     $("#cb_" + grid[0].id).hide();
     
+    //emptyMsgDiv.insertAfter($("#create_multiple_dialog_table").parent());
+}
+
+/*    try {
+     request = new XMLHttpRequest();
+   } catch (trymicrosoft) {
+     try {
+       request = new ActiveXObject("Msxml2.XMLHTTP");
+     } catch (othermicrosoft) {
+       try {
+         request = new ActiveXObject("Microsoft.XMLHTTP");
+       } catch (failed) {
+         request = false;
+       }  
+     }
+   }
+
+   if (!request)
+     alert("Error initializing XMLHttpRequest!");
+*/ 
+
     function getTemplates() {
         
     var template_id = document.getElementById("Asset_asset_template_id").value;
@@ -197,9 +295,38 @@ switch (id_multiple) {
              
             });
 
+/*        var url = 'GetTemplateByAsset/?template_id='+ template_id;
+        request.open("GET", url, true);
+        request.onreadystatechange = updateTemplates;
+        request.send(null);
+*/
+    }
+/*    function updateTemplates() {
+
+      if (request.readyState == 4) {
+            if (request.status == 200) {
+                
+         var response = JSON.parse(request.responseText);
+         $("#asset_group_id").html('');
+         $("#asset_group_id").val(response['asset_group_id']);
+         $("#budget_item_id").val(response['budget_item_id']);
+         $("#direction_id").val(response['direction_id']);
+         $("#direction_id_val").val(response['direction_id_val']);
+         $("#ware_type_id").val(response['ware_type_id']);
+         $("#info").val(response['info']);
+         
+         alert("direction_id " + response['direction_id_val']);
+       } else
+         alert("status is " + request.status);
+     }
+   }
+*/
+
 function send(id_multiple_param){
-      id_multiple=id_multiple_param;            //set global var
+    id_multiple=id_multiple_param;            //set global var
     
+//    if(sel_) id_ = $("#create_multiple_dialog_table").getCell(sel_, 'id');
+
       id_temlate = $("#Asset_asset_template_id").val();
       if(id_temlate) {
           
@@ -231,8 +358,60 @@ switch (id_multiple_param) {
     break;
   default:
     alert('Я таких значений не знаю')
-    }    
+    }
+    
+ //   alert(strtitle);
+ //   alert(id_multiple_param);
+    
+//    $("#create_multiple_dialog_table").jqGrid('setGridParam', {url: 'ggetDataForMultipleChoice?id='+id_multiple_param}).trigger('reloadGrid');
+    //$("#create_multiple_dialog_table").jqGrid('GridUnload');
+
+    
+
     	LoadGrid(id_multiple,id_direction);
+      
+      //alert(grid);
+      //if (!firstLoad) {
+          //$("#create_multiple_dialog_table").trigger("reloadGrid");
+          //alert ('2 '+firstLoad + '  ' + request);
+  //    }
+//var selId;
+//var _first = $("#firstLoad").data("firstLoad");
+//alert("child "+_first);
+                //$("#create_multiple_dialog_table").jqGrid('clearGridData');
+//                $("#create_multiple_dialog_table").jqGrid('setGridParam',{datatype:"json", postData : {'multiple_id' : id_multiple, 'direction_id' : id_direction}});
+//                $("#create_multiple_dialog_table").jqGrid('GridUnload');
+//                grid_opts['datatype']="json";
+//                grid_opts['postData']={'multiple_id' : id_multiple, 'direction_id' : id_direction};
+                //$("#create_multiple_dialog_table").jqGrid(grid_opts);
+//                var arr = new String(grid_opts);
+                
+                //alert(arr);
+      //          LoadGrid();
+//                $("#create_multiple_dialog_table").trigger("reloadGrid");
+        //if(!_first){
+                //selId = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+                //alert(selId);
+                //$("#create_multiple_dialog_table").trigger("reloadGrid");
+            
+        //}
+        //else
+        /*
+            {
+                selId = $("#create_multiple_dialog_table").jqGrid('getGridParam','datatype');
+                alert(selId);
+                LoadGrid();
+            }
+    */
+
+//      $("#create_multiple_dialog_table").setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+    //$("#create_multiple_dialog_table").setGridParam({datatype:"json", url:"getDataForMultipleChoice/?id="+id_multiple+'?direction_id='+ id_direction}).trigger("reloadGrid");
+
+//    $("#create_multiple_dialog_table").trigger("reloadGrid");
+    
+    
+    //var parent_ = id_;
+    
              	$("#create_multiple_dialog").dialog({
              		title: strtitle,
                         modal:true,
@@ -242,6 +421,11 @@ switch (id_multiple_param) {
                         buttons:{
                             'OK': function(){
                             var asset_id = $("#create_dialog").data("parent_id");
+                        
+//     alert(idsOfSelectedRows);
+//                               alert(asset_id);
+
+//                            alert(asset_id+"   "+idsOfSelectedRows);
                  $.ajax({
                   'type': "POST",
                    'url': 'editMultipleChoice',
@@ -250,14 +434,64 @@ switch (id_multiple_param) {
 
                        var contact = JSON.parse(data);
                        
+//                      $("#place_id_selector").html(contact.text_plase);
+//                      $("#Asset_place_id").val(contact.data_plase);
                       place_text.html(contact.text_place);
                       place_data.val(contact.data_place);
                       
+//                      $("#Asset_place_id").append(contact.data_plase);
+//                      alert(contact);
+//                      alert(contact.text_plase);
+//                      alert(contact.data_plase);
+
                   });
 
 
-                      $(this).dialog('close');
-                     },
+/*                           
+  var options = {
+//                success: function(data){alert(data);},
+     url: 'editMultipleChoice/?id='+asset_id+'&plase_arr='+idsOfSelectedRows,
+     type: 'post',
+     dataType: 'json',
+     error: function(res, status, exeption) {
+            alert("error:"+res.responseText);
+     },
+     success:  function(data) {
+
+     var status = data['status'];
+                			
+     if(status=="ok"){
+         
+       $("#create_multiple_dialog_table").setGridParam({datatype:'json'});
+       rd = data['rows'][0]['cell'];     //row data
+					 //!!! OMG, why it uses only associated array!?
+					 //TODO: try to make for cycle...
+       $("#create_multiple_dialog_table").jqGrid('setRowData',sel_,{'type':rd[1],'supergroup':rd[2],'group':rd[3],'name':rd[4],'part_number':rd[5],'cost':rd[6],'comment':rd[7],'article':rd[8],'article_code':rd[9],'cell_red':rd[10]});
+       $("#create_dialog").dialog('close');
+
+      }
+      else if(status=="err"){
+	      alert("error:"+data['message']);
+      }
+      
+      else
+      {
+        var response= jQuery.parseJSON (data);
+
+        $.each(response, function(key, value) { 
+            $("#"+key+"_em_").show();
+            $("#"+key+"_em_").html(value[0]);
+        });
+      }
+      
+      }
+}; 
+
+*/
+//                                alert($("#create_multiple_dialog_table").val());
+//                                $response = $("#asset-form").submit();
+                                 $(this).dialog('close');
+                               },
                             'Отмена': function(){
                                 $(this).dialog('close');
                             }
@@ -268,14 +502,28 @@ switch (id_multiple_param) {
     } else alert('Выберите шаблон!');   // end if(id_direction)
 
 }
+
+    //LoadGrid();
+
 </script>
+<?php 
+      
+?>
 
 <div class="form">
     
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'action'=>'editAsset',
 	'id'=>'asset-form',
+//	'enableAjaxValidation'=>true,
         'enableClientValidation' => true,
+//      'clientOptions' => array(
+//                'validateOnSubmit' => true,
+//                'validateOnChange' => false,
+//       ),
+
+
+//,array('readonly'=>true)
 
 )); ?>
 
@@ -371,6 +619,7 @@ switch (id_multiple_param) {
 		<td><b>Статья бюджета</b></td>
 		<td colspan="5"><?php 
                  echo $form->dropDownList($model,'budget_item_id', CHtml::listData(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(),'ID','NAME'), array('empty' => '<Выбор статьи бюджета>'));
+//                 echo $form->dropDownList($model,'budget_item_id',  BudgetItem::model()->get3LevelAllNameBudgetItem(),array('empty' => '<Выбор статьи бюджета>'));
                 ?> 
 		<?php echo $form->error($model,'budget_item_id'); ?></td>
 
@@ -421,6 +670,16 @@ switch (id_multiple_param) {
 		</td>
 	</tr>
 </table>
+
+        <?php /*  echo $form->dropDownList($model, 'parent_id', 
+                CHtml::listData(Section::model()->getList()->getData(), 'id', 'title'), 
+                array('encode' => false, 
+                      'onchange'=>Chtml::ajax(array('type'=>'POST','url' => CController::createUrl('sectionType'),
+                      'update' => '#'.CHtml::activeId($model, 'comments_allowed'))),
+                      'empty'=>t('Выберите раздел для публикации'))); 
+         */ ?>
+    <?php // echo $form->checkBox($model, 'comments_allowed',  array()); ?>
+
     
 <?php $this->endWidget(); ?>
 <div id="create_multiple_dialog" style="display: none;">
