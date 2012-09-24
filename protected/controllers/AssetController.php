@@ -146,7 +146,7 @@ class AssetController extends Controller {
         
         $id = $_POST['id'];
         $model = $this->loadModel($id);
-       
+    }       
         if (isset($_POST['type_data']) && isset($_POST['multiple_arr'])) {
             
             $save_type = $_POST['type_data'];
@@ -167,7 +167,7 @@ class AssetController extends Controller {
             break;
             }    
         }
-    }   
+//    }   
  
         echo CJSON::encode(array(  
             'text_place'=>$this->replacementPlace($save_arr,$save_type),
