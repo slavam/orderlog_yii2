@@ -50,7 +50,9 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Для кого',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->findWorker($model->for_whom))
+                    'value'=>CHtml::encode($model->worker->getFullNameAndStaff($model->for_whom))
+//        'value'=>CHtml::encode($model->findWorker($model->for_whom))
+        
                 ),
                 array(               
                     'label'=>'Центр финансовой ответственности',
