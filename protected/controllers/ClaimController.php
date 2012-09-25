@@ -62,7 +62,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel','update'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel','update','editComment'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -266,6 +266,25 @@ class ClaimController extends Controller
 //		echo ClaimLine::model()->findWorkerDepartment2levels($id);
 //            Yii::app()->end();
 //	}
+
+
+	public function actionEditComment()
+	{
+		//lysenko 25.sep.2012 - TODO check ajax stuff
+
+        if(isset($_REQUEST['claim_id'])){
+        	$model=$this->loadModel($_REQUEST['claim_id']);
+        	$model->comment=$_REQUEST['comment'];
+        	if(!$model->save())
+        	{
+        		echo CJSON::encode('error in saving comment');
+		        Yii::app()->end();
+        	}
+        }
+
+        Yii::app()->end();
+	}
+
 
 	public function actionGetAssetFieldsForGrid($asset_id)
 	{

@@ -750,6 +750,7 @@ function fill_pane(id)
             	               $grid.delRowData(last_row_id);
 				}*/
 
+				//alert('before add '+lastSel);
                 $grid.jqGrid('restoreRow', lastSel);
 
 				if(new_line_added)
@@ -764,6 +765,13 @@ function fill_pane(id)
                var ids_ = $grid.jqGrid("getDataIDs");
                last_row_id=Math.max.apply(Math, ids_);
 
+               //infinity!
+               if (!isFinite(last_row_id))
+				{
+					last_row_id=0;
+				}
+
+               //alert('after get '+last_row_id);
                lastSel=rowid=last_row_id+1;
 
                var row = {                      "iddb":null,
