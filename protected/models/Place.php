@@ -20,6 +20,7 @@
 class Place extends CActiveRecord
 {
 public $PATH;	
+private $url_save = "/claimline/create/";
     /**
 	 * Returns the static model of the specified AR class.
 	 * @return Place the static model class
@@ -218,25 +219,25 @@ public $PATH;
 	/**
 	 * Add or change record 
 	 */
-	public function AddRecord($place,$add_record)
+	public function AddRecord($place,$add_record,$parent_model)
 	{
 
          if ($add_record != 2){
             $save_model = new Place;
-                 $save_model->parent_id = $this->parent_model->id;
+                 $save_model->parent_id = $parent_model->id;
                  $save_model->title = $place;
                  $save_model->position = 0;
-                 $save_model->tooltip = $this->parent_model->title;
+                 $save_model->tooltip = $parent_model->title;
                  $save_model->url = $this->url_save.$save_model->id;
                  $save_model->icon = "";
                  $save_model->visible = 1;
                  $save_model->task = "";
                  $save_model->options = '"';
-                 $save_model->productid = $this->parent_model->id;
-                 $save_model->id2 = $this->parent_model->id;
+                 $save_model->productid = $parent_model->id;
+                 $save_model->id2 = $parent_model->id;
 
             } else {
-            $save_model=$this->loadModel($this->parent_model->id);
+            $save_model=$this->loadModel($parent_model->id);
                  $save_model->title = $place;
          }
                
