@@ -250,5 +250,18 @@ private $url_save = "/claimline/create/";
             }
          return $save_model->id;
 	}
-        
+ 
+        public function findAddress($address_id)
+	{
+            $position = Place::model()->findAllBySql("
+                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
+                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
+                    FROM places T1 WHERE T1.parent_id IS NULL
+                  union
+                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
+                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
+                  select path as title from temp1 where id=".$address_id);
+            return CHtml::encode($position[0]->title); 
+	}
+
 }
