@@ -356,6 +356,9 @@ class ClaimController extends Controller
 //                        'order'=>'period_id desc, division_id, id',
 //                        ),
 //                ));
+
+		$this->pageTitle='Первичные заявки';
+		
 		$this->render('indexJqgrid',array(
 			'dataProvider'=>null, //$dataProvider,
 		));
