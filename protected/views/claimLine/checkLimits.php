@@ -4,6 +4,7 @@
 <p>Отделение: <?php echo ($division_id!='0' ? Division::model()->findByPk($division_id)->NAME: 'Весь банк')?></p>
 </div>
 <?php
+$this->pageTitle = "Контроль лимитов";
 $cs = Yii::app()->clientScript;
  
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
