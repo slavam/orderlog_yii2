@@ -44,7 +44,7 @@ class SiteController extends Controller
                     switch ($error['errorCode'])
                     {
                         case '23503':
-                               echo 'Нельзя удалить строку, так как она используется в строках заявки';
+                               echo 'Нельзя удалить строку. Значение используется в других справочниках!';
                             break;
                         default:
                             echo $error['message'];
