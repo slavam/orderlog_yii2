@@ -53,7 +53,11 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 
 <div id="create_del_dialog" style="display:none">
 </div>
-<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар):, так как он используется в строках заявки!
+<!-- <div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар):, так как он используется в строках заявки!  -->
+<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">
+</div>
+
+<div id="ok_del_dialog" style="display:none">
 </div>
 
 
@@ -366,8 +370,20 @@ top_bottom_pager_ButtonAdd ({
                                         grid.collapseSubGridRow(sel_)
                                         grid.jqGrid('delRowData',sel_);
                                      }
-
-                                    alert(data.responce);
+                               document.getElementById("ok_del_dialog").innerHTML = data.responce;
+                                     
+                                $("#ok_del_dialog").dialog({
+                                    title: 'Запись удалена!',
+                                    modal:true,
+                                    width:300,
+                                    height:150,
+                                    buttons:{
+                                        'Ok': function(){
+                                             $(this).dialog('close')
+                                        }
+                                       }
+                                 })
+//                                    alert(data.responce);
                                     
                                 }
                             };
