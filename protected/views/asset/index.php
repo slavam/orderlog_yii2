@@ -53,7 +53,11 @@ $cs->registerScriptFile(Yii::app()->request->baseUrl.'/jqgrid/js/i18n/grid.local
 
 <div id="create_del_dialog" style="display:none">
 </div>
-<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар):, так как он используется в строках заявки!
+<!-- <div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">Нельзя удалить объект заявки (товар):, так как он используется в строках заявки!  -->
+<div id="error_del_dialog" style="display:none; border: 4px solid red; font-weight: bold; color:red">
+</div>
+
+<div id="ok_del_dialog" style="display:none">
 </div>
 
 
@@ -321,20 +325,30 @@ top_bottom_pager_ButtonAdd ({
                     height:100,
                     buttons:{
                         'Да': function(){
-                            
+/*                            
                             var error_str = document.getElementById("error_del_dialog").innerHTML;
                             var old_error_str = error_str;
                             var tagList = error_str.split(',');
                             document.getElementById("error_del_dialog").innerHTML = tagList[0]+" "+
                                                                                     name_+","+
                                                                                     tagList[1];
+*/
                             var options = { 
                                 url: '<?php  echo Yii::app()->createUrl('asset/delete',array('id'=>''))?>'+id_,
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
                                     
-//                                alert('Error: ' + res.responseCode+'  '+status+'  '+exeption);
+                                var tagList = res.responseText.split('.');
+                                
+                                document.getElementById("error_del_dialog").innerHTML = tagList[0]+": "+
+                                                                                    name_+"."+
+                                                                                    tagList[1];
+
+//                                document.getElementById("error_del_dialog").innerHTML = res.responseText;
+                                    
+//                                alert('Error: ' + res.responseCode+'  '+status+'  '+exeption+'  '+res.responseText);
+                                
                                 $("#error_del_dialog").dialog({
                                     title: 'Ошибка удаления!',
                                     modal:true,
@@ -342,7 +356,7 @@ top_bottom_pager_ButtonAdd ({
                                     height:150,
                                     buttons:{
                                         'Ok': function(){
-                                             document.getElementById("error_del_dialog").innerHTML = old_error_str;
+//                                             document.getElementById("error_del_dialog").innerHTML = old_error_str;
                                              $(this).dialog('close')
                                         }
                                        }
@@ -356,8 +370,20 @@ top_bottom_pager_ButtonAdd ({
                                         grid.collapseSubGridRow(sel_)
                                         grid.jqGrid('delRowData',sel_);
                                      }
-
-                                    alert(data.responce);
+                               document.getElementById("ok_del_dialog").innerHTML = data.responce;
+                                     
+                                $("#ok_del_dialog").dialog({
+                                    title: 'Запись удалена!',
+                                    modal:true,
+                                    width:300,
+                                    height:150,
+                                    buttons:{
+                                        'Ok': function(){
+                                             $(this).dialog('close')
+                                        }
+                                       }
+                                 })
+//                                    alert(data.responce);
                                     
                                 }
                             };
