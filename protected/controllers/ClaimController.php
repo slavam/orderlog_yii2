@@ -260,12 +260,12 @@ class ClaimController extends Controller
 	}
 
 
-//	public function actionFindWorkerDepForList($id)
-//	{
-//		//lysenko 16.sep.2012 - TODO check ajax stuff
-//		echo ClaimLine::model()->findWorkerDepartment2levels($id);
-//            Yii::app()->end();
-//	}
+	public function actionFindWorkerDepForList($id)
+	{
+		//lysenko 16.sep.2012 - TODO check ajax stuff
+		echo ClaimLine::model()->findWorkerDepartment2levels($id);
+            Yii::app()->end();
+	}
 
 
 	public function actionEditComment()
@@ -356,6 +356,9 @@ class ClaimController extends Controller
 //                        'order'=>'period_id desc, division_id, id',
 //                        ),
 //                ));
+
+		$this->pageTitle='Первичные заявки';
+		
 		$this->render('indexJqgrid',array(
 			'dataProvider'=>null, //$dataProvider,
 		));

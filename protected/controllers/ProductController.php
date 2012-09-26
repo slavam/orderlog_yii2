@@ -150,6 +150,8 @@ class ProductController extends Controller
 	public function actionIndex()
 	{
 
+			$this->pageTitle='Продукты';
+
             $this->render('index',array(
                 'dataProvider'=>$dataProvider,
             ));

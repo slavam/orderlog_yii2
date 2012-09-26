@@ -9,6 +9,8 @@ class PurposeController extends Controller{
    
     public function actionIndex()
     {
+		$this->pageTitle='Цели';
+
         $this->render('index');
     }
     

@@ -360,6 +360,8 @@ class AssetTemplateController extends Controller
     }
     public function actionIndexJqgrid()
 	{
+			$this->pageTitle='Шаблоны';
+
             $dataProvider=new CActiveDataProvider('AssetTemplate', array(
                 'pagination' => false,
                 'criteria' => array(

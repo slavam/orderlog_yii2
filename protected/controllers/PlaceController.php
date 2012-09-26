@@ -147,6 +147,9 @@ class PlaceController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+		$this->pageTitle='Расположения';
+
             $rawData=Yii::app()->db->createCommand("
                 WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
                   SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
@@ -251,6 +254,9 @@ class PlaceController extends Controller
 
         public function actionTree()
 	{
+
+		$this->pageTitle='Расположения';
+            
             Yii::app()->clientScript->registerCoreScript('jquery');
             Yii::app()->clientScript->registerCoreScript('jquery.yiiactiveform.js'); 
 
