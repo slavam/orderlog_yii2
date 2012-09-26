@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow','GetAssetGroupsByDirection'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow','getAssetGroupsByDirection','getAssetGroupStamps'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -291,7 +291,17 @@ class AssetGroupController extends Controller
 
 			return print $ret;
         }
-            
+
+        
+        //o.lysenko 26.sep.2012 11:09
+        public function actionGetAssetGroupStamps(){
+            if (($grp_id=$_REQUEST['grp_id']))
+            {
+            	$model=AssetGroup::model()->findByPk($grp_id);
+            	echo $model->block->stamp.'.'.$model->stamp;
+            }
+        }
+
         public function actionGetAssetGroupsByDirection(){
             $list=array();
             if (($dir=$_REQUEST['dir']))
