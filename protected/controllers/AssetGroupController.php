@@ -27,7 +27,7 @@ class AssetGroupController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','addRow','getBlocks','relinkRow','getAssetGroupsByDirection','getAssetGroupStamps'),
+				'actions'=>array('index','view','show','jqgriddata','getDataForGrid','updateRow','updateCell','getDirectionsForSelect','delete','addRow','getBlocks','relinkRow','getAssetGroupsByDirection','getAssetGroupStamps'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -210,19 +210,28 @@ class AssetGroupController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
-		if(Yii::app()->request->isPostRequest)
+		if(Yii::app()->request->isAjaxRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
-
+                        if (($id=$_POST['iddb']))
+                        {
+                            if ($this->loadModel($id)->delete())
+                            {
+                                echo CJSON::encdode (array('status'=>'deleted','message'=>'deleted'));
+                            }
+                            else{
+                                    echo CJSON::encode(array('status'=>'error','message'=>'error while delete record'));
+                                }
+                        }
+                        Yii::app()->end();
 			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+//			if(!isset($_GET['ajax']))
+//				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 		}
 		else
-			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
+			throw new CHttpException(400,'Invalid Request');
 	}
 
 	/**
