@@ -62,7 +62,7 @@ class ClaimController extends Controller
                                     'indexJqgrid','getDataForGrid','getDataForSubGrid','getDataForDialogGrid','editClaimDialog','editClaim',
                                     'editClaimLineDialog','editClaimLine','claimLineDelete','getAssetFieldsForGrid',
                                     'viewClaimWithLines','editClaimWithLinesJq','getDepartmensByDivision','findWorkerDepForList',
-                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel','update'),
+                                    'editWholeClaim','ReportGroup','FormDlg','toExcel','delete','claimsExportToExcel','update','editComment'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -264,9 +264,27 @@ class ClaimController extends Controller
 	{
 		//lysenko 16.sep.2012 - TODO check ajax stuff
 		echo ClaimLine::model()->findWorkerDepartment2levels($id);
-        Yii::app()->end();
-
+            Yii::app()->end();
 	}
+
+
+	public function actionEditComment()
+	{
+		//lysenko 25.sep.2012 - TODO check ajax stuff
+
+        if(isset($_REQUEST['claim_id'])){
+        	$model=$this->loadModel($_REQUEST['claim_id']);
+        	$model->comment=$_REQUEST['comment'];
+        	if(!$model->save())
+        	{
+        		echo CJSON::encode('error in saving comment');
+		        Yii::app()->end();
+        	}
+        }
+
+        Yii::app()->end();
+	}
+
 
 	public function actionGetAssetFieldsForGrid($asset_id)
 	{
@@ -338,6 +356,9 @@ class ClaimController extends Controller
 //                        'order'=>'period_id desc, division_id, id',
 //                        ),
 //                ));
+
+		$this->pageTitle='Первичные заявки';
+		
 		$this->render('indexJqgrid',array(
 			'dataProvider'=>null, //$dataProvider,
 		));
@@ -498,6 +519,7 @@ class ClaimController extends Controller
                     //TODO: check if returns '' on view
 
                     $row->for_whom>0? $row->for_whom: '',//>0? $row->findWorker($row->for_whom): '',                  //for_whom
+//                    $row->for_whom>0? $row->worker->department->findDepartment($row->worker->ID_DIVISION): '',
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',//for_whom_div
 //                    $row->budget_item_id>0 ? CHtml::encode($row->budgetItem->NAME): '',
                     Feature::model()->getNamesFromArray($row->feature_id),
@@ -901,33 +923,34 @@ class ClaimController extends Controller
         
         $columns = array(
             'A'=>array('index'=>'id','title'=>'ID','width'=>5),
-            'B'=>array('index'=>'claim_num','title'=>'Номер заявки','width'=>12),
-            'C'=>array('index'=>'division_id','title'=>'Отделение','width'=>30),
+            'B'=>array('index'=>'direction_id','title'=>'Направление'), //'Номер заявки','width'=>12),
+            'C'=>array('index'=>'period_id','title'=>'Период','width'=>14),//'Отделение','width'=>30),
             'D'=>array('index'=>'create_date','title'=>'Создана','width'=>12),
-            'E'=>array('index'=>'direction_id','title'=>'Направление'),
-            'F'=>array('index'=>'state_id','title'=>'Состояние','width'=>12),
-            'G'=>array('index'=>'period_id','title'=>'Период','width'=>14),
-            'H'=>array('index'=>'comment','title'=>'Комментарий','width'=>20),
+            'E'=>array('index'=>'claim_num','title'=>'Номер заявки','width'=>12), //'Направление'),
+            'F'=>array('index'=>'division_id','title'=>'Отделение','width'=>30), //'Состояние','width'=>12),
+            'G'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20), //'Период','width'=>14),
+            'H'=>array('index'=>'state_id','title'=>'Состояние','width'=>12), //'Комментарий','width'=>20),
             'I'=>array('index'=>'description','title'=>'Описание','width'=>30),
-            'J'=>array('index'=>'department_id','title'=>'Подразделение','width'=>20),
-            'K'=>array('index'=>'unit_id','title'=>'Ед.изм'), /////////////
-            'L'=>array('index'=>'count','title'=>'Кол-во'),
-            'M'=>array('index'=>'amount','title'=>'Сумма'),
-            'N'=>array('index'=>'description','title'=>'Описание','width'=>30),
-            'O'=>array('index'=>'for_whom','title'=>'Для кого','width'=>30),
-            'P'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),
-            'Q'=>array('index'=>'type','title'=>'Тип'), ////////////
-            'R'=>array('index'=>'asset_id','title'=>'Товар','width'=>20),
-            'S'=>array('index'=>'asset_group','title'=>'Группа'), ///////////////
-            'T'=>array('index'=>'cost','title'=>'Цена'),
-            'U'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),
-            'V'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
-            'W'=>array('index'=>'position_id','title'=>'Адрес','width'=>30),
-            'X'=>array('index'=>'complect_id','title'=>'Комплект'),
-            'Y'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),
-            'Z'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),
-            'AA'=>array('index'=>'product_id','title'=>'Продукты','width'=>20),
-            'AB'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20),
+            'J'=>array('index'=>'comment','title'=>'Комментарий','width'=>20), //'Подразделение','width'=>20),
+            'K'=>array('index'=>'type','title'=>'Тип'),//'Ед.изм'), /////////////
+            'L'=>array('index'=>'asset_id','title'=>'Товар','width'=>20), //'Кол-во'),
+            'M'=>array('index'=>'unit_id','title'=>'Ед.изм'), //'Сумма'),
+            'N'=>array('index'=>'count','title'=>'Кол-во'), //'Описание','width'=>30), Примечание
+            'O'=>array('index'=>'cost','title'=>'Цена'), //'Для кого','width'=>30),
+            'P'=>array('index'=>'amount','title'=>'Сумма'), //'Статья бюджета','width'=>20),
+            'Q'=>array('index'=>'asset_group','title'=>'Группа'), //'Тип'), ////////////
+            'R'=>array('index'=>'purpose_id','title'=>'Цель','width'=>20),//'Товар','width'=>20),
+            'S'=>array('index'=>'for_whom','title'=>'Для кого - ФИО','width'=>30),//'Группа'), ///////////////
+            'T'=>array('index'=>'staff','title'=>'Для кого - Должность','width'=>30),//'Цена'),
+            'U'=>array('index'=>'department','title'=>'Для кого - Подразделение','width'=>30),//'Бизнес','width'=>15),
+            'V'=>array('index'=>'feature_id','title'=>'Характеристики','width'=>20), //'Статус','width'=>20),
+            'W'=>array('index'=>'product_id','title'=>'Продукты','width'=>20), //'Адрес','width'=>30), Расположение
+            'X'=>array('index'=>'position_id','title'=>'Расположение','width'=>30), //'Комплект'),
+            'Y'=>array('index'=>'description','title'=>'Примечание','width'=>30),  //'ЦФО','width'=>20),
+            'Z'=>array('index'=>'payer_id','title'=>'ЦФО','width'=>20),//'Цель','width'=>20),
+            'AA'=>array('index'=>'business_id','title'=>'Бизнес','width'=>15),//'Продукты','width'=>20),
+            'AB'=>array('index'=>'budget_item_id','title'=>'Статья бюджета','width'=>20),//'Характеристики','width'=>20),
+            'AC'=>array('index'=>'status_id','title'=>'Статус','width'=>20),
 //            'AA','AB','AC','AD','AE','AF','AG','AH','AI','AJ','AK','AL','AM','AN',
 //            'AO','AP','AQ','AR','AS','AT','AU','AW','AV','AX','AY','AZ'
 );
@@ -966,70 +989,89 @@ class ClaimController extends Controller
         $i=0;
         
         foreach ($data as $record) {
-            $this->fill_claim_fields($periods,$directions,$divisions,$aSheet, $record, $j);  // fill claim fields
+            $this->fill_claim_fields($periods,$directions,$divisions,$aSheet, $record, $j); 
             $claim_fields_num = 11; //$i;
             $claim_lines = ClaimLine::model()->findAll('claim_id='.$record->id);
             $i=0;
             foreach ($claim_lines as $line) {
-               $this->fill_claim_fields($periods,$directions,$divisions,$aSheet, $record, $j);  // fill claim fields
+               $this->fill_claim_fields($periods,$directions,$divisions,$aSheet, $record, $j); 
                 $i = $claim_fields_num+1;
                 foreach ($line as $key => $value) {
                     switch ($key) {
-                        case 'for_whom':
-                            $aSheet->setCellValue($this->letters[$i].$j,$workersStaffsDepartments[$value]); //$value>0 ? $line->findWorker($value): '');
-                            break;
-                        case 'budget_item_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $budgetItems[$value]:''); //$line->budgetItem->get2LevelNameBudgetItem($value):'');
-                            break;
                         case 'asset_id':
-                            $aSheet->setCellValue($this->letters[$i+1].$j,$assets[$value]);
-                            $aSheet->setCellValue($this->letters[$i-6].$j,$line->asset->unit->sign);
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->asset->waretype->short_name);
-                            $aSheet->setCellValue($this->letters[$i+2].$j,$line->asset->asset_group_id>0 ? $line->asset->assetgroup->getGroupSubgroupName($line->asset->asset_group_id):'');
-                            $i = $i+2;
+                            $aSheet->setCellValue('K'.$j,$line->asset->waretype->short_name);
+                            $aSheet->setCellValue('L'.$j,$assets[$value]);
+                            $aSheet->setCellValue('M'.$j,$line->asset->unit->sign);
+                            $aSheet->setCellValue('Q'.$j,$line->asset->asset_group_id>0 ? $line->asset->assetgroup->getGroupSubgroupName($line->asset->asset_group_id):'');
+//                            $i = $i+2;
                             break;
-                        case 'business_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$businesses[$value]);
+                        case 'count':
+                            $aSheet->setCellValue('N'.$j,$value);
                             break;
-                        case 'status_id';
-                            $aSheet->setCellValue($this->letters[$i].$j,$statuses[$value]);
+                        case 'cost':
+                            $aSheet->setCellValue('O'.$j,$value);
                             break;
-                        case 'position_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->position_id>0 ? $line->position->findAddress($value): ''); //$value>0 ? $addresses[$value]:''); //
-                            break;
-                        case 'payer_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$divisions[$value]);
+                        case 'amount':
+                            $aSheet->setCellValue('P'.$j,$value);
                             break;
                         case 'purpose_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$goals[$value]);
+                            $aSheet->setCellValue('R'.$j,$goals[$value]);
                             break;
-                        case 'product_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->getProductsNamesFromArray($value));
+                        case 'for_whom':
+                            $s = $workersStaffsDepartments[$value];
+                            if ($s>'') {
+                                $aSheet->setCellValue('S'.$j,  substr($s, 0, strpos($s, ';'))); 
+                                $s = substr($s, strpos($s, ';')+2);
+                                $aSheet->setCellValue('T'.$j,  substr($s, 0, strpos($s, ';'))); 
+                                $s = substr($s, strpos($s, ';')+2);
+                                $aSheet->setCellValue('U'.$j, $s); 
+                            } 
                             break;
                         case 'feature_id':
-                            $aSheet->setCellValue($this->letters[$i].$j,$line->getFeaturesNamesFromArray($value));
+                            $aSheet->setCellValue('V'.$j,$line->getFeaturesNamesFromArray($value));
                             break;
-                        case 'id':
-                            $i--;
+                        case 'product_id':
+                            $aSheet->setCellValue('W'.$j,$line->getProductsNamesFromArray($value));
                             break;
-                        case 'claim_id':
-                            $i--;
+                        case 'position_id':
+                            $aSheet->setCellValue('X'.$j,$line->position_id>0 ? $line->position->findAddress($value): ''); //$value>0 ? $addresses[$value]:''); //
                             break;
-                        case 'state_id':
-                            $i--;
+                        case 'description':
+                            $aSheet->setCellValue('Y'.$j,$value);
                             break;
-                        case 'change_date';
-                            $i--;
+                        case 'payer_id':
+                            $aSheet->setCellValue('Z'.$j,$divisions[$value]);
                             break;
-                        case 'created_at':
-                            $i--;
+                        case 'business_id':
+                            $aSheet->setCellValue('AA'.$j,$businesses[$value]);
                             break;
-                        case 'how_created':
-                            $i--;
+                        case 'budget_item_id':
+                            $aSheet->setCellValue('AB'.$j,$value>0 ? $budgetItems[$value]:''); //$line->budgetItem->get2LevelNameBudgetItem($value):'');
                             break;
-                        default:
-                            $aSheet->setCellValue($this->letters[$i].$j,$value);
+                        case 'status_id';
+                            $aSheet->setCellValue('AC'.$j,$statuses[$value]);
                             break;
+//                        case 'id':
+//                            $i--;
+//                            break;
+//                        case 'claim_id':
+//                            $i--;
+//                            break;
+//                        case 'state_id':
+//                            $i--;
+//                            break;
+//                        case 'change_date';
+//                            $i--;
+//                            break;
+//                        case 'created_at':
+//                            $i--;
+//                            break;
+//                        case 'how_created':
+//                            $i--;
+//                            break;
+//                        default:
+//                            $aSheet->setCellValue($this->letters[$i].$j,$value);
+//                            break;
                     };
                     $i++;
                 }
@@ -1058,30 +1100,39 @@ class ClaimController extends Controller
             foreach($record as $key=>$value){
                 switch ($key) {
                     case 'division_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$divisions[$record->division_id]);
+                        $aSheet->setCellValue('F'.$j,$divisions[$record->division_id]);
                         break;
                     case 'create_date':
-                        $aSheet->setCellValue($this->letters[$i].$j,substr($value, 0, 10));
+                        $aSheet->setCellValue('D'.$j,substr($value, 0, 10));
                         break;
                     case 'direction_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$directions[$record->direction_id]);
+                        $aSheet->setCellValue('B'.$j,$directions[$record->direction_id]);
                         break;
                     case 'state_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$record->state->stateName->name);
+                        $aSheet->setCellValue('H'.$j,$record->state->stateName->name);
                         break;
                     case 'period_id':
-                        $aSheet->setCellValue($this->letters[$i].$j,$periods[$record->period_id]);
+                        $aSheet->setCellValue('C'.$j,$periods[$record->period_id]);
                         break;
                     case 'department_id':
 //                        $aSheet->setCellValue($this->letters[$i].$j,$record->department_id>0 ? $record->department->findDepartment($record->department_id):'');
-                        $aSheet->setCellValue($this->letters[$i].$j,$value>0 ? $record->findDepartment($value):'');
+                        $aSheet->setCellValue('G'.$j,$value>0 ? $record->findDepartment($value):'');
                         break;
-                    case 'budgetary':
-                        $i--;
+                    case 'claim_number':
+                        $aSheet->setCellValue('E'.$j,$value);
                         break;
-                    default:
-                        $aSheet->setCellValue($this->letters[$i].$j,$value);
+                    case 'description':
+                        $aSheet->setCellValue('I'.$j,$value);
                         break;
+                    case 'comment':
+                        $aSheet->setCellValue('J'.$j,$value);
+                        break;
+                    case 'id':
+                        $aSheet->setCellValue('A'.$j,$value);
+                        break;
+//                    default:
+//                        $aSheet->setCellValue($this->letters[$i].$j,$value);
+//                        break;
                 };
                 $i++;
             }

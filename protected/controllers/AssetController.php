@@ -273,6 +273,9 @@ class AssetController extends Controller {
      * Lists all models.
      */
     public function actionIndex() {
+
+		$this->pageTitle='Объекты заявки (товары)';
+
         $dataProvider = new CActiveDataProvider('Asset', array(
                     'pagination' => false,
                     'criteria' => array(

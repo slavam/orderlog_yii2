@@ -264,6 +264,10 @@ top_bottom_pager_ButtonAdd ({
                                  'article':rd[8],
                                  'article_code':rd[9],
                                  'cell_red':rd[10]});
+                                 if (rd[10]) {
+                                     grid.jqGrid('setCell',sel_,'article_code','',{'color':'red'});
+                                  }
+
               		     $("#create_dialog").dialog('close');
 
                 	    }
@@ -319,6 +323,7 @@ top_bottom_pager_ButtonAdd ({
                         'Да': function(){
                             
                             var error_str = document.getElementById("error_del_dialog").innerHTML;
+                            var old_error_str = error_str;
                             var tagList = error_str.split(',');
                             document.getElementById("error_del_dialog").innerHTML = tagList[0]+" "+
                                                                                     name_+","+
@@ -328,6 +333,8 @@ top_bottom_pager_ButtonAdd ({
                                 type: 'post',
                                 dataType: 'json',
                                 error: function(res, status, exeption) {
+                                    
+//                                alert('Error: ' + res.responseCode+'  '+status+'  '+exeption);
                                 $("#error_del_dialog").dialog({
                                     title: 'Ошибка удаления!',
                                     modal:true,
@@ -335,11 +342,12 @@ top_bottom_pager_ButtonAdd ({
                                     height:150,
                                     buttons:{
                                         'Ok': function(){
+                                             document.getElementById("error_del_dialog").innerHTML = old_error_str;
                                              $(this).dialog('close')
                                         }
                                        }
                                 })
-//                                    alert("error from index:"+exeption+' status:'+status);
+//                                    alert("error "+res+" from index:"+exeption+' status:'+status);
                                 },
                                 success:  function(data) {
                                    

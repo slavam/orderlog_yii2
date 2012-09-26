@@ -486,7 +486,6 @@ function fill_pane(id)
         width : '1070',
         mtype : 'GET',
         shrinkToFit : false,
-        loadonce:true,
         colNames: ['ID','Тип','Наименование','Ед.изм','Кол-во','Цена','Сумма',
             'Группа','Цель','Для кого','Для кого','Характеристики','','Продукты','','Расположение','','Примечание','ЦФО','Бизнес',
             'Статья бюджета','Статус',
@@ -607,6 +606,7 @@ function fill_pane(id)
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,  
         viewrecords: false,
+        loadonce: true,
         loadComplete: function () {
             $grid.setGridParam({datatype:'local'});
             //$grid.setGridParam({});
@@ -654,7 +654,7 @@ function fill_pane(id)
         },       
                 
         ondblClickRow: function (rowid, iRow, iCol, e) {
-            	$grid.setGridParam({editurl:'#'});
+            	//$grid.setGridParam({editurl:'#'});
                 $(".ui-dialog-buttonpane button:contains('OK')").attr("disabled", true ).addClass("ui-state-disabled");
 
                     $(this).jqGrid('editRow', rowid, true, function () 
@@ -662,7 +662,7 @@ function fill_pane(id)
                             //$('#'+rowid+'_name').focus(); //
                     	},
                     	null,
-                    	'',
+                    	'clientArray',
                     	null, 
                     	function(){/*aftersave*/
          $.ajax({
@@ -801,7 +801,7 @@ function fill_pane(id)
                		     };
 
              
-	           	$grid.setGridParam({editurl:'#'});
+	           	//$grid.setGridParam({editurl:'#'});
 				//$grid.setGridParam({datatype:'json'});
 
                $grid.addRowData(rowid,row,"last");
@@ -816,7 +816,7 @@ function fill_pane(id)
                         $('#'+rowid+'_name').focus(); //
                    	},
                     	null,
-                    	'',
+                    	'clientArray',
                     	null, 
                     	function(){/*aftersave*/
                                 

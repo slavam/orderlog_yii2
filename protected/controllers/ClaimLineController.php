@@ -112,8 +112,9 @@ class ClaimLineController extends Controller
                 $criteria=new CDbCriteria;
                 $criteria->condition="asset_template_id>0 and complect_id=".$complect_id;
                 if (ComplectLine::model()->count($criteria)>0)
-//                    $this->redirect(array('claimLine/selectWaresFromTemplates','complect_id'=>$complect_id,'claim_id'=>$claim_id));
-                    $this->redirect(array('claimLine/getWaresForTemplatesByComplect','complect_id'=>$complect_id,'claim_id'=>$claim_id,'for_whom'=>$_POST['for_whom'],'business_id'=>$_POST['business_id']));
+                    $this->redirect(array('claimLine/getWaresForTemplatesByComplect',
+                        'complect_id'=>$complect_id,'claim_id'=>$claim_id,
+                        'for_whom'=>$_POST['for_whom'],'business_id'=>$_POST['business_id']));
                 else {
                     $criteria->condition=null;
                     $criteria->condition="complect_id=".$complect_id;
@@ -161,9 +162,8 @@ class ClaimLineController extends Controller
             {
                 $current_time = date("Y-m-d H:i:s", time());
                 foreach ($complect_lines as $c_l) {
-                    if ($c_l->asset_id<1) {
+                    if ($c_l->asset_id<1) 
                         $c_l->asset_id = $_POST['asset_id_'.$c_l->id];
-                    }
                     $model=new ClaimLine;
                     $model->claim_id=$claim_id;
                     $model->how_created =$c_l->complect->complect_type_id;
@@ -312,21 +312,23 @@ class ClaimLineController extends Controller
             $s = '';
             if ($division_id != '0'){
             $sql = '
-                select c.division_id  as id, budget_item_id, sum(amount) as amount
+                select c.division_id  as id, a.budget_item_id, sum(amount) as amount
                 from claim_lines c_l
                 join claims c on c.id=c_l.claim_id and c.division_id='.$division_id.'
-                where budget_item_id > 0 and c.direction_id='.$direction_id.'
+                join assets a on a.id=c_l.asset_id
+                where a.budget_item_id > 0 and c.direction_id='.$direction_id.'
                     and c.period_id='.$period_id.'
-                group by c.division_id, budget_item_id
-                order by c.division_id, budget_item_id';
+                group by c.division_id, a.budget_item_id
+                order by c.division_id, a.budget_item_id';
             }else { $sql = '
-                select 0 as id, budget_item_id, sum(amount) as amount
+                select 0 as id, a.budget_item_id, sum(amount) as amount
                 from claim_lines c_l
                 join claims c on c.id=c_l.claim_id 
-                where budget_item_id > 0 and c.direction_id='.$direction_id.'
+                join assets a on a.id=c_l.asset_id
+                where a.budget_item_id > 0 and c.direction_id='.$direction_id.'
                     and c.period_id='.$period_id.'
-                group by budget_item_id
-                order by budget_item_id';
+                group by a.budget_item_id
+                order by a.budget_item_id';
             }
             $lines = ClaimLine::model()->findAllBySql($sql);
             $responce['rows']=array();
@@ -380,6 +382,7 @@ class ClaimLineController extends Controller
                     $row->amount,
                     $row->description,
                     $row->for_whom>0? $row->for_whom: '',
+//                    $row->for_whom>0? $row->worker->department->findDepartment($row->worker->ID_DIVISION): '',
                     $row->for_whom>0? $row->findWorkerDepartment2levels($row->for_whom): '',
                     );
             }
@@ -389,7 +392,7 @@ class ClaimLineController extends Controller
         public function actionCheckLimits()
         {
             $this->render('checkLimits',array(
-                'dataProvider'=>null, //$dataProvider,
+                'dataProvider'=>null, 
                 'period_id'=>$_GET['period_id'],
                 'direction_id'=>$_GET['direction_id'],
                 'division_id'=>$_GET['division_id'],
