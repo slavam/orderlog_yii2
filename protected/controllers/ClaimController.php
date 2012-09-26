@@ -260,12 +260,12 @@ class ClaimController extends Controller
 	}
 
 
-//	public function actionFindWorkerDepForList($id)
-//	{
-//		//lysenko 16.sep.2012 - TODO check ajax stuff
-//		echo ClaimLine::model()->findWorkerDepartment2levels($id);
-//            Yii::app()->end();
-//	}
+	public function actionFindWorkerDepForList($id)
+	{
+		//lysenko 16.sep.2012 - TODO check ajax stuff
+		echo ClaimLine::model()->findWorkerDepartment2levels($id);
+            Yii::app()->end();
+	}
 
 
 	public function actionEditComment()
