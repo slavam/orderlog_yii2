@@ -230,6 +230,8 @@ class AssetGroupController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->pageTitle='Группы';
+
 		$dataProvider=new CActiveDataProvider('AssetGroup', array(
                     'criteria'=>array(
                         'order'=>'id, name',

@@ -192,6 +192,9 @@ class ComplectController extends Controller
 
         public function actionIndexJqgrid()
 	{
+
+		$this->pageTitle='Комплекты';
+
 		$dataProvider=new CActiveDataProvider('Complect', array(
                     'pagination'=>false, 
                     'criteria'=>array(
