@@ -89,7 +89,7 @@ $(function() {
             {name:'state',index:'state', width:100},
             {name:'division',index:'division', width:300},
             {name:'department',index:'department', width:300, sortable:false},
-            {name:'comment',index:'comment', width:300, sortable:false},
+            {name:'comment',index:'comment', width:300, sortable:false, editable:true},
         ],
         caption : 'Журнал регистрации заявок',
         rowNum : 300000,
@@ -151,6 +151,29 @@ $(function() {
 //        onSelectRow: function(rowId){ 
 //      grid.expandSubGridRow(rowId); 
 //   },
+
+        ondblClickRow: function (rowid, iRow, iCol, e) {
+
+        			var claim_id=grid.getCell(rowid,'id');
+            		grid.setGridParam({editurl:'editComment?claim_id='+claim_id});
+
+                    $(this).jqGrid('editRow', rowid, true, function () 
+                        {
+                            //$('#'+rowid+'_name').focus(); //
+                    	},
+                    	null,
+                    	'',
+                    	null, 
+                    	function(){/*aftersave*/
+                    	}, 
+                    	null, 
+	                    function () {/*afterrestore*/
+	                    	/*fixPositionsOfFrozenDivs.call(this)*/
+
+	                    } 
+                    );
+        },
+
         gridComplete: function () {
             grid.setGridParam({datatype:'local'});
             $(".subgrid-data").css('background','#ddd');

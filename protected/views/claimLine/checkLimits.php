@@ -4,6 +4,7 @@
 <p>Отделение: <?php echo ($division_id!='0' ? Division::model()->findByPk($division_id)->NAME: 'Весь банк')?></p>
 </div>
 <?php
+$this->pageTitle = "Контроль лимитов";
 $cs = Yii::app()->clientScript;
  
 $cs->registerCssFile(Yii::app()->request->baseUrl.'/jqgrid/themes/ui.jqgrid.css');
@@ -78,12 +79,10 @@ $(function() {
             {name:'division_id',index:'division_id', width:20, hidden:true},
             {name:'direction_id',index:'direction_id', width:20, hidden:true},
             {name:'division',index:'division', width:200, sortable:false, hidden:true},
-//            {name:'article',index:'article', width:300, sortable:false},
-            {name:'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>}  },
+            {name:'article', width: 500, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptionsWithModel(BudgetItem::model()->get3LevelAllNameBudgetItemOptionList(), array('key'=>'ID','value'=>'NAME'))?>} },
             {name:'limit',index:'limit', width:70, sortable:true},
             {name:'sum',index:'sum', width:70},
-            {name:'delta',index:'delta', width:70},
-           
+            {name:'delta',index:'delta', width:70},           
         ],
         caption : 'Контроль лимитов',
         rowNum : 300000,
@@ -119,7 +118,7 @@ $(function() {
                     {name: 'claim_num', width: 50 },
                     {name: 'type', width: 40 },
                     {name: 'name',index:'name', width:150},
-                    {name: 'unit', width: 40, frozen:false, /*editable:true,*/ edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
+                    {name: 'unit', width: 40, frozen:false, edittype:'select', formatter:"select", editoptions: {value:<?echo Helpers::BuildEditOptions(Unit::model(), array('key'=>'id','value'=>'sign'))?>} },
                     {name: 'quantity', width: 60 },
                     {name: 'cost', width: 60 },
                     {name: 'amount', width: 60 },
@@ -133,18 +132,12 @@ $(function() {
                         }
                     },
                 ],
-//              pager: null, //pager_id,
-//            viewrecords: false,
             ondblClickRow: function(id) {
-//                $_GET['claim_id'] = $("#" + subgridTableId).getCell(id, 'claim_id');
-                var clid = $("#" + subgridTableId).getCell(id, 'claim_id');
-                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+"?claim_id="+clid
+                window.location.href = "<?echo Yii::app()->createUrl('/claim/indexJqgrid');?>"+
+                    "?claim_id="+$("#" + subgridTableId).getCell(id, 'claim_id')
             },
             gridComplete: function () {
-//                $(".subgrid-data").css('background','#ddd');
-
             }
-            
         });
         },
         gridComplete: function () {
@@ -153,9 +146,7 @@ $(function() {
             var cl;
             for( i=0; i < rows.length; i++){
                 row = grid.jqGrid('getRowData',rows[i]);
-                var delta = row['delta'];
-
-                if(delta >= 0 ) cl="";
+                if(row['delta'] >= 0 ) cl="";
                 else cl="red";
                 grid.jqGrid('setCell',rows[i],'delta','',{'color':cl});
             } 

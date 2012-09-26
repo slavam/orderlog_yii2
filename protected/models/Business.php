@@ -116,5 +116,14 @@ class Business extends CActiveRecord
 //		$businesses = Business::model()->findAll(array('order' => 'CODE'));
 //		return CHtml::listData($businesses,'ID','NAME');
 	}
+        
+        public function getBusinessName($business_id)
+        {
+            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
+            $business = Business::model()->findBySql($sql);
+            return $business->NAME;
+        }
+
 
 }

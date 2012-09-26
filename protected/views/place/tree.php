@@ -23,7 +23,7 @@
 	));
 */
 ?>
-<h1>Расположение</h1>
+<h1>Расположения</h1>
 
 <div id="mtreeview" style="width: 235px;float:left">
 <?php 

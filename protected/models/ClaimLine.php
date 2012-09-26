@@ -41,11 +41,11 @@ class ClaimLine extends CActiveRecord
             return 'claim_lines';
 	}
 
-       	public function findWorker($worker_id)
-	{
-            $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
-            return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
-	}
+//       	public function findWorker($worker_id)
+//	{
+//            $worker = Worker::model()->find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
+//            return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
+//	}
 
       	public function findWorkerDepartment2levels($worker_id)
 	{
@@ -86,7 +86,7 @@ class ClaimLine extends CActiveRecord
                     'accountLines' => array(self::HAS_MANY, 'AccountLines', 'clime_line_id'),
                     'asset' => array(self::BELONGS_TO, 'Asset', 'asset_id'),
                     'claim' => array(self::BELONGS_TO, 'Claim', 'claim_id'),
-                    'claim_sum' => array(self::HAS_ONE, 'Claim', 'claim_id'),
+//                    'claim_sum' => array(self::HAS_ONE, 'Claim', 'claim_id'),
                     'business' => array(self::BELONGS_TO, 'Business', 'business_id'),
                     'position' => array(self::BELONGS_TO, 'Place', 'position_id'),
                     'budgetItem' => array(self::BELONGS_TO, 'BudgetItem', 'budget_item_id'),
@@ -155,26 +155,13 @@ class ClaimLine extends CActiveRecord
 		));
 	}
         
-        public function findConsolidatedClaimLines($period_id, $direction_id)
-        {
-            $lines = ClaimLine::model()->findAllBySql('select * from claim_lines c_l 
-                join claims c on c.id=c_l.claim_id and c.period_id ='.$period_id.' and c.state_id=2 and c.direction_id='.$direction_id);
-            return $lines;
-        }
+//        public function findConsolidatedClaimLines($period_id, $direction_id)
+//        {
+//            $lines = ClaimLine::model()->findAllBySql('select * from claim_lines c_l 
+//                join claims c on c.id=c_l.claim_id and c.period_id ='.$period_id.' and c.state_id=2 and c.direction_id='.$direction_id);
+//            return $lines;
+//        }
         
-        public function findAddress($address_id)
-	{
-            $position = Place::model()->findAllBySql("
-                WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
-                  SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
-                    FROM places T1 WHERE T1.parent_id IS NULL
-                  union
-                    select T2.id, T2.parent_id, T2.title, CAST( temp1.PATH ||', '|| T2.title AS VARCHAR(150)), LEVEL + 1
-                      FROM places T2 INNER JOIN temp1 ON( temp1.id= T2.parent_id)      )
-                  select path as title from temp1 where id=".$address_id);
-            return CHtml::encode($position[0]->title); 
-	}
-
         public function findProductsAsString($claim_line_id,$type='string')
         {
             if ($claim_line_id>'')
@@ -234,13 +221,13 @@ class ClaimLine extends CActiveRecord
             return $res;
         }
 
-        public function getBusinessName($business_id)
-        {
-            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
-                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
-            $business = Business::model()->findBySql($sql);
-            return $business->NAME;
-        }
+//        public function getBusinessName($business_id)
+//        {
+//            $sql = "select sb.CODE||' => '||bb.NAME as NAME from FIN.budget_business bb
+//                    join fin.sr_busines sb on sb.id=bb.sr_business_id and bb.id=".$business_id;
+//            $business = Business::model()->findBySql($sql);
+//            return $business->NAME;
+//        }
         
         public function getProductsNamesFromArray($product_ids){
             return Product::model()->getNamesFromArray($product_ids);

@@ -147,6 +147,9 @@ class PlaceController extends Controller
 	 */
 	public function actionIndex()
 	{
+
+		$this->pageTitle='Расположения';
+
             $rawData=Yii::app()->db->createCommand("
                 WITH RECURSIVE temp1 ( id, parent_id, title, PATH, LEVEL ) AS (
                   SELECT T1.id, T1.parent_id, T1.title as name, CAST (T1.title AS VARCHAR(150)) as PATH, 1
@@ -219,15 +222,15 @@ class PlaceController extends Controller
                         
                         $findtown=Place::model()->findBySql("select * from places where upper(title) = upper('".$model->town."') AND parent_id = ".$this->parent_model->id);
                                 
-                            if (!$findtown) {
-                                $town_id = Place::AddRecord($model->town,$model->add_record);
-                                $this->parent_model = $this->loadModel($town_id);
+                        if (!$findtown) {
+                            $town_id = Place::model()->AddRecord($model->town,$model->add_record,$this->parent_model);
+                            $this->parent_model = $this->loadModel($town_id);
                         } else {
                                 $this->parent_model = $this->loadModel($findtown->id);    
                         }
-                        $place_id = Place::AddRecord($model->place,$model->add_record);
+                        $place_id = Place::model()->AddRecord($model->place,$model->add_record,$this->parent_model);
                     } else {
-                        $town_id = Place::AddRecord($model->place,$model->add_record);                    
+                        $town_id = Place::model()->AddRecord($model->place,$model->add_record,$this->parent_model);                    
                     }
                     
                     $this->redirect(array('tree'));
@@ -251,6 +254,9 @@ class PlaceController extends Controller
 
         public function actionTree()
 	{
+
+		$this->pageTitle='Расположения';
+            
             Yii::app()->clientScript->registerCoreScript('jquery');
             Yii::app()->clientScript->registerCoreScript('jquery.yiiactiveform.js'); 
 

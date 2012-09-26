@@ -58,6 +58,7 @@ class Department extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+//                    'claims' => array(self::HAS_MANY, 'Claim', 'department_id')
 		);
 	}
 
@@ -116,6 +117,65 @@ class Department extends CActiveRecord
                     $data[$d->ID_DIVISION] = $d->CODE_DIVISION." ".$d->DIVISION;
             }			
             return $data;
+	}
+
+        public function findDepartment($departmen_id)
+	{
+            if ($departmen_id<1) return '';
+            $sql = 'with Hierachy(ID_DIVISION, PARENT_ID, DIVISION, Level)
+                as
+                (
+                select ID_DIVISION, PARENT_ID, DIVISION, 0 as Level
+                    from div2doc c
+                    where c.ID_DIVISION = '.$departmen_id.' 
+                    union all
+                    select c.ID_DIVISION, c.PARENT_ID, c.DIVISION, ch.Level + 1
+                    from div2doc c
+                    inner join Hierachy ch
+                    on ch.parent_id = c.ID_DIVISION
+                )
+                select ID_DIVISION, PARENT_ID, DIVISION
+                from Hierachy
+                where Level >= 0 order by Level desc';
+            $departments = Department::model()->findAllBySql($sql);
+            $s = '';
+            foreach ($departments as $d) {
+                $s .= $d->DIVISION.'; ';
+            }
+            return $s;
+	}
+
+        public function primaryKey()
+        {
+            return 'ID_DIVISION';
+        }
+        
+        public function findDepartmentHiLow($code_div)
+	{
+            if ($code_div<1) return '';
+            $sql = "with Hierachy (ID_DIVISION, PARENT_ID, DIVISION, Level) 
+            as 
+            (
+            	select
+					ID_DIVISION, PARENT_ID, DIVISION, 0 as Level
+					from div2doc c 
+					where c.CODE_DIVISION='".$code_div."' 
+					union all 
+					select c.ID_DIVISION, c.PARENT_ID, c.DIVISION, ch.Level + 1
+	            from div2doc c 
+	            inner join Hierachy ch 
+	            on ch.PARENT_ID = c.ID_DIVISION
+            ) 
+            select ID_DIVISION, PARENT_ID, DIVISION
+            from Hierachy 
+            where Level >= 0 order by Level desc";
+
+            $departments = Department::model()->findAllBySql($sql);
+            $s = '';
+            foreach ($departments as $d) {
+                $s .= $d->DIVISION.'; ';
+            }
+            return $s;
 	}
 
 }

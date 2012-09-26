@@ -6,11 +6,11 @@
       '
           $(function(){
           getassetgroupbydirection();
-          
+          getassetgroupstamps();
 });
 function getassetgroupbydirection(){
          $.ajax({
-        url: "'.Yii::app()->createUrl('/assetgroup/GetAssetGroupsByDirection').'",
+        url: "'.Yii::app()->createUrl('/assetgroup/getAssetGroupsByDirection').'",
         data:{"dir":$("#AssetTemplate_direction_id").val()}
             })
             .done(function(data) { 
@@ -24,7 +24,19 @@ function getassetgroupbydirection(){
                     $("#AssetTemplate_asset_group_id").val(assetgroup);
                 }
             });
-        }',
+        }
+function getassetgroupstamps(){
+         $.ajax({
+        url: "'.Yii::app()->createUrl('/assetgroup/getAssetGroupStamps').'",
+        data:{"grp_id":$("#AssetTemplate_asset_group_id").val()}
+            })
+            .done(function(data) { 
+//            	alert(data);
+                $("#AssetTemplate_part_number").val(data);
+            });
+}
+        
+        ',
       CClientScript::POS_HEAD
   );
  
@@ -74,7 +86,7 @@ $form=$this->beginWidget('CActiveForm', array(
 		<td>
 			<b>Группа</b>
 	                <br>
-	                <?php echo $form->dropDownList($model,'asset_group_id', array(),array('empty'=>'<Выберите группу>'));?> 
+	                <?php echo $form->dropDownList($model,'asset_group_id', array(),array('empty'=>'<Выберите группу>','onchange'=>'{getassetgroupstamps();}'));?> 
 			<?php echo $form->error($model,'asset_group_id'); ?>
 		</td>
 	</tr>

@@ -1,7 +1,7 @@
 <div class="form">
     
 <?php 
-
+$this->pageTitle = "Параметры контроля лимитов";
 $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'claim-params-form',
 )); ?>

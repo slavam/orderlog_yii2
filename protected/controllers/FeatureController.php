@@ -195,6 +195,8 @@ class FeatureController extends Controller
 	 */
 	public function actionIndex()
 	{
+		$this->pageTitle='Характеристики';
+
             $dataProvider = new CActiveDataProvider('Feature', array(
                 'pagination' => false,
                 'criteria' => array(

@@ -39,7 +39,8 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Бизнес',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->getBusinessName($model->business_id))
+                    'value'=>CHtml::encode($model->business->getBusinessName($model->business_id))
+//                    'value'=>CHtml::encode($model->getBusinessName($model->business_id))
                 ),
                 array(               
                     'label'=>'Статья бюджета',
@@ -49,7 +50,9 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Для кого',
                     'type'=>'raw',
-                    'value'=>CHtml::encode($model->findWorker($model->for_whom))
+                    'value'=>CHtml::encode($model->worker->getFullNameAndStaff($model->for_whom))
+//        'value'=>CHtml::encode($model->findWorker($model->for_whom))
+        
                 ),
                 array(               
                     'label'=>'Центр финансовой ответственности',
@@ -59,7 +62,7 @@ $this->breadcrumbs=array(
                 array(               
                     'label'=>'Расположение объекта',
                     'type'=>'raw',
-                    'value'=>($model->position_id>0 ? CHtml::encode($model->findAddress($model->position_id)): '')
+                    'value'=>($model->position_id>0 ? CHtml::encode($model->position->findAddress($model->position_id)): '')
                 ),
                 array(               
                     'label'=>'Продукты',

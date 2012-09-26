@@ -82,6 +82,7 @@ class Worker extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'claimLines' => array(self::HAS_MANY, 'ClaimLine', 'for_whom'),
+                    'department' => array(self::BELONGS_TO, 'Department', 'ID_DIVISION'),
 		);
 	}
 
@@ -157,7 +158,7 @@ class Worker extends CActiveRecord
 		));
 	}
         
-        	public static function findWorkers()
+        public static function findWorkers()
 	{
 		$workers = Worker::model()->findAll(array('order' => 'LASTNAME, FIRSTNAME, SONAME'));
                 $data = array(''=>'Задайте сотрудника');
@@ -167,7 +168,13 @@ class Worker extends CActiveRecord
                 return $data;
 	}
 
-        	public static function findWorkersWithStaff()
+        public function getFullNameAndStaff($worker_id)
+	{
+            $worker = Worker::model()->findByPk($worker_id); //find('ID_EMP=:ID_EMP', array(':ID_EMP'=>$worker_id));
+            return CHtml::encode($worker->LASTNAME." ".$worker->FIRSTNAME." ".$worker->SONAME.", ".$worker->STAFF); 
+	}
+
+        public static function findWorkersWithStaff()
 	{
 		$workers = Worker::model()->findAll(array('order' => 'LASTNAME, FIRSTNAME, SONAME'));
 //                $data = array(''=>'Задайте сотрудника');
@@ -194,4 +201,9 @@ class Worker extends CActiveRecord
         join q d on d.id_division=e.id_division";
             return CHtml::listData(Worker::model()->findAllBySql($sql),'ID_EMP', 'LASTNAME');
         }
+        public function primaryKey()
+        {
+            return 'ID_EMP';
+        }
+
 }
