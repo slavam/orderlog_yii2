@@ -101,6 +101,7 @@ $(function() {
         sortname : 'name',
         sortorder : 'asc',
         caption : 'Товары',
+        scrollrows : true,
         toppager:true,
         pgbuttons: false,     // disable page control like next, back button
         pgtext: null,         // disable pager text like 'Page 0 of 10'
