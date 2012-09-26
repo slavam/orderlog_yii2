@@ -27,7 +27,7 @@ class BlockController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view','delete'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -107,16 +107,19 @@ class BlockController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
-		if(Yii::app()->request->isPostRequest)
+		if(Yii::app()->request->isAjaxRequest)
 		{
 			// we only allow deletion via POST request
-			$this->loadModel($id)->delete();
-
-			// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-			if(!isset($_GET['ajax']))
-				$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+                        if (($id=$_POST['iddb']))
+                        {
+                            if ($this->loadModel($id)->delete())
+                            {
+                                echo CJSON::encdode (array('status'=>'deleted','message'=>'deleted'));
+                            }else{echo CJSON::encode(array('status'=>'error','message'=>'error while delete record'));}
+                        }
+                        Yii::app()->end();
 		}
 		else
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');

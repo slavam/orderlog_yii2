@@ -56,7 +56,7 @@ $(function() {
 //        ExpandColClick: true,
         rowNum : 0,
         pager: '#pager',
-
+        editurl:'<?echo Yii::app()->createUrl('/assetgroup/delete');?>',
     	loadError: function(xhr, status, error) {alert(status +error)},
 
 //    	gridComplete: function(){
@@ -78,7 +78,65 @@ $(function() {
             }
         }
 
-    }).navGrid('#pager',{search:false, view:false, del:false, add:false, edit:false, cloneToTop:true, refresh:false});
+    }).navGrid('#pager',{search:false, view:false, del:true, add:false, edit:false, cloneToTop:true, refresh:false
+//        delfunc:function(){
+//            var sel_ = grid.getGridParam('selrow');
+//            	if(sel_) {
+//            		var parent_ = grid.getCell(sel_, 'parent');
+//                        var iddb =grid.getCell(sel_, 'iddb');
+//	            	if(parent_ != 'null' && parent_ != "") 
+//                        {
+//                            $.ajax({
+//                                
+//                                'data':{'iddb':iddb,'type':'assetgroup'},
+//                                'type':'POST',
+//                                'dataType':'json',
+//                                'success': function(msg){
+//                                    alert(msg);
+//                                },
+//                                'error': function(res, status, exeption) {
+//                                        alert(res.responseText);
+//                                    }
+//                            });
+////                            $grid.delRowData(sel_,);
+//	            	} 
+//                        else alert("Выберите группу!");
+//            	} else alert("Выберите группу!");
+//            }
+            }, {},{},{
+             
+            onclickSubmit:function(params,postdata){
+                 var sel_ = grid.getGridParam('selrow');
+            	if(sel_) {
+            		var parent_ = grid.getCell(sel_, 'parent');
+                        var iddb =grid.getCell(sel_, 'iddb');
+	            	if(parent_ != 'null' && parent_ != "") 
+                        {
+                             params.url='<?echo Yii::app()->createUrl('/assetgroup/delete');?>';
+                        }
+                        else params.url = '<?echo Yii::app()->createUrl('/block/delete');?>';
+                    }
+            },
+            afterSubmit:function(responce,postdata){
+//                responce=JSON.parse(responce);
+                if (responce.status='deleted')
+                    {
+                        return[true]
+                    }
+                    else return[false,,responce.message];
+            },
+            serializeDelData:function(postdata){
+                    
+                    var sel_ = grid.getGridParam('selrow');
+                    
+                    if(sel_) {
+                        postdata.iddb=grid.getCell(sel_, 'iddb');
+                    }
+                    
+                    return postdata;
+            }},{},{}
+       
+        );
 //        grid.jqGrid('navSeparatorAdd','#pager');
         grid.jqGrid('navButtonAdd','#pager',{
             caption: '',//'Группа',
@@ -96,7 +154,7 @@ $(function() {
                                         grid.jqGrid('setGridParam', {editurl:'addRow'});
                                         grid.editRow(last_row_id+1, true, null, null, null, {}, after_save, null, after_restore);
 //				                lastSel = last_row_id+1 ;
-            },
+            }
             //position:'last'
         });
         grid.jqGrid('navButtonAdd','#pager',{
@@ -130,8 +188,9 @@ $(function() {
             		
             	} else alert("Выберите группу!");
 
-            },
+            }
         });
+        
         grid.jqGrid('navButtonAdd','#pager',{
             caption: '',//'Подгруппа',
             title: 'Изменить привязку',
@@ -202,9 +261,10 @@ $(function() {
               }//if sel_
               else alert("Выберите подгруппу!");
 
-            },
+            }
             //position:'last'
-        })
+        });
+        
 
 		function after_restore(rowid) {
 			if(new_node){
