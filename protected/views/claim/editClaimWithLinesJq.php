@@ -197,12 +197,16 @@
             
         },
         dialogOkHandler:function(){
+            
                         seldata = $('#create_multiple_dialog_table').jqGrid('getRowData',selected);
+                        alert(JSON.stringify(seldata));
+                        alert(selected);
                         if(!selected)
                             {
                                 seldata.id='';
                                 seldata.title='';
                             }
+                            alert(seldata.id);
                         $("#claim_line_list").setCell(global_rowid,'position_ids',seldata.id,null,null,true);
                         $("#claim_line_list").setCell(global_rowid,'position',seldata.title,null,null,true);
                        
@@ -478,6 +482,8 @@ function fill_pane(id)
     var deletedrows=[];
    	var _msg="[";
     var lastSel;
+    $grid.jqGrid('GridUnload');
+    $grid.jqGrid('clearGridData');
     $grid.jqGrid( {
 //        url : "getDataForSubGrid?claim_id="+<?php // echo $model->id ?>,
         url : "<?echo Yii::app()->createUrl('claim/getDataForDialogGrid',array('claim_id'=>$model->id))?>",
