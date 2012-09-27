@@ -360,7 +360,8 @@ class ClaimLineController extends Controller
                 select c_l.*
                 from claim_lines c_l
                 join claims c on c.id=c_l.claim_id
-                where budget_item_id='.$_GET['article_id'].' and 
+                join assets a on a.id=c_l.asset_id
+                where a.budget_item_id='.$_GET['article_id'].' and 
                     c.direction_id='.$_GET['direction_id'].' and '.$s.'
                     c.period_id='.$_GET['period_id'].' 
                 order by c.division_id, c_l.id';
